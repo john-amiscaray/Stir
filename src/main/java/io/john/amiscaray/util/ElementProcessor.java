@@ -2,6 +2,7 @@ package io.john.amiscaray.util;
 
 import io.john.amiscaray.annotation.Attribute;
 import io.john.amiscaray.annotation.HTMLElement;
+import io.john.amiscaray.annotation.Nested;
 import io.john.amiscaray.annotation.exceptions.IllegalElementException;
 
 import java.lang.annotation.Annotation;
@@ -76,8 +77,17 @@ public class ElementProcessor {
 
         try{
             buildElementOpeningTag(builder, obj);
-
-            buildElementClosingTag(builder, tagName);
+            Field[] fields = type.getDeclaredFields();
+            for (Field field: fields) {
+                field.setAccessible(true);
+                if(field.isAnnotationPresent(Nested.class)){
+                    builder.append(getMarkup(field.get(obj)));
+                }
+            }
+            HTMLElement elementMeta = (HTMLElement) type.getAnnotation(HTMLElement.class);
+            if(elementMeta.hasClosing()){
+                buildElementClosingTag(builder, tagName);
+            }
 
         }catch(IllegalAccessException ex){
             ex.printStackTrace();
