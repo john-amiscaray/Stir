@@ -1,7 +1,7 @@
 package io.john.amiscaray.util;
 
-import io.john.amiscaray.annotation.elements.Form;
-import io.john.amiscaray.stub.MyForm;
+import io.john.amiscaray.stub.EmptyForm;
+import io.john.amiscaray.stub.SimpleForm;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -14,14 +14,21 @@ class ElementProcessorTest {
     @Test
     void isMyFormAForm() {
 
-        assertEquals(processor.getElementAnnotation(MyForm.class).annotationType(), Form.class);
+        assertEquals(processor.getTagName(EmptyForm.class), "form");
 
     }
 
     @Test
     void myFormMarkup(){
 
-        assertEquals( "<form></form>", processor.getMarkup(new MyForm()));
+        assertEquals( "<form>\n\n</form>", processor.getMarkup(new EmptyForm()));
+
+    }
+
+    @Test
+    void simpleFormWithAttributes(){
+
+        assertEquals("<form action=\"/\" method=\"post\">\n\n</form>", processor.getMarkup(new SimpleForm()));
 
     }
 
