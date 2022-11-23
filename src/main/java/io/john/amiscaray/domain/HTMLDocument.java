@@ -1,14 +1,18 @@
+package io.john.amiscaray.domain;
+
+import io.john.amiscaray.util.ElementProcessor;
+
 import java.util.ArrayList;
 import java.util.List;
 
 public class HTMLDocument {
 
-    private List<Object> elements = new ArrayList<>();
-    private ElementProcessor processor = new ElementProcessor();
+    private final List<Object> elements = new ArrayList<>();
+    private final ElementProcessor processor = ElementProcessor.getInstance();
 
     public static class Builder{
 
-        private HTMLDocument doc;
+        private final HTMLDocument doc;
 
         public Builder(){
             doc = new HTMLDocument();

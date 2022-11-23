@@ -1,13 +1,16 @@
+package io.john.amiscaray.annotation;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.TYPE)
-public @interface Form {
+@Target(ElementType.FIELD)
+public @interface Input {
 
-    String action();
-    String method();
+    String type();
+    String name();
+    String defaultVal();
 
 }
