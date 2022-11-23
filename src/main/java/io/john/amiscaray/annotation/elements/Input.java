@@ -1,4 +1,4 @@
-package io.john.amiscaray.annotation;
+package io.john.amiscaray.annotation.elements;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -9,8 +9,6 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface Input {
 
-    String type();
-    String name();
-    String defaultVal();
+
 
 }

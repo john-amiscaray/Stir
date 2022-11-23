@@ -1,26 +1,27 @@
 package io.john.amiscaray.util;
 
-import io.john.amiscaray.annotation.Form;
-import io.john.amiscaray.annotation.Input;
+import io.john.amiscaray.annotation.elements.Form;
+import io.john.amiscaray.stub.MyForm;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 
 class ElementProcessorTest {
 
     private final ElementProcessor processor = ElementProcessor.getInstance();
 
     @Test
-    void isFormValid() {
+    void isMyFormAForm() {
 
-        assertTrue(processor.isValidElementType(Form.class));
+        assertEquals(processor.getElementAnnotation(MyForm.class).annotationType(), Form.class);
 
     }
 
     @Test
-    void isInputValid(){
+    void myFormMarkup(){
 
-        assertTrue(processor.isValidElementType(Input.class));
+        assertEquals( "<form></form>", processor.getMarkup(new MyForm()));
 
     }
 
