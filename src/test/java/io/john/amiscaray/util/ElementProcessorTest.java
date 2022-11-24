@@ -2,11 +2,14 @@ package io.john.amiscaray.util;
 
 import io.john.amiscaray.domain.elements.Form;
 import io.john.amiscaray.domain.elements.Input;
+import io.john.amiscaray.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stub.EmptyForm;
 import io.john.amiscaray.stub.FormWithChildList;
 import io.john.amiscaray.stub.FormWithInputs;
 import io.john.amiscaray.stub.SimpleForm;
 import org.junit.jupiter.api.Test;
+
+import java.io.IOException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ElementProcessorTest {
 
     private final ElementProcessor processor = ElementProcessor.getInstance();
+    private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
 
     @Test
     void isMyFormAForm() {
@@ -23,137 +27,64 @@ class ElementProcessorTest {
     }
 
     @Test
-    void myFormMarkup(){
+    void myFormMarkup() throws IOException {
 
-        assertEquals( "<form>\n</form>", processor.getMarkup(new EmptyForm()));
-
-    }
-
-    @Test
-    void simpleFormWithAttributes(){
-
-        assertEquals("<form action=\"/\" method=\"post\">\n</form>", processor.getMarkup(new SimpleForm()));
+        assertEquals(htmlLoader.getHTMLContentOf("html/myFormMarkUpExpected.html") , processor.getMarkup(new EmptyForm()));
 
     }
 
     @Test
-    void formWithInputs(){
+    void simpleFormWithAttributes() throws IOException {
 
-        StringBuilder expected = new StringBuilder();
+        assertEquals(htmlLoader.getHTMLContentOf("html/simpleFormWithAttributesExpected.html"), processor.getMarkup(new SimpleForm()));
+
+    }
+
+    @Test
+    void formWithInputs() throws IOException {
+
         FormWithInputs form = new FormWithInputs();
-        Input username = form.getUsername();
-        Input message = form.getMessage();
-        expected.append("<form>\n")
-                // Username input field
-                .append("<input type=\"")
-                .append(username.getType())
-                .append("\" value=\"")
-                .append(username.getValue())
-                .append("\">\n")
-                // Message input field
-                .append("<input type=\"")
-                .append(message.getType())
-                .append("\" value=\"")
-                .append(message.getValue())
-                .append("\">")
-                .append("\n</form>");
-        assertEquals(expected.toString(), processor.getMarkup(form));
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithInputsExpected.html"), processor.getMarkup(form));
 
     }
 
     @Test
-    void formWithChildList(){
+    void formWithChildList() throws IOException {
 
-        StringBuilder expected = new StringBuilder();
         Input username = new Input("text", "username", "John", null);
-        Input message = new Input("text", "message", "Some Message", null);
+        Input message = new Input("text1", "message", "Some Message", null);
         FormWithChildList form = new FormWithChildList.Builder()
                 .addInput(username)
                 .addInput(message)
                 .build();
-        expected.append("<form>\n")
-                // Username input field
-                .append("<input id=\"")
-                .append(username.getId())
-                .append("\" type=\"")
-                .append(username.getType())
-                .append("\" ")
-                .append("value=\"")
-                .append(username.getValue())
-                .append("\">\n")
-                // Message input field
-                .append("<input id=\"")
-                .append(message.getId())
-                .append("\" type=\"")
-                .append(message.getType())
-                .append("\" ")
-                .append("value=\"")
-                .append(message.getValue())
-                .append("\">\n</form>");
-        assertEquals(expected.toString(), processor.getMarkup(form));
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithChildListExpected.html"), processor.getMarkup(form));
 
     }
 
     @Test
-    void testLibForm(){
+    void testLibForm() throws IOException {
 
-        StringBuilder expected = new StringBuilder();
         Input username = new Input("text", "username", "John", null);
-        Input message = new Input("text", "message", "Some Message", null);
+        Input message = new Input("text1", "message", "Some Message", null);
         Form form = new Form.Builder()
                         .addField(username)
                         .addField(message)
                         .setAction("/path")
                         .setMethod("post")
                         .build();
-        expected.append("<form method=\"post\" action=\"/path\">\n")
-                // Username input field
-                .append("<input id=\"")
-                .append(username.getId())
-                .append("\" ")
-                .append("type=\"")
-                .append(username.getType())
-                .append("\" ")
-                .append("value=\"")
-                .append(username.getValue())
-                .append("\">\n")
-                // Message input field
-                .append("<input id=\"")
-                .append(message.getId())
-                .append("\" ")
-                .append("type=\"")
-                .append(message.getType())
-                .append("\" ")
-                .append("value=\"")
-                .append(message.getValue())
-                .append("\">")
-                .append("\n</form>");
-        assertEquals(expected.toString(), processor.getMarkup(form));
+        assertEquals(htmlLoader.getHTMLContentOf("html/testLibFormExpected.html"), processor.getMarkup(form));
 
     }
 
     @Test
-    void FormWithLabel(){
+    void FormWithLabel() throws IOException {
 
-        StringBuilder expected = new StringBuilder();
         Input username = new Input("text", "username", "John", "Username");
         Form form = new Form.Builder()
                 .addField(username)
                 .build();
-        expected.append("<form method=\"get\" action=\"/\">\n")
-                .append("<label for=\"text\">\nUsername\n</label>\n")
-                // Username input field
-                .append("<input id=\"")
-                .append(username.getId())
-                .append("\" ")
-                .append("type=\"")
-                .append(username.getType())
-                .append("\" ")
-                .append("value=\"")
-                .append(username.getValue())
-                .append("\">\n</form>");
-        assertEquals(expected.toString(), processor.getMarkup(form));
-
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithLabelExpected.html"), processor.getMarkup(form));
 
     }
 
