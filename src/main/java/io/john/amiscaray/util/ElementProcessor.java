@@ -1,9 +1,6 @@
 package io.john.amiscaray.util;
 
-import io.john.amiscaray.annotation.Attribute;
-import io.john.amiscaray.annotation.ChildList;
-import io.john.amiscaray.annotation.HTMLElement;
-import io.john.amiscaray.annotation.Nested;
+import io.john.amiscaray.annotation.*;
 import io.john.amiscaray.annotation.exceptions.IllegalElementException;
 
 import java.lang.annotation.Annotation;
@@ -45,13 +42,19 @@ public class ElementProcessor {
 
         Field[] fields = clazz.getDeclaredFields();
         for (Field f: fields) {
+            f.setAccessible(true);
+            Object value = f.get(obj);
             if(f.isAnnotationPresent(Attribute.class)){
                 f.setAccessible(true);
-                Object value = f.get(obj);
                 if(value == null){
                     value = f.getAnnotation(Attribute.class).defaultValue();
                 }
                 builder.append(" ").append(f.getName()).append("=\"").append(value).append("\"");
+            }else if(f.isAnnotationPresent(Id.class)){
+                if(value == null){
+                    continue;
+                }
+                builder.append(" id=\"").append(value).append("\"");
             }
         }
 
@@ -61,9 +64,30 @@ public class ElementProcessor {
 
     private void buildElementClosingTag(StringBuilder builder, String tagName){
 
-        builder.append("\n</")
+        builder.append("</")
                 .append(tagName)
                 .append(">");
+
+    }
+
+    private void buildLabel(StringBuilder builder, Field label, Object parent) throws IllegalAccessException {
+
+        String parentId = null;
+        Field[] fields = parent.getClass().getDeclaredFields();
+        for (Field f : fields) {
+            f.setAccessible(true);
+            if(f.isAnnotationPresent(Id.class)){
+                parentId = f.get(parent).toString();
+            }
+        }
+        if(parentId == null){
+            throw new IllegalArgumentException("A labeled element must have an id");
+        }
+        builder.append("<label for=\"")
+                .append(parentId)
+                .append("\">\n")
+                .append(label.get(parent))
+                .append("\n</label>\n");
 
     }
 
@@ -78,24 +102,33 @@ public class ElementProcessor {
         StringBuilder builder = new StringBuilder();
 
         try{
-            buildElementOpeningTag(builder, obj);
             Field[] fields = type.getDeclaredFields();
-            for (Field field: fields) {
+            HTMLElement elementMeta = (HTMLElement) type.getAnnotation(HTMLElement.class);
+
+            for(Field field: fields){
                 field.setAccessible(true);
+                if(field.isAnnotationPresent(Label.class) && field.get(obj) != null){
+                    buildLabel(builder, field, obj);
+                }
+            }
+            buildElementOpeningTag(builder, obj);
+            for (Field field: fields) {
+                Object value = field.get(obj);
+                if(value == null){
+                    continue;
+                }
                 if(field.isAnnotationPresent(Nested.class)){
-                    builder.append(getMarkup(field.get(obj)));
+                    builder.append(getMarkup(value));
                 }else if(field.isAnnotationPresent(ChildList.class)){
                     if(!field.getType().equals(List.class)){
                         throw new IllegalElementException("A child list must be a List");
                     }
-                    List<Object> children = (List<Object>) field.get(obj);
+                    List<Object> children = (List<Object>) value;
                     for (Object child : children) {
                         builder.append(getMarkup(child));
                     }
-
                 }
             }
-            HTMLElement elementMeta = (HTMLElement) type.getAnnotation(HTMLElement.class);
             if(elementMeta.hasClosing()){
                 buildElementClosingTag(builder, tagName);
             }

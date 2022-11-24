@@ -10,9 +10,9 @@ import lombok.Data;
 public class FormWithInputs {
 
     @Nested
-    private Input username = new Input("text", "username", "John");
+    private Input username = new Input(null, "username", "John", null);
 
     @Nested
-    private Input message = new Input("text", "message", "Some Message");
+    private Input message = new Input(null, "message", "Some Message", null);
 
 }
