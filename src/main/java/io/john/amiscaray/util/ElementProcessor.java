@@ -1,12 +1,14 @@
 package io.john.amiscaray.util;
 
 import io.john.amiscaray.annotation.Attribute;
+import io.john.amiscaray.annotation.ChildList;
 import io.john.amiscaray.annotation.HTMLElement;
 import io.john.amiscaray.annotation.Nested;
 import io.john.amiscaray.annotation.exceptions.IllegalElementException;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.List;
 
 public class ElementProcessor {
 
@@ -82,6 +84,15 @@ public class ElementProcessor {
                 field.setAccessible(true);
                 if(field.isAnnotationPresent(Nested.class)){
                     builder.append(getMarkup(field.get(obj)));
+                }else if(field.isAnnotationPresent(ChildList.class)){
+                    if(!field.getType().equals(List.class)){
+                        throw new IllegalElementException("A child list must be a List");
+                    }
+                    List<Object> children = (List<Object>) field.get(obj);
+                    for (Object child : children) {
+                        builder.append(getMarkup(child));
+                    }
+
                 }
             }
             HTMLElement elementMeta = (HTMLElement) type.getAnnotation(HTMLElement.class);
