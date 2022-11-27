@@ -36,7 +36,7 @@ public class ElementProcessor {
 
     }
 
-    private void buildElementOpeningTag(StringBuilder builder, Object obj) throws IllegalAccessException {
+    private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta) throws IllegalAccessException {
 
         Class clazz = obj.getClass();
         String tagName = getTagName(clazz);
@@ -65,7 +65,10 @@ public class ElementProcessor {
             }
         }
 
-        builder.append(">\n");
+        builder.append(">");
+        if(elMeta.newLineAfterOpening()){
+            builder.append("\n");
+        }
 
     }
 
@@ -118,7 +121,7 @@ public class ElementProcessor {
                     buildLabel(builder, field, obj);
                 }
             }
-            buildElementOpeningTag(builder, obj);
+            buildElementOpeningTag(builder, obj, elementMeta);
             for (Field field: fields) {
                 Object value = field.get(obj);
                 if(value == null){

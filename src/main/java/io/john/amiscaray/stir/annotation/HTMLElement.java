@@ -9,5 +9,6 @@ public @interface HTMLElement {
 
     String tagName();
     boolean hasClosing() default true;
+    boolean newLineAfterOpening() default true;
 
 }

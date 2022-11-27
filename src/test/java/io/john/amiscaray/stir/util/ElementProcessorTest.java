@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.util;
 import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
+import io.john.amiscaray.stir.domain.elements.Script;
 import io.john.amiscaray.stir.domain.elements.Style;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.EmptyForm;
@@ -78,7 +79,7 @@ class ElementProcessorTest {
     }
 
     @Test
-    void testLibFormAsDoc() throws IOException {
+    void testLibFormAsDocWithStyles() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
                         .addElement(sampleLibForm)
@@ -91,6 +92,18 @@ class ElementProcessorTest {
                         .title("Hello")
                         .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/testLibFormAsDocExpected.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    void testLibFormAsDocWithFooterScript() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .addElement(sampleLibForm)
+                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.FOOTER)
+                .title("Hello")
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/testDocWithFooterScriptExpected.html"), doc.generateDocumentString());
 
     }
 
