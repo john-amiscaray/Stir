@@ -10,6 +10,7 @@ import java.util.List;
 public class ElementProcessor {
 
     private static ElementProcessor instance;
+    private static int indentationSize = 4;
 
     private ElementProcessor(){}
 
@@ -18,6 +19,10 @@ public class ElementProcessor {
             instance = new ElementProcessor();
         }
         return instance;
+    }
+
+    public static void setIndentationSize(int size){
+        ElementProcessor.indentationSize = size;
     }
 
     public String getTagName(Class clazz){
@@ -86,8 +91,8 @@ public class ElementProcessor {
         builder.append("<label for=\"")
                 .append(parentId)
                 .append("\">\n")
-                .append(label.get(parent))
-                .append("\n</label>\n");
+                .append(label.get(parent).toString().indent(ElementProcessor.indentationSize))
+                .append("</label>\n");
 
     }
 
@@ -118,14 +123,14 @@ public class ElementProcessor {
                     continue;
                 }
                 if(field.isAnnotationPresent(Nested.class)){
-                    builder.append(getMarkup(value));
+                    builder.append(getMarkup(value).indent(ElementProcessor.indentationSize));
                 }else if(field.isAnnotationPresent(ChildList.class)){
                     if(!field.getType().equals(List.class)){
                         throw new IllegalElementException("A child list must be a List");
                     }
                     List<Object> children = (List<Object>) value;
                     for (Object child : children) {
-                        builder.append(getMarkup(child));
+                        builder.append(getMarkup(child).indent(ElementProcessor.indentationSize));
                     }
                 }
             }
