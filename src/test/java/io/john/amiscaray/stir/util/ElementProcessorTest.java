@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.util;
 import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
+import io.john.amiscaray.stir.domain.elements.Style;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.EmptyForm;
 import io.john.amiscaray.stir.stub.FormWithChildList;
@@ -81,6 +82,13 @@ class ElementProcessorTest {
 
         HTMLDocument doc = HTMLDocument.builder()
                         .addElement(sampleLibForm)
+                        .addStyle(new Style(
+                                "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
+                                "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
+                                "anonymous"
+                        ))
+                        .addStyle(new Style("./styles.css"))
+                        .title("Hello")
                         .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/testLibFormAsDocExpected.html"), doc.generateDocumentString());
 

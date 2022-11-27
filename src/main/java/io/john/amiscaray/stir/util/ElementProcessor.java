@@ -49,10 +49,14 @@ public class ElementProcessor {
             Object value = f.get(obj);
             if(f.isAnnotationPresent(Attribute.class)){
                 f.setAccessible(true);
+                Attribute meta = f.getAnnotation(Attribute.class);
                 if(value == null){
-                    value = f.getAnnotation(Attribute.class).defaultValue();
+                    value = meta.defaultValue();
+                    if(meta.defaultValue().isEmpty()){
+                        continue;
+                    }
                 }
-                builder.append(" ").append(f.getName()).append("=\"").append(value).append("\"");
+                builder.append(" ").append(meta.name()).append("=\"").append(value).append("\"");
             }else if(f.isAnnotationPresent(Id.class)){
                 if(value == null){
                     continue;

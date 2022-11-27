@@ -8,6 +8,6 @@ import java.lang.annotation.*;
 public @interface Attribute {
 
     String name();
-    String defaultValue();
+    String defaultValue() default "";
 
 }

@@ -1,5 +1,6 @@
 package io.john.amiscaray.stir.domain;
 
+import io.john.amiscaray.stir.domain.elements.Style;
 import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.util.ArrayList;
@@ -8,6 +9,7 @@ import java.util.List;
 public class HTMLDocument {
 
     private final List<Object> elements = new ArrayList<>();
+    private final List<Style> styleSheets = new ArrayList<>();
     private String title;
     private final ElementProcessor processor = ElementProcessor.getInstance();
 
@@ -33,9 +35,23 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocument.Builder addStyle(Style style){
+            doc.styleSheets.add(style);
+            return this;
+        }
+
         public HTMLDocument build(){
             return doc;
         }
+
+    }
+
+    private String generateStylesMarkup(){
+
+        return String.format("%s".repeat(styleSheets.size()).trim(),
+                styleSheets.stream()
+                        .map(element -> processor.getMarkup(element).indent(ElementProcessor.getIndentationSize() * 2))
+                        .toArray());
 
     }
 
@@ -48,6 +64,9 @@ public class HTMLDocument {
                         <title>""" + (title != null ? title : "Title") +
                 """
                 </title>
+                """ +
+                generateStylesMarkup() +
+                """
                     </head>
                     <body>
                 """ +
