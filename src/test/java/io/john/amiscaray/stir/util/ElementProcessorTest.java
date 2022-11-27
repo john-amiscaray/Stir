@@ -74,7 +74,7 @@ class ElementProcessorTest {
     @Test
     void testLibForm() throws IOException {
 
-        assertEquals(htmlLoader.getHTMLContentOf("html/testLibFormExpected.html"), processor.getMarkup(sampleLibForm));
+        assertEquals(htmlLoader.getHTMLContentOf("html/libFormExpected.html"), processor.getMarkup(sampleLibForm));
 
     }
 
@@ -91,7 +91,7 @@ class ElementProcessorTest {
                         .addStyle(new Style("./styles.css"))
                         .title("Hello")
                         .build();
-        assertEquals(htmlLoader.getHTMLContentOf("html/testLibFormAsDocExpected.html"), doc.generateDocumentString());
+        assertEquals(htmlLoader.getHTMLContentOf("html/libFormAsDocExpected.html"), doc.generateDocumentString());
 
     }
 
@@ -103,7 +103,37 @@ class ElementProcessorTest {
                 .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.FOOTER)
                 .title("Hello")
                 .build();
-        assertEquals(htmlLoader.getHTMLContentOf("html/testDocWithFooterScriptExpected.html"), doc.generateDocumentString());
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithFooterScriptExpected.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    void testLibFormAsDocWithHeaderScript() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .addElement(sampleLibForm)
+                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
+                .title("Hello")
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithHeaderScriptExpected.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    void testDocWithHeaderScriptAndStyles() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .addElement(sampleLibForm)
+                .addStyle(new Style(
+                        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
+                        "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
+                        "anonymous"
+                ))
+                .addStyle(new Style("./styles.css"))
+                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
+                .title("Hello")
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithHeaderScriptAndStyleExpected.html"), doc.generateDocumentString());
 
     }
 

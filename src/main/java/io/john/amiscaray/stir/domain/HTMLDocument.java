@@ -78,6 +78,14 @@ public class HTMLDocument {
                 );
     }
 
+    private String generateHeaderScriptsMarkup(){
+        return String.format("%s".repeat(headerScripts.size()),
+                headerScripts.stream()
+                        .map(element -> processor.getMarkup(element).indent(ElementProcessor.getIndentationSize() * 2))
+                        .toArray()
+        );
+    }
+
     public String generateDocumentString(){
         String builder = """
                 <!DOCTYPE html>
@@ -87,7 +95,7 @@ public class HTMLDocument {
                         <title>""" + (title != null ? title : "Title") +
                 """
                 </title>
-                """ +
+                """ + generateHeaderScriptsMarkup() +
                 generateStylesMarkup() +
                 """
                     </head>
