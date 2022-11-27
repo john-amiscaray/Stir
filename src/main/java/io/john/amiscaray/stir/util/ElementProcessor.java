@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
+import lombok.Getter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -10,6 +11,7 @@ import java.util.List;
 public class ElementProcessor {
 
     private static ElementProcessor instance;
+    @Getter
     private static int indentationSize = 4;
 
     private ElementProcessor(){}
@@ -19,10 +21,6 @@ public class ElementProcessor {
             instance = new ElementProcessor();
         }
         return instance;
-    }
-
-    public static void setIndentationSize(int size){
-        ElementProcessor.indentationSize = size;
     }
 
     public String getTagName(Class clazz){
