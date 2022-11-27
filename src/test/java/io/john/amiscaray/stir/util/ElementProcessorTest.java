@@ -6,10 +6,7 @@ import io.john.amiscaray.stir.domain.elements.Input;
 import io.john.amiscaray.stir.domain.elements.Script;
 import io.john.amiscaray.stir.domain.elements.Style;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
-import io.john.amiscaray.stir.stub.EmptyForm;
-import io.john.amiscaray.stir.stub.FormWithChildList;
-import io.john.amiscaray.stir.stub.FormWithInputs;
-import io.john.amiscaray.stir.stub.SimpleForm;
+import io.john.amiscaray.stir.stub.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -145,6 +142,13 @@ class ElementProcessorTest {
                 .addField(username)
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/formWithLabelExpected.html"), processor.getMarkup(form));
+
+    }
+
+    @Test
+    void paragraphWithInnerContent() throws IOException {
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithInnerContentExpected.html"), processor.getMarkup(new Paragraph("This is a paragraph")));
 
     }
 

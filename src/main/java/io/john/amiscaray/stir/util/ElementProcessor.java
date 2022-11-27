@@ -124,12 +124,15 @@ public class ElementProcessor {
             buildElementOpeningTag(builder, obj, elementMeta);
             for (Field field: fields) {
                 Object value = field.get(obj);
-                if(value == null){
-                    continue;
-                }
                 if(field.isAnnotationPresent(Nested.class)){
+                    if(value == null){
+                        continue;
+                    }
                     builder.append(getMarkup(value).indent(ElementProcessor.indentationSize));
                 }else if(field.isAnnotationPresent(ChildList.class)){
+                    if(value == null){
+                        continue;
+                    }
                     if(!field.getType().equals(List.class)){
                         throw new IllegalElementException("A child list must be a List");
                     }
@@ -137,6 +140,9 @@ public class ElementProcessor {
                     for (Object child : children) {
                         builder.append(getMarkup(child).indent(ElementProcessor.indentationSize));
                     }
+                }else if(field.isAnnotationPresent(InnerContent.class)){
+                    InnerContent content = field.getAnnotation(InnerContent.class);
+                    builder.append(value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue());
                 }
             }
             if(elementMeta.hasClosing()){
