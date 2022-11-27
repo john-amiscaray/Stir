@@ -6,6 +6,7 @@ import lombok.Getter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Arrays;
 import java.util.List;
 
 public class ElementProcessor {
@@ -36,6 +37,17 @@ public class ElementProcessor {
 
     }
 
+    public Field[] getAllFields(Class type){
+
+        Field[] declared = type.getDeclaredFields();
+        Field[] superFields = type.getSuperclass().getDeclaredFields();
+        Field[] fields = new Field[declared.length + superFields.length];
+        Arrays.setAll(fields, i ->
+                (i < superFields.length ? superFields[i] : declared[i - superFields.length]));
+        return fields;
+
+    }
+
     private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta) throws IllegalAccessException {
 
         Class clazz = obj.getClass();
@@ -43,7 +55,7 @@ public class ElementProcessor {
         builder.append("<")
                 .append(tagName);
 
-        Field[] fields = clazz.getDeclaredFields();
+        Field[] fields = getAllFields(clazz);
         for (Field f: fields) {
             f.setAccessible(true);
             Object value = f.get(obj);
@@ -83,7 +95,7 @@ public class ElementProcessor {
     private void buildLabel(StringBuilder builder, Field label, Object parent) throws IllegalAccessException {
 
         String parentId = null;
-        Field[] fields = parent.getClass().getDeclaredFields();
+        Field[] fields = getAllFields(parent.getClass());
         for (Field f : fields) {
             f.setAccessible(true);
             if(f.isAnnotationPresent(Id.class)){
@@ -112,7 +124,7 @@ public class ElementProcessor {
         StringBuilder builder = new StringBuilder();
 
         try{
-            Field[] fields = type.getDeclaredFields();
+            Field[] fields = getAllFields(type);
             HTMLElement elementMeta = (HTMLElement) type.getAnnotation(HTMLElement.class);
 
             for(Field field: fields){

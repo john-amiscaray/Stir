@@ -2,15 +2,15 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @HTMLElement(tagName = "script", newLineAfterOpening = false)
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Script {
+@Data
+public class Script extends AbstractElement{
 
     @Attribute(name="src")
     private final String src;

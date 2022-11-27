@@ -2,17 +2,15 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 @HTMLElement(tagName="link", hasClosing = false)
 @Builder
-public class Style {
+public class Style extends AbstractElement{
 
     @Attribute(name="href", defaultValue="./styles.css")
     private final String href;

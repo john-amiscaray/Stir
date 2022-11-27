@@ -5,16 +5,18 @@ import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@EqualsAndHashCode(callSuper = true)
 @HTMLElement(tagName = "form")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Form {
+public class Form extends AbstractElement{
 
     @ChildList
     private List<Input> fields = new ArrayList<>();
@@ -56,6 +58,20 @@ public class Form {
         public Builder action(String action){
 
             form.action = action;
+            return this;
+
+        }
+
+        public Builder id(String id){
+
+            form.id = id;
+            return this;
+
+        }
+
+        public Builder addClass(String clazz){
+
+            form.classList.add(clazz);
             return this;
 
         }

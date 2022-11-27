@@ -2,18 +2,14 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import io.john.amiscaray.stir.annotation.Id;
 import io.john.amiscaray.stir.annotation.Label;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.*;
 
+@EqualsAndHashCode(callSuper = true)
 @HTMLElement(tagName = "input", hasClosing = false)
 @AllArgsConstructor
 @Data
-public class Input {
-
-    @Id
-    private String id;
+public class Input extends AbstractElement{
 
     @Attribute(name="type", defaultValue="text")
     private String type;
@@ -23,5 +19,14 @@ public class Input {
 
     @Label(defaultText="")
     private String label;
+
+    public Input(String id, String type, String value, String label){
+
+        this.id = id;
+        this.type = type;
+        this.value = value;
+        this.label = label;
+
+    }
 
 }
