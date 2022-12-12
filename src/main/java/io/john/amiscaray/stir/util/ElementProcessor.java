@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
+import io.john.amiscaray.stir.domain.elements.CacheableElement;
 import lombok.Getter;
 
 import java.lang.annotation.Annotation;
@@ -122,6 +123,16 @@ public class ElementProcessor {
 
     }
 
+    public String getMarkup(CacheableElement element){
+
+        if(element.getCacheStatus().equals(CacheableElement.CacheStatus.CLEAN)){
+            return element.getCacheContents();
+        }
+
+        return getMarkup((Object) element);
+
+    }
+
     public String getMarkup(Object obj){
 
         String tagName = getTagName(obj.getClass());
@@ -131,6 +142,7 @@ public class ElementProcessor {
         }
         Class type = obj.getClass();
         StringBuilder builder = new StringBuilder();
+        boolean hasChildren = false;
 
         try{
             Field[] fields = getAllFields(type);
@@ -149,11 +161,13 @@ public class ElementProcessor {
                     if(value == null){
                         continue;
                     }
+                    hasChildren = true;
                     builder.append(getMarkup(value).indent(ElementProcessor.indentationSize));
                 }else if(field.isAnnotationPresent(ChildList.class)){
                     if(value == null){
                         continue;
                     }
+                    hasChildren = true;
                     if(!field.getType().equals(List.class)){
                         throw new IllegalElementException("A child list must be a List");
                     }
@@ -173,7 +187,9 @@ public class ElementProcessor {
         }catch(IllegalAccessException ex){
             ex.printStackTrace();
         }
-
+        if(obj instanceof CacheableElement && !hasChildren){
+            ((CacheableElement) obj).setCacheContents(builder.toString());
+        }
         return builder.toString();
 
     }

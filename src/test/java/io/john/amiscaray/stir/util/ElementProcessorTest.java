@@ -90,4 +90,12 @@ public class ElementProcessorTest {
 
     }
 
+    @Test
+    public void testProcessorWritesInputToCache(){
+
+        String content = processor.getMarkup(username);
+        assertEquals(content, username.getCacheContents());
+
+    }
+
 }
