@@ -8,20 +8,33 @@ import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
-@Data
 @RequiredArgsConstructor
 @AllArgsConstructor
 @HTMLElement(tagName="link", hasClosing = false)
-public class Style extends AbstractElement{
+public class Style extends AbstractUIElement {
 
     @Attribute(name="href", defaultValue="./styles.css")
+    @Getter
     private final String href;
     @Attribute(name="rel")
+    @Getter
     private final String rel = "stylesheet";
     @Attribute(name="integrity")
+    @Getter
     private String integrity;
     @Attribute(name="crossorigin")
+    @Getter
     private String crossOrigin;
+
+    public void setIntegrity(String integrity) {
+        propertyChangeSupport.firePropertyChange("integrity", this.integrity, integrity);
+        this.integrity = integrity;
+    }
+
+    public void setCrossOrigin(String crossOrigin) {
+        propertyChangeSupport.firePropertyChange("crossOrigin", this.crossOrigin, crossOrigin);
+        this.crossOrigin = crossOrigin;
+    }
 
     public static Builder builder(){ return new Builder(); }
 
