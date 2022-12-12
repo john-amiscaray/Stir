@@ -9,6 +9,7 @@ import lombok.*;
 @HTMLElement(tagName = "input", hasClosing = false)
 @AllArgsConstructor
 @Data
+@Builder
 public class Input extends AbstractElement{
 
     @Attribute(name="type", defaultValue="text")
