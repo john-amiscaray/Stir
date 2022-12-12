@@ -4,6 +4,7 @@ import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -23,6 +24,15 @@ public class ElementProcessorTest {
             .action("/path")
             .method("post")
             .build();
+
+    @AfterEach
+    public void tearDown(){
+
+        sampleLibForm.emptyCache();
+        username.emptyCache();
+        message.emptyCache();
+
+    }
 
     @Test
     public void testMyFormAForm() {
@@ -97,5 +107,42 @@ public class ElementProcessorTest {
         assertEquals(content, username.getCacheContents());
 
     }
+
+    @Test
+    public void testProcessorInputCache(){
+
+        String computedMarkup = processor.getMarkup(username);
+        String markupFromCache = processor.getMarkup(username);
+        assertEquals(computedMarkup, markupFromCache);
+
+    }
+
+    @Test
+    public void testProcessorWritesFormToCache() throws IOException {
+
+        processor.getMarkup(sampleLibForm);
+        assertEquals(htmlLoader.getHTMLContentOf("html/formCacheContent.html"), sampleLibForm.getCacheContents());
+
+    }
+
+    @Test
+    public void testProcessorFormCache(){
+
+        String computedMarkup = processor.getMarkup(sampleLibForm);
+        String markUpFromCache = processor.getMarkup(sampleLibForm);
+        assertEquals(computedMarkup, markUpFromCache);
+
+    }
+
+    @Test
+    public void testProcessorFormWithInputsCache(){
+
+        FormWithInputs stub = new FormWithInputs();
+        String computedMarkup = processor.getMarkup(stub);
+        String markUpFromCache = processor.getMarkup(stub);
+        assertEquals(computedMarkup, markUpFromCache);
+
+    }
+
 
 }

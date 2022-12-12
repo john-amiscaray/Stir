@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -13,6 +14,10 @@ public abstract class CacheableElement {
 
     @Getter
     private String cacheContents;
+
+    @Getter
+    @Setter
+    private boolean hasChildren = false;
 
     public enum CacheStatus {
         EMPTY,

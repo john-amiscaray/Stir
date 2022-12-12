@@ -7,8 +7,10 @@ import lombok.Getter;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ElementProcessor {
 
@@ -123,10 +125,34 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkup(CacheableElement element){
+    public String getMarkup(CacheableElement element) {
 
         if(element.getCacheStatus().equals(CacheableElement.CacheStatus.CLEAN)){
-            return element.getCacheContents();
+            if(!element.isHasChildren()){
+                return element.getCacheContents();
+            }else{
+                try{
+                    List<String> childContent = new ArrayList<>();
+                    Class type = element.getClass();
+                    Field[] fields = getAllFields(type);
+                    for(Field field: fields){
+                        field.setAccessible(true);
+                        Object value = field.get(element);
+                        if(field.isAnnotationPresent(ChildList.class)){
+                            List<Object> children = (List<Object>) value;
+                            childContent.addAll(children.stream()
+                                    .map(this::getMarkup)
+                                    .map(String::stripTrailing)
+                                    .collect(Collectors.toList()));
+                        }else if(field.isAnnotationPresent(Nested.class)){
+                            childContent.add(getMarkup(value).stripTrailing());
+                        }
+                    }
+                    return String.format(element.getCacheContents(), childContent.toArray());
+                }catch(IllegalAccessException ex){
+                    ex.printStackTrace();
+                }
+            }
         }
 
         return getMarkup((Object) element);
@@ -142,6 +168,7 @@ public class ElementProcessor {
         }
         Class type = obj.getClass();
         StringBuilder builder = new StringBuilder();
+        StringBuilder cacheBuilder = new StringBuilder();
         boolean hasChildren = false;
 
         try{
@@ -152,9 +179,11 @@ public class ElementProcessor {
                 field.setAccessible(true);
                 if(field.isAnnotationPresent(Label.class) && field.get(obj) != null){
                     buildLabel(builder, field, obj);
+                    buildLabel(cacheBuilder, field, obj);
                 }
             }
             buildElementOpeningTag(builder, obj, elementMeta);
+            buildElementOpeningTag(cacheBuilder, obj, elementMeta);
             for (Field field: fields) {
                 Object value = field.get(obj);
                 if(field.isAnnotationPresent(Nested.class)){
@@ -163,6 +192,7 @@ public class ElementProcessor {
                     }
                     hasChildren = true;
                     builder.append(getMarkup(value).indent(ElementProcessor.indentationSize));
+                    cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
                 }else if(field.isAnnotationPresent(ChildList.class)){
                     if(value == null){
                         continue;
@@ -174,21 +204,30 @@ public class ElementProcessor {
                     List<Object> children = (List<Object>) value;
                     for (Object child : children) {
                         builder.append(getMarkup(child).indent(ElementProcessor.indentationSize));
+                        cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
                     }
                 }else if(field.isAnnotationPresent(InnerContent.class)){
                     InnerContent content = field.getAnnotation(InnerContent.class);
-                    builder.append(value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue());
+                    String finalContent = value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue();
+                    builder.append(finalContent);
+                    cacheBuilder.append(finalContent);
                 }
             }
             if(elementMeta.hasClosing()){
                 buildElementClosingTag(builder, tagName);
+                buildElementClosingTag(cacheBuilder, tagName);
             }
 
         }catch(IllegalAccessException ex){
             ex.printStackTrace();
         }
-        if(obj instanceof CacheableElement && !hasChildren){
-            ((CacheableElement) obj).setCacheContents(builder.toString());
+        if(obj instanceof CacheableElement){
+            if(!hasChildren){
+                ((CacheableElement) obj).setCacheContents(builder.toString());
+            }else{
+                ((CacheableElement) obj).setCacheContents(cacheBuilder.toString());
+            }
+            ((CacheableElement) obj).setHasChildren(hasChildren);
         }
         return builder.toString();
 
