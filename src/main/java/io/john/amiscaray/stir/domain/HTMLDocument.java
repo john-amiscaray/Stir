@@ -17,6 +17,17 @@ public class HTMLDocument {
     private final List<Meta> metaList = new ArrayList<>();
     private String title;
     private final ElementProcessor processor = ElementProcessor.getInstance();
+    private final static String format =
+            """
+            <!DOCTYPE html>
+            <html lang="en">
+                <head>
+                    <meta charset="UTF-8">%s
+                    <title>%s</title>%s%s
+                </head>
+                <body>%s%s
+                </body>
+            </html>""";
 
     public static Builder builder(){
         return new Builder();
@@ -71,17 +82,6 @@ public class HTMLDocument {
     }
 
     public String generateDocumentString(){
-        String format =
-                """
-                <!DOCTYPE html>
-                <html lang="en">
-                    <head>
-                        <meta charset="UTF-8">%s
-                        <title>%s</title>%s%s
-                    </head>
-                    <body>%s%s
-                    </body>
-                </html>""";
         String metaMarkup = processor.getMarkupForElementList(metaList, 2);
         String finalTitle = (title != null ? title : "Title");
         String headerScriptsMarkup = processor.getMarkupForElementList(headerScripts, 2);
