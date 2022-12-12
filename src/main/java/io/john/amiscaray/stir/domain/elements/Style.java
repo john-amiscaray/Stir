@@ -28,11 +28,10 @@ public class Style extends AbstractElement{
     public static class Builder {
 
         private String href;
-        private String rel;
         private String integrity;
         private String crossOrigin;
         private String id;
-        private List<String> classList = new ArrayList<>();
+        private final List<String> classList = new ArrayList<>();
 
         public Builder href(String href){
             this.href = href;
@@ -60,7 +59,10 @@ public class Style extends AbstractElement{
         }
 
         public Style build(){
-            return new Style(href, integrity, crossOrigin);
+            Style result = new Style(href, integrity, crossOrigin);
+            result.setId(id);
+            result.setClassList(classList);
+            return result;
         }
 
     }
