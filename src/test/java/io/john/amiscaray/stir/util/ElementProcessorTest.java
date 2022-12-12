@@ -1,10 +1,7 @@
 package io.john.amiscaray.stir.util;
 
-import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
-import io.john.amiscaray.stir.domain.elements.Script;
-import io.john.amiscaray.stir.domain.elements.Style;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
 import org.junit.jupiter.api.Test;
@@ -14,7 +11,7 @@ import java.io.IOException;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-class ElementProcessorTest {
+public class ElementProcessorTest {
 
     private final ElementProcessor processor = ElementProcessor.getInstance();
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
@@ -28,28 +25,28 @@ class ElementProcessorTest {
             .build();
 
     @Test
-    void isMyFormAForm() {
+    public void testMyFormAForm() {
 
         assertEquals(processor.getTagName(EmptyForm.class), "form");
 
     }
 
     @Test
-    void myFormMarkup() throws IOException {
+    public void testMyFormMarkup() throws IOException {
 
         assertEquals(htmlLoader.getHTMLContentOf("html/myFormMarkUpExpected.html") , processor.getMarkup(new EmptyForm()));
 
     }
 
     @Test
-    void simpleFormWithAttributes() throws IOException {
+    public void testSimpleFormWithAttributes() throws IOException {
 
         assertEquals(htmlLoader.getHTMLContentOf("html/simpleFormWithAttributesExpected.html"), processor.getMarkup(new SimpleForm()));
 
     }
 
     @Test
-    void formWithInputs() throws IOException {
+    public void testFormWithInputs() throws IOException {
 
         FormWithInputs form = new FormWithInputs();
 
@@ -58,7 +55,7 @@ class ElementProcessorTest {
     }
 
     @Test
-    void formWithChildList() throws IOException {
+    public void testFormWithChildList() throws IOException {
 
         FormWithChildList form = FormWithChildList.builder()
                 .addInput(username)
@@ -69,73 +66,14 @@ class ElementProcessorTest {
     }
 
     @Test
-    void testLibForm() throws IOException {
+    public void testLibForm() throws IOException {
 
         assertEquals(htmlLoader.getHTMLContentOf("html/libFormExpected.html"), processor.getMarkup(sampleLibForm));
 
     }
 
     @Test
-    void testLibFormAsDocWithStyles() throws IOException {
-
-        HTMLDocument doc = HTMLDocument.builder()
-                        .addElement(sampleLibForm)
-                        .addStyle(new Style(
-                                "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
-                                "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
-                                "anonymous"
-                        ))
-                        .addStyle(new Style("./styles.css"))
-                        .title("Hello")
-                        .build();
-        assertEquals(htmlLoader.getHTMLContentOf("html/libFormAsDocExpected.html"), doc.generateDocumentString());
-
-    }
-
-    @Test
-    void testLibFormAsDocWithFooterScript() throws IOException {
-
-        HTMLDocument doc = HTMLDocument.builder()
-                .addElement(sampleLibForm)
-                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.FOOTER)
-                .title("Hello")
-                .build();
-        assertEquals(htmlLoader.getHTMLContentOf("html/docWithFooterScriptExpected.html"), doc.generateDocumentString());
-
-    }
-
-    @Test
-    void testLibFormAsDocWithHeaderScript() throws IOException {
-
-        HTMLDocument doc = HTMLDocument.builder()
-                .addElement(sampleLibForm)
-                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
-                .title("Hello")
-                .build();
-        assertEquals(htmlLoader.getHTMLContentOf("html/docWithHeaderScriptExpected.html"), doc.generateDocumentString());
-
-    }
-
-    @Test
-    void testDocWithHeaderScriptAndStyles() throws IOException {
-
-        HTMLDocument doc = HTMLDocument.builder()
-                .addElement(sampleLibForm)
-                .addStyle(new Style(
-                        "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
-                        "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
-                        "anonymous"
-                ))
-                .addStyle(new Style("./styles.css"))
-                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
-                .title("Hello")
-                .build();
-        assertEquals(htmlLoader.getHTMLContentOf("html/docWithHeaderScriptAndStyleExpected.html"), doc.generateDocumentString());
-
-    }
-
-    @Test
-    void FormWithLabel() throws IOException {
+    public void testFormWithLabel() throws IOException {
 
         Input username = new Input("text", "text", "John", "Username");
         Form form = Form.builder()
@@ -146,7 +84,7 @@ class ElementProcessorTest {
     }
 
     @Test
-    void paragraphWithInnerContent() throws IOException {
+    public void testParagraphWithInnerContent() throws IOException {
 
         assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithInnerContentExpected.html"), processor.getMarkup(new Paragraph("This is a paragraph")));
 
