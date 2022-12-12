@@ -48,6 +48,15 @@ public class ElementProcessor {
 
     }
 
+    public String getMarkupForElementList(List<?> elements, int indentationLevel){
+
+        return String.format("%s".repeat(elements.size()),
+                elements.stream()
+                        .map(element -> getMarkup(element).indent(ElementProcessor.getIndentationSize() * indentationLevel))
+                        .toArray()).stripTrailing();
+
+    }
+
     private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta) throws IllegalAccessException {
 
         Class clazz = obj.getClass();

@@ -1,5 +1,6 @@
 package io.john.amiscaray.stir.domain;
 
+import io.john.amiscaray.stir.domain.elements.Meta;
 import io.john.amiscaray.stir.domain.elements.Script;
 import io.john.amiscaray.stir.domain.elements.Style;
 import io.john.amiscaray.stir.util.ElementProcessor;
@@ -13,6 +14,7 @@ public class HTMLDocument {
     private final List<Style> styleSheets = new ArrayList<>();
     private final List<Script> headerScripts = new ArrayList<>();
     private final List<Script> footerScripts = new ArrayList<>();
+    private final List<Meta> metaList = new ArrayList<>();
     private String title;
     private final ElementProcessor processor = ElementProcessor.getInstance();
 
@@ -57,57 +59,43 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocument.Builder addMeta(Meta meta){
+            doc.metaList.add(meta);
+            return this;
+        }
+
         public HTMLDocument build(){
             return doc;
         }
 
     }
 
-    private String generateStylesMarkup(){
-        return String.format("%s".repeat(styleSheets.size()),
-                styleSheets.stream()
-                        .map(element -> processor.getMarkup(element).indent(ElementProcessor.getIndentationSize() * 2))
-                        .toArray());
-    }
-
-    private String generateFooterScriptsMarkup(){
-        return String.format("%s".repeat(footerScripts.size()),
-                footerScripts.stream()
-                        .map(element -> processor.getMarkup(element).indent(ElementProcessor.getIndentationSize() * 2))
-                        .toArray()
-                );
-    }
-
-    private String generateHeaderScriptsMarkup(){
-        return String.format("%s".repeat(headerScripts.size()),
-                headerScripts.stream()
-                        .map(element -> processor.getMarkup(element).indent(ElementProcessor.getIndentationSize() * 2))
-                        .toArray()
-        );
-    }
-
     public String generateDocumentString(){
-        String builder = """
+        String format =
+                """
                 <!DOCTYPE html>
                 <html lang="en">
                     <head>
-                        <meta charset="UTF-8">
-                        <title>""" + (title != null ? title : "Title") +
-                """
-                </title>
-                """ + generateHeaderScriptsMarkup() +
-                generateStylesMarkup() +
-                """
+                        <meta charset="UTF-8">%s
+                        <title>%s</title>%s%s
                     </head>
-                    <body>
-                """ +
-                "%s\n".repeat(elements.size()).trim() +
-                generateFooterScriptsMarkup()
-                +
-                """
+                    <body>%s%s
                     </body>
                 </html>""";
-        return String.format(builder, elements.stream().map(element -> processor.getMarkup(element).indent(ElementProcessor.getIndentationSize() * 2)).toArray());
+        String metaMarkup = processor.getMarkupForElementList(metaList, 2);
+        String finalTitle = (title != null ? title : "Title");
+        String headerScriptsMarkup = processor.getMarkupForElementList(headerScripts, 2);
+        String stylesMarkup = processor.getMarkupForElementList(styleSheets, 2);
+        String elementsMarkup = processor.getMarkupForElementList(elements, 2);
+        String footerScriptsMarkup = processor.getMarkupForElementList(footerScripts, 2);
+        return String.format(format,
+                !metaMarkup.isEmpty() ? "\n" + metaMarkup : "",
+                finalTitle,
+                !headerScriptsMarkup.isEmpty() ? "\n" + headerScriptsMarkup : "",
+                !stylesMarkup.isEmpty() ? "\n" + stylesMarkup : "",
+                !elementsMarkup.isEmpty() ? "\n" + elementsMarkup : "",
+                !footerScriptsMarkup.isEmpty() ? "\n" + footerScriptsMarkup : ""
+        );
     }
 
 }

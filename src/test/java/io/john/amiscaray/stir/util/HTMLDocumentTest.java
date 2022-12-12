@@ -1,10 +1,7 @@
 package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.domain.HTMLDocument;
-import io.john.amiscaray.stir.domain.elements.Form;
-import io.john.amiscaray.stir.domain.elements.Input;
-import io.john.amiscaray.stir.domain.elements.Script;
-import io.john.amiscaray.stir.domain.elements.Style;
+import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import org.junit.jupiter.api.Test;
 
@@ -81,6 +78,20 @@ public class HTMLDocumentTest {
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithHeaderScriptAndStyleExpected.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithMeta() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .addMeta(new Meta("viewport", "width=device-width, initial-scale=1.0"))
+                .addMeta(new Meta("robots", "noindex"))
+                .addMeta(Meta.builder().httpEquiv("refresh").content("30").build())
+                .title("Hello")
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithMeta.html"), doc.generateDocumentString());
 
     }
 
