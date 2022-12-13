@@ -2,7 +2,7 @@ package io.john.amiscaray.stir.domain;
 
 import io.john.amiscaray.stir.domain.elements.Meta;
 import io.john.amiscaray.stir.domain.elements.Script;
-import io.john.amiscaray.stir.domain.elements.Style;
+import io.john.amiscaray.stir.domain.elements.LinkedStyle;
 import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
 public class HTMLDocument {
 
     private final List<Object> elements = new ArrayList<>();
-    private final List<Style> styleSheets = new ArrayList<>();
+    private final List<LinkedStyle> styleSheets = new ArrayList<>();
     private final List<Script> headerScripts = new ArrayList<>();
     private final List<Script> footerScripts = new ArrayList<>();
     private final List<Meta> metaList = new ArrayList<>();
@@ -22,7 +22,8 @@ public class HTMLDocument {
             <!DOCTYPE html>
             <html lang="en">
                 <head>
-                    <meta charset="UTF-8">%s
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">%s
                     <title>%s</title>%s%s
                 </head>
                 <body>%s%s
@@ -65,7 +66,7 @@ public class HTMLDocument {
             return this;
         }
 
-        public HTMLDocument.Builder addStyle(Style style){
+        public HTMLDocument.Builder addStyle(LinkedStyle style){
             doc.styleSheets.add(style);
             return this;
         }

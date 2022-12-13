@@ -28,12 +28,12 @@ public class HTMLDocumentTest {
 
         HTMLDocument doc = HTMLDocument.builder()
                 .addElement(sampleLibForm)
-                .addStyle(new Style(
+                .addStyle(new LinkedStyle(
                         "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
                         "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
                         "anonymous"
                 ))
-                .addStyle(new Style("./styles.css"))
+                .addStyle(new LinkedStyle("./styles.css"))
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/libFormAsDocExpected.html"), doc.generateDocumentString());
@@ -69,12 +69,12 @@ public class HTMLDocumentTest {
 
         HTMLDocument doc = HTMLDocument.builder()
                 .addElement(sampleLibForm)
-                .addStyle(new Style(
+                .addStyle(new LinkedStyle(
                         "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
                         "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
                         "anonymous"
                 ))
-                .addStyle(new Style("./styles.css"))
+                .addStyle(new LinkedStyle("./styles.css"))
                 .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
                 .title("Hello")
                 .build();

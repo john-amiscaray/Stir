@@ -11,7 +11,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @AllArgsConstructor
 @HTMLElement(tagName="link", hasClosing = false)
-public class Style extends AbstractUIElement {
+public class LinkedStyle extends AbstractUIElement {
 
     @Attribute(name="href", defaultValue="./styles.css")
     @Getter
@@ -71,8 +71,8 @@ public class Style extends AbstractUIElement {
             return this;
         }
 
-        public Style build(){
-            Style result = new Style(href, integrity, crossOrigin);
+        public LinkedStyle build(){
+            LinkedStyle result = new LinkedStyle(href, integrity, crossOrigin);
             result.setId(id);
             result.setClassList(classList);
             return result;
