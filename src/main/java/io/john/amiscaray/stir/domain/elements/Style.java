@@ -1,81 +1,70 @@
 package io.john.amiscaray.stir.domain.elements;
 
-import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.john.amiscaray.stir.annotation.InnerContent;
+import io.john.amiscaray.stir.util.ElementProcessor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
-@RequiredArgsConstructor
-@AllArgsConstructor
-@HTMLElement(tagName="link", hasClosing = false)
-public class Style extends AbstractUIElement {
+@HTMLElement(tagName = "style")
+@Data
+@NoArgsConstructor
+public class Style extends CacheableElement{
 
-    @Attribute(name="href", defaultValue="./styles.css")
-    @Getter
-    private final String href;
-    @Attribute(name="rel")
-    @Getter
-    private final String rel = "stylesheet";
-    @Attribute(name="integrity")
-    @Getter
-    private String integrity;
-    @Attribute(name="crossorigin")
-    @Getter
-    private String crossOrigin;
+    @InnerContent(encode = false)
+    private StringBuilder css = new StringBuilder();
 
-    public void setIntegrity(String integrity) {
-        propertyChangeSupport.firePropertyChange("integrity", this.integrity, integrity);
-        this.integrity = integrity;
+    private ElementProcessor processor = ElementProcessor.getInstance();
+
+    public Style(String styles){
+
+        css.append(styles);
+
     }
 
-    public void setCrossOrigin(String crossOrigin) {
-        propertyChangeSupport.firePropertyChange("crossOrigin", this.crossOrigin, crossOrigin);
-        this.crossOrigin = crossOrigin;
+    public void addRule(CssRule rule){
+
+        css.append(processor.processStyle(rule));
+
     }
 
-    public static Builder builder(){ return new Builder(); }
+    public void addStylesAsRawString(String styles){
 
-    public static class Builder {
+        if(!css.isEmpty()){
+            css.append("\n");
+        }
+        css.append(styles);
 
-        private String href;
-        private String integrity;
-        private String crossOrigin;
-        private String id;
-        private final List<String> classList = new ArrayList<>();
+    }
 
-        public Builder href(String href){
-            this.href = href;
+    public static Builder builder(){
+        return new Builder();
+    }
+
+    public static class Builder{
+
+        private Style style = new Style();
+
+        public Builder addRule(CssRule rule){
+
+            style.addRule(rule);
             return this;
+
         }
 
-        public Builder integrity(String integrity){
-            this.integrity = integrity;
-            return this;
-        }
+        public Builder addLiteralCss(String cssLiteral){
 
-        public Builder crossOrigin(String crossOrigin){
-            this.crossOrigin = crossOrigin;
+            style.addStylesAsRawString(cssLiteral);
             return this;
-        }
 
-        public Builder id(String id){
-            this.id = id;
-            return this;
-        }
-
-        public Builder addClass(String clazz){
-            classList.add(clazz);
-            return this;
         }
 
         public Style build(){
-            Style result = new Style(href, integrity, crossOrigin);
-            result.setId(id);
-            result.setClassList(classList);
-            return result;
+
+            return style;
+
         }
 
     }

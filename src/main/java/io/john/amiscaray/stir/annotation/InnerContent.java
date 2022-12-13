@@ -10,5 +10,6 @@ import java.lang.annotation.Target;
 public @interface InnerContent {
 
     String defaultValue() default "";
+    boolean encode() default true;
 
 }

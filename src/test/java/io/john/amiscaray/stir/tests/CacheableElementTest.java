@@ -22,7 +22,7 @@ public class CacheableElementTest {
             .build();
 
     @AfterEach
-    void tearDown(){
+    void cleanUpEach(){
 
         in.emptyCache();
 
