@@ -68,7 +68,9 @@ public class CacheableElementTest {
         CompletableFuture<List<String>> future = new CompletableFuture<>();
         in.setClassList(classes);
         in.addPropertyChangeListener(e -> {
-            future.complete((List<String>) e.getOldValue());
+            if(e.getPropertyName().equals("classList")){
+                future.complete((List<String>) e.getOldValue());
+            }
         });
         in.addClass("another-class");
         assertEquals(List.of("my-class"), future.get());
