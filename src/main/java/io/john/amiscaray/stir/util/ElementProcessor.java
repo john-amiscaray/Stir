@@ -210,7 +210,7 @@ public class ElementProcessor {
                 }else if(field.isAnnotationPresent(InnerContent.class)){
                     InnerContent content = field.getAnnotation(InnerContent.class);
                     String finalContent = value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue();
-                    finalContent = encodeForFormatsOnly(finalContent);
+                    finalContent = encode(finalContent);
                     builder.append(finalContent);
                     cacheBuilder.append(finalContent);
                 }
@@ -239,12 +239,6 @@ public class ElementProcessor {
     public String encode(String dirty){
 
         return StringEscapeUtils.escapeHtml4(dirty.replaceAll("%", "%%"));
-
-    }
-
-    public String encodeForFormatsOnly(String dirty){
-
-        return dirty.replaceAll("%", "%%");
 
     }
     

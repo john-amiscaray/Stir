@@ -192,4 +192,19 @@ public class ElementProcessorTest {
 
     }
 
+    @Test
+    public void testInputWithQuotes() throws IOException {
+
+        Input in = new Input("myIn", "text", "\"<!--", "myIn");
+        assertEquals(htmlLoader.getHTMLContentOf("html/inputWithHTMLEntities.html"), processor.getMarkup(in));
+
+    }
+
+    @Test
+    public void testParagraphWithEntities() throws IOException {
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithEntities.html"), processor.getMarkup(new Paragraph("\"<!-- Hello World")));
+
+    }
+
 }
