@@ -23,6 +23,69 @@ public class HTMLDocumentTest {
             .method("post")
             .build();
 
+    private final CssRule animation = CssRule.builder()
+            .selector("@keyframes example")
+            .addNested(
+                    CssRule.builder()
+                            .selector("0%")
+                            .addStyle("background-color", "red")
+                            .addStyle("left", "0")
+                            .addStyle("top", "0")
+                            .build()
+            )
+            .addNested(
+                    CssRule.builder()
+                            .selector("25%")
+                            .addStyle("background-color", "yellow")
+                            .addStyle("left", "200px")
+                            .addStyle("top", "0")
+                            .build()
+            )
+            .addNested(
+                    CssRule.builder()
+                            .selector("50%")
+                            .addStyle("background-color", "blue")
+                            .addStyle("left", "200px")
+                            .addStyle("top", "200px")
+                            .build()
+            )
+            .addNested(
+                    CssRule.builder()
+                            .selector("75%")
+                            .addStyle("background-color", "green")
+                            .addStyle("left", "0")
+                            .addStyle("top", "200px")
+                            .build()
+            )
+            .addNested(
+                    CssRule.builder()
+                            .selector("100%")
+                            .addStyle("background-color", "red")
+                            .addStyle("left", "0")
+                            .addStyle("top", "0")
+                            .build()
+            )
+            .build();
+
+    private final String sampleCss = """
+                /* Set the background color of body to tan */
+                body {
+                    background-color: tan;
+                }              
+                /* On screens that are 992px or less, set the background color to blue */
+                @media screen and (max-width: 992px) {
+                    body {
+                        background-color: blue;
+                    }
+                }
+                /* On screens that are 600px or less, set the background color to olive */
+                @media screen and (max-width: 600px) {
+                    body {
+                        background-color: olive;
+                    }
+                }
+                """;
+
     @Test
     public void testLibFormAsDocWithStyles() throws IOException {
 
@@ -210,6 +273,48 @@ public class HTMLDocumentTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithStyleContent.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithStyleLiteral() throws IOException {
+
+        Style style = new Style(sampleCss);
+        HTMLDocument doc = HTMLDocument.builder()
+                .style(style)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithStyleLiteral.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithStyleLiteralAndBuiltStyle() throws IOException{
+
+        Style style = Style.builder()
+                .addRule(animation)
+                .addLiteralCss(sampleCss)
+                .build();
+        HTMLDocument doc = HTMLDocument.builder()
+                .style(style)
+                .title("Hello")
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithMixedCss.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testAddBuiltStyleToEnd() throws IOException{
+
+        Style style = Style.builder()
+                .addLiteralCss(sampleCss)
+                .addRule(animation)
+                .build();
+        HTMLDocument doc = HTMLDocument.builder()
+                .style(style)
+                .title("Hello")
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithMixedCss2.html"), doc.generateDocumentString());
 
     }
 

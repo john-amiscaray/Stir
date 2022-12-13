@@ -32,6 +32,9 @@ public class Style extends CacheableElement{
 
     public void addStylesAsRawString(String styles){
 
+        if(!css.isEmpty()){
+            css.append("\n");
+        }
         css.append(styles);
 
     }
@@ -45,12 +48,23 @@ public class Style extends CacheableElement{
         private Style style = new Style();
 
         public Builder addRule(CssRule rule){
+
             style.addRule(rule);
             return this;
+
+        }
+
+        public Builder addLiteralCss(String cssLiteral){
+
+            style.addStylesAsRawString(cssLiteral);
+            return this;
+
         }
 
         public Style build(){
+
             return style;
+
         }
 
     }
