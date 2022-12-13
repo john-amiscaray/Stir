@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.tests;
 import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
+import io.john.amiscaray.stir.stub.Paragraph;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
@@ -92,6 +93,28 @@ public class HTMLDocumentTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithMeta.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithParagraphStringFormat() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .addElement(new Paragraph("%s%s%s"))
+                .title("%s%s%s")
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithStringFormat.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithInputStringFormat() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .addElement(new Input("myText", "text", "%s%s%s", "myText"))
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithInputStringFormat.html"), doc.generateDocumentString());
 
     }
 

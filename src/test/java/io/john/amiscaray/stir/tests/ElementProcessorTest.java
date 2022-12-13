@@ -145,5 +145,51 @@ public class ElementProcessorTest {
 
     }
 
+    @Test
+    public void testParagraphWithStringFormat() throws IOException {
+
+        String actual = processor.getMarkup(new Paragraph("%s%s%s%s"));
+        assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithStringFormat.html"), actual);
+
+    }
+
+    @Test
+    public void testFormWithStringFormatAction() throws IOException {
+
+        Form form = Form.builder()
+                .addField(username)
+                .addField(message)
+                .method("post")
+                .action("%s%s%s")
+                .build();
+        String actual = processor.getMarkup(form);
+        // Doing this again to trigger cache call
+        actual = processor.getMarkup(form);
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithStringFormatAction.html"), actual);
+
+    }
+
+    @Test
+    public void testFormWithAllFormatAction() throws IOException {
+
+        Form form = Form.builder()
+                .addField(username)
+                .addField(message)
+                .method("post")
+                .action("%a%b%c%d%e%f%g%h%n%o%s%t%x")
+                .build();
+        String actual = processor.getMarkup(form);
+        // Doing this again to trigger cache call
+        actual = processor.getMarkup(form);
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithAllFormatsAction.html"), actual);
+
+    }
+
+    @Test
+    public void testParagraphWithPercents() throws IOException{
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithPercents.html"), processor.getMarkup(new Paragraph("%%%%%%%%%%")));
+
+    }
 
 }
