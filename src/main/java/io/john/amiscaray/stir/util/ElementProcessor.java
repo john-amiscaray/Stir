@@ -4,6 +4,7 @@ import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.CacheableElement;
 import lombok.Getter;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -80,12 +81,12 @@ public class ElementProcessor {
                         continue;
                     }
                 }
-                builder.append(" ").append(meta.name()).append("=\"").append(value).append("\"");
+                builder.append(" ").append(meta.name()).append("=\"").append(encode(value.toString())).append("\"");
             }else if(f.isAnnotationPresent(Id.class)){
                 if(value == null){
                     continue;
                 }
-                builder.append(" id=\"").append(value).append("\"");
+                builder.append(" id=\"").append(encode(value.toString())).append("\"");
             }
         }
 
@@ -118,9 +119,9 @@ public class ElementProcessor {
             throw new IllegalArgumentException("A labeled element must have an id");
         }
         builder.append("<label for=\"")
-                .append(parentId)
+                .append(encode(parentId))
                 .append("\">\n")
-                .append(label.get(parent).toString().indent(ElementProcessor.indentationSize))
+                .append(encode(label.get(parent).toString()).indent(ElementProcessor.indentationSize))
                 .append("</label>\n");
 
     }
@@ -148,7 +149,7 @@ public class ElementProcessor {
                             childContent.add(getMarkup(value).stripTrailing());
                         }
                     }
-                    return String.format(element.getCacheContents(), childContent.toArray());
+                    return unescapeStringFormats(String.format(element.getCacheContents(), childContent.toArray()));
                 }catch(IllegalAccessException ex){
                     ex.printStackTrace();
                 }
@@ -209,6 +210,7 @@ public class ElementProcessor {
                 }else if(field.isAnnotationPresent(InnerContent.class)){
                     InnerContent content = field.getAnnotation(InnerContent.class);
                     String finalContent = value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue();
+                    finalContent = encode(finalContent);
                     builder.append(finalContent);
                     cacheBuilder.append(finalContent);
                 }
@@ -221,16 +223,29 @@ public class ElementProcessor {
         }catch(IllegalAccessException ex){
             ex.printStackTrace();
         }
+        String finalMarkup = unescapeStringFormats(builder.toString());
         if(obj instanceof CacheableElement){
             if(!hasChildren){
-                ((CacheableElement) obj).setCacheContents(builder.toString());
+                ((CacheableElement) obj).setCacheContents(finalMarkup);
             }else{
                 ((CacheableElement) obj).setCacheContents(cacheBuilder.toString());
             }
             ((CacheableElement) obj).setHasChildren(hasChildren);
         }
-        return builder.toString();
+        return finalMarkup;
 
+    }
+
+    public String encode(String dirty){
+
+        return StringEscapeUtils.escapeHtml4(dirty.replaceAll("%", "%%"));
+
+    }
+    
+    public String unescapeStringFormats(String encoded){
+        
+        return encoded.replaceAll("%%", "%");
+        
     }
 
 }

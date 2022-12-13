@@ -1,9 +1,10 @@
-package io.john.amiscaray.stir.util;
+package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
+import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -144,5 +145,66 @@ public class ElementProcessorTest {
 
     }
 
+    @Test
+    public void testParagraphWithStringFormat() throws IOException {
+
+        String actual = processor.getMarkup(new Paragraph("%s%s%s%s"));
+        assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithStringFormat.html"), actual);
+
+    }
+
+    @Test
+    public void testFormWithStringFormatAction() throws IOException {
+
+        Form form = Form.builder()
+                .addField(username)
+                .addField(message)
+                .method("post")
+                .action("%s%s%s")
+                .build();
+        String actual = processor.getMarkup(form);
+        // Doing this again to trigger cache call
+        actual = processor.getMarkup(form);
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithStringFormatAction.html"), actual);
+
+    }
+
+    @Test
+    public void testFormWithAllFormatAction() throws IOException {
+
+        Form form = Form.builder()
+                .addField(username)
+                .addField(message)
+                .method("post")
+                .action("%a%b%c%d%e%f%g%h%n%o%s%t%x")
+                .build();
+        String actual = processor.getMarkup(form);
+        // Doing this again to trigger cache call
+        actual = processor.getMarkup(form);
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithAllFormatsAction.html"), actual);
+
+    }
+
+    @Test
+    public void testParagraphWithPercents() throws IOException{
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithPercents.html"), processor.getMarkup(new Paragraph("%%%%%%%%%%")));
+
+    }
+
+    @Test
+    public void testInputWithQuotes() throws IOException {
+
+        Input in = new Input("myIn", "text", "\"<!--", "myIn");
+        assertEquals(htmlLoader.getHTMLContentOf("html/inputWithHTMLEntities.html"), processor.getMarkup(in));
+
+    }
+
+    @Test
+    public void testParagraphWithEntities() throws IOException {
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithEntities.html"), processor.getMarkup(new Paragraph("\"<!-- Hello World")));
+
+    }
 
 }
