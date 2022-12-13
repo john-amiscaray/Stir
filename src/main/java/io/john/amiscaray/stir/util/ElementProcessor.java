@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.util;
 import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.CacheableElement;
+import io.john.amiscaray.stir.domain.elements.CssRule;
 import lombok.Getter;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -11,6 +12,7 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class ElementProcessor {
@@ -210,7 +212,7 @@ public class ElementProcessor {
                 }else if(field.isAnnotationPresent(InnerContent.class)){
                     InnerContent content = field.getAnnotation(InnerContent.class);
                     String finalContent = value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue();
-                    finalContent = encode(finalContent);
+                    finalContent = content.encode() ? encode(finalContent) : finalContent;
                     builder.append(finalContent);
                     cacheBuilder.append(finalContent);
                 }
@@ -236,9 +238,39 @@ public class ElementProcessor {
 
     }
 
+    public String processStyle(CssRule rule){
+
+        StringBuilder template = new StringBuilder("""
+                %s {
+                """);
+        List<String> formatArgs = new ArrayList<>();
+
+        formatArgs.add(encodeForStringFormats(rule.getSelector()));
+
+        for (CssRule nestedRule : rule.getNested()) {
+            String nested = processStyle(nestedRule);
+            template.append(encodeForStringFormats(nested.indent(ElementProcessor.indentationSize)));
+        }
+        for (Map.Entry<String, String> entry: rule.getStyles().entrySet()) {
+            template.append("%s: %s;\n".indent(ElementProcessor.getIndentationSize()));
+            formatArgs.add(encodeForStringFormats(entry.getKey()));
+            formatArgs.add(encodeForStringFormats(entry.getValue()));
+        }
+        template.append("}");
+
+        return unescapeStringFormats(String.format(template.toString(), formatArgs.toArray()));
+
+    }
+
     public String encode(String dirty){
 
         return StringEscapeUtils.escapeHtml4(dirty.replaceAll("%", "%%"));
+
+    }
+
+    public String encodeForStringFormats(String dirty){
+
+        return dirty.replaceAll("%", "%%");
 
     }
     

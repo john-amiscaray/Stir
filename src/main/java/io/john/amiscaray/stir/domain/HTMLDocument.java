@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.domain;
 import io.john.amiscaray.stir.domain.elements.Meta;
 import io.john.amiscaray.stir.domain.elements.Script;
 import io.john.amiscaray.stir.domain.elements.LinkedStyle;
+import io.john.amiscaray.stir.domain.elements.Style;
 import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.util.ArrayList;
@@ -11,7 +12,8 @@ import java.util.List;
 public class HTMLDocument {
 
     private final List<Object> elements = new ArrayList<>();
-    private final List<LinkedStyle> styleSheets = new ArrayList<>();
+    private final List<LinkedStyle> linkedStyles = new ArrayList<>();
+    private Style style;
     private final List<Script> headerScripts = new ArrayList<>();
     private final List<Script> footerScripts = new ArrayList<>();
     private final List<Meta> metaList = new ArrayList<>();
@@ -24,7 +26,7 @@ public class HTMLDocument {
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">%s
-                    <title>%s</title>%s%s
+                    <title>%s</title>%s%s%s
                 </head>
                 <body>%s%s
                 </body>
@@ -66,8 +68,13 @@ public class HTMLDocument {
             return this;
         }
 
-        public HTMLDocument.Builder addStyle(LinkedStyle style){
-            doc.styleSheets.add(style);
+        public HTMLDocument.Builder addLinkedStyle(LinkedStyle style){
+            doc.linkedStyles.add(style);
+            return this;
+        }
+
+        public HTMLDocument.Builder style(Style style){
+            doc.style = style;
             return this;
         }
 
@@ -86,14 +93,16 @@ public class HTMLDocument {
         String metaMarkup = processor.getMarkupForElementList(metaList, 2);
         String finalTitle = (title != null ? title : "Title");
         String headerScriptsMarkup = processor.getMarkupForElementList(headerScripts, 2);
-        String stylesMarkup = processor.getMarkupForElementList(styleSheets, 2);
+        String linkedStylesMarkup = processor.getMarkupForElementList(linkedStyles, 2);
+        String styleMarkup = style != null ? "\n" + processor.getMarkup(style).indent(ElementProcessor.getIndentationSize() * 2).stripTrailing() : "";
         String elementsMarkup = processor.getMarkupForElementList(elements, 2);
         String footerScriptsMarkup = processor.getMarkupForElementList(footerScripts, 2);
         return String.format(format,
                 !metaMarkup.isEmpty() ? "\n" + metaMarkup : "",
                 finalTitle,
                 !headerScriptsMarkup.isEmpty() ? "\n" + headerScriptsMarkup : "",
-                !stylesMarkup.isEmpty() ? "\n" + stylesMarkup : "",
+                !linkedStylesMarkup.isEmpty() ? "\n" + linkedStylesMarkup : "",
+                styleMarkup,
                 !elementsMarkup.isEmpty() ? "\n" + elementsMarkup : "",
                 !footerScriptsMarkup.isEmpty() ? "\n" + footerScriptsMarkup : ""
         );

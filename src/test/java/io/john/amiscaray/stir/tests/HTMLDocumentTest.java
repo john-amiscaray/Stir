@@ -28,12 +28,12 @@ public class HTMLDocumentTest {
 
         HTMLDocument doc = HTMLDocument.builder()
                 .addElement(sampleLibForm)
-                .addStyle(new LinkedStyle(
+                .addLinkedStyle(new LinkedStyle(
                         "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
                         "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
                         "anonymous"
                 ))
-                .addStyle(new LinkedStyle("./styles.css"))
+                .addLinkedStyle(new LinkedStyle("./styles.css"))
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/libFormAsDocExpected.html"), doc.generateDocumentString());
@@ -69,12 +69,12 @@ public class HTMLDocumentTest {
 
         HTMLDocument doc = HTMLDocument.builder()
                 .addElement(sampleLibForm)
-                .addStyle(new LinkedStyle(
+                .addLinkedStyle(new LinkedStyle(
                         "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
                         "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
                         "anonymous"
                 ))
-                .addStyle(new LinkedStyle("./styles.css"))
+                .addLinkedStyle(new LinkedStyle("./styles.css"))
                 .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
                 .title("Hello")
                 .build();
@@ -118,5 +118,99 @@ public class HTMLDocumentTest {
 
     }
 
+    @Test
+    public void testDocWithBasicStyles() throws IOException {
+
+        CssRule background = CssRule.builder()
+                .selector("body")
+                .addStyle("color", "red")
+                .addStyle("background-color", "#777777")
+                .build();
+        Style style = Style.builder()
+                .addRule(background)
+                .build();
+        HTMLDocument doc = HTMLDocument.builder()
+                .style(style)
+                .title("Hello")
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithBasicStyles.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithCssAnimation() throws IOException {
+
+        CssRule animation = CssRule.builder()
+                .selector("@keyframes example")
+                .addNested(
+                        CssRule.builder()
+                                .selector("0%")
+                                .addStyle("background-color", "red")
+                                .addStyle("left", "0")
+                                .addStyle("top", "0")
+                                .build()
+                )
+                .addNested(
+                        CssRule.builder()
+                                .selector("25%")
+                                .addStyle("background-color", "yellow")
+                                .addStyle("left", "200px")
+                                .addStyle("top", "0")
+                                .build()
+                )
+                .addNested(
+                        CssRule.builder()
+                                .selector("50%")
+                                .addStyle("background-color", "blue")
+                                .addStyle("left", "200px")
+                                .addStyle("top", "200px")
+                                .build()
+                )
+                .addNested(
+                        CssRule.builder()
+                                .selector("75%")
+                                .addStyle("background-color", "green")
+                                .addStyle("left", "0")
+                                .addStyle("top", "200px")
+                                .build()
+                )
+                .addNested(
+                        CssRule.builder()
+                                .selector("100%")
+                                .addStyle("background-color", "red")
+                                .addStyle("left", "0")
+                                .addStyle("top", "0")
+                                .build()
+                )
+                .build();
+        Style style = Style.builder()
+                .addRule(animation)
+                .build();
+        HTMLDocument doc = HTMLDocument.builder()
+                .style(style)
+                .title("Hello")
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithCssAnimation.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithStyleContent() throws IOException{
+
+        CssRule body = CssRule.builder()
+                .selector("body")
+                .addStyle("content", "'Hello World &&&'")
+                .build();
+
+        Style style = Style.builder()
+                .addRule(body)
+                .build();
+        HTMLDocument doc = HTMLDocument.builder()
+                .style(style)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithStyleContent.html"), doc.generateDocumentString());
+
+    }
 
 }
