@@ -1,9 +1,10 @@
-package io.john.amiscaray.stir.util;
+package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
+import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

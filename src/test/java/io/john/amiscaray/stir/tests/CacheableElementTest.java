@@ -1,4 +1,4 @@
-package io.john.amiscaray.stir.util;
+package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.elements.CacheableElement.CacheStatus;
 import io.john.amiscaray.stir.domain.elements.Input;
