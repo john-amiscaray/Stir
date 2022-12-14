@@ -269,6 +269,12 @@ public class ElementProcessor {
 
     }
 
+    public String encodeForEntitiesOnly(String dirty){
+
+        return StringEscapeUtils.escapeHtml4(dirty);
+
+    }
+
     public String encode(String dirty){
 
         return StringEscapeUtils.escapeHtml4(dirty.replaceAll("%", "%%"));

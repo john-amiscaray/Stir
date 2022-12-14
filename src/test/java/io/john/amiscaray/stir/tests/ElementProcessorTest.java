@@ -15,6 +15,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class ElementProcessorTest {
 
+    public static final String ALL_FORMATS = "%a%b%c%d%e%f%g%h%n%o%s%t%x";
     private final ElementProcessor processor = ElementProcessor.getInstance();
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
     private final Input username = new Input("text", "text", "John", null);
@@ -176,7 +177,7 @@ public class ElementProcessorTest {
                 .addField(username)
                 .addField(message)
                 .method("post")
-                .action("%a%b%c%d%e%f%g%h%n%o%s%t%x")
+                .action(ALL_FORMATS)
                 .build();
         String actual = processor.getMarkup(form);
         // Doing this again to trigger cache call
