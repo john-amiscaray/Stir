@@ -154,7 +154,7 @@ public class ElementProcessorTest {
     }
 
     @Test
-    public void testFormWithStringFormatAction() throws IOException {
+    public void testFormWithStringFormatActionCache() throws IOException {
 
         Form form = Form.builder()
                 .addField(username)
