@@ -128,7 +128,7 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkup(CacheableElement element) {
+    public String getMarkupFromCache(CacheableElement element) {
 
         if(element.getCacheStatus().equals(CacheableElement.CacheStatus.CLEAN)){
             if(!element.isHasChildren()){
@@ -158,11 +158,18 @@ public class ElementProcessor {
             }
         }
 
-        return getMarkup((Object) element);
+        return null;
 
     }
 
     public String getMarkup(Object obj){
+
+        if(obj instanceof CacheableElement){
+            String result = getMarkupFromCache((CacheableElement) obj);
+            if(result != null && !result.isEmpty()){
+                return result;
+            }
+        }
 
         String tagName = getTagName(obj.getClass());
 
