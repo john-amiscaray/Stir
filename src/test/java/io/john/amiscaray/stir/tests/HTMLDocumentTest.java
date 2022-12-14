@@ -12,6 +12,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HTMLDocumentTest {
 
+    public static final String ALL_FORMATS = "%a%b%c%d%e%f%g%h%n%o%s%t%x";
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
     private final Input username = new Input("text", "text", "John", null);
     private final Input message = new Input("text1", "text", "Some Message", null);
@@ -315,6 +316,50 @@ public class HTMLDocumentTest {
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithMixedCss2.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testSetLanguageToRussian() throws IOException{
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .language("ru")
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithLanguageRussian.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testSetLanguageWithMaliciousCharacters() throws IOException{
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .language("en\"><script>alert('Hello World!')</script></html><!--")
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithLanguageMalicious.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testSetLanguageWithStringFormats() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .language(ALL_FORMATS)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docLanguageWithStringFormats.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testSetTitleMalicious() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .title("Hello</title></head><body><script>alert('I did the thing!');</script></body><!--")
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithTitleMalicious.html"), doc.generateDocumentString());
 
     }
 

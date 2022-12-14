@@ -19,10 +19,11 @@ public class HTMLDocument {
     private final List<Meta> metaList = new ArrayList<>();
     private String title;
     private final ElementProcessor processor = ElementProcessor.getInstance();
+    private String language = "en";
     private final static String format =
             """
             <!DOCTYPE html>
-            <html lang="en">
+            <html lang="%s">
                 <head>
                     <meta charset="UTF-8">
                     <meta name="viewport" content="width=device-width, initial-scale=1.0">%s
@@ -63,6 +64,11 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocument.Builder language(String language){
+            doc.language = language;
+            return this;
+        }
+
         public HTMLDocument.Builder title(String title){
             doc.title = title;
             return this;
@@ -90,14 +96,16 @@ public class HTMLDocument {
     }
 
     public String generateDocumentString(){
+        String finalLanguage = processor.encodeForEntitiesOnly(language != null && !language.isEmpty() ? language : "en");
         String metaMarkup = processor.getMarkupForElementList(metaList, 2);
-        String finalTitle = (title != null ? title : "Title");
+        String finalTitle = processor.encodeForEntitiesOnly(title != null ? title : "Title");
         String headerScriptsMarkup = processor.getMarkupForElementList(headerScripts, 2);
         String linkedStylesMarkup = processor.getMarkupForElementList(linkedStyles, 2);
         String styleMarkup = style != null ? "\n" + processor.getMarkup(style).indent(ElementProcessor.getIndentationSize() * 2).stripTrailing() : "";
         String elementsMarkup = processor.getMarkupForElementList(elements, 2);
         String footerScriptsMarkup = processor.getMarkupForElementList(footerScripts, 2);
         return String.format(format,
+                finalLanguage,
                 !metaMarkup.isEmpty() ? "\n" + metaMarkup : "",
                 finalTitle,
                 !headerScriptsMarkup.isEmpty() ? "\n" + headerScriptsMarkup : "",
