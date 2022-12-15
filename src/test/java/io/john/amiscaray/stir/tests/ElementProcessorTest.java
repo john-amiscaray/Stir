@@ -9,6 +9,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -205,6 +206,17 @@ public class ElementProcessorTest {
     public void testParagraphWithEntities() throws IOException {
 
         assertEquals(htmlLoader.getHTMLContentOf("html/paragraphWithEntities.html"), processor.getMarkup(new Paragraph("\"<!-- Hello World")));
+
+    }
+
+    @Test
+    public void testSimpleStudentTable() throws IOException {
+
+        List<Student> students = List.of(
+                new Student(1, "John", 1.0f),
+                new Student(2, "Ben", 4.0f)
+        );
+        assertEquals(htmlLoader.getHTMLContentOf("html/simpleTableOfPojoList.html"), processor.getMarkup(students, Student.class));
 
     }
 
