@@ -220,4 +220,16 @@ public class ElementProcessorTest {
 
     }
 
+    @Test
+    public void testSimpleStudentWithTableAnnotationTable() throws IOException {
+
+        List<StudentWithTableAnnotation> students = List.of(
+                new StudentWithTableAnnotation(1, "John", 1.0f),
+                new StudentWithTableAnnotation(2, "Ben", 4.0f)
+        );
+        assertEquals(htmlLoader.getHTMLContentOf("html/simpleTableOfAnnotatedPojo.html"),
+                processor.getMarkup(students, StudentWithTableAnnotation.class));
+
+    }
+
 }

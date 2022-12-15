@@ -171,7 +171,14 @@ public class ElementProcessor {
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
-            builder.append(String.format("<th>%s</th>", field.getName()).indent(ElementProcessor.indentationSize * 3));
+            String name = field.getName();
+            if(field.isAnnotationPresent(TableData.class)){
+                String columnMetaName = field.getAnnotation(TableData.class).columnName();
+                if(!columnMetaName.isBlank()){
+                    name = columnMetaName;
+                }
+            }
+            builder.append(String.format("<th>%s</th>", name).indent(ElementProcessor.indentationSize * 3));
         }
         builder.append("</tr>\n".indent(ElementProcessor.indentationSize * 2));
         builder.append("</thead>\n".indent(ElementProcessor.indentationSize));
