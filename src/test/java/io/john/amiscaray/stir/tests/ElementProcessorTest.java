@@ -15,12 +15,13 @@ import java.util.Queue;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 
 public class ElementProcessorTest {
 
     public static final String ALL_FORMATS = "%a%b%c%d%e%f%g%h%n%o%s%t%x";
-    private final ElementProcessor processor = ElementProcessor.getInstance();
+    private final ElementProcessor processor = spy(ElementProcessor.getInstance());
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
     private final Input username = new Input("text", "text", "John", null);
     private final Input message = new Input("text1", "text", "Some Message", null);
@@ -286,6 +287,26 @@ public class ElementProcessorTest {
                     htmlLoader.getHTMLContentOf("html/pojoTablePriorityQueue.html"),
                     processor.getMarkup(queue, StudentWithTableAnnotation.class)
                 );
+
+    }
+
+    @Test
+    public void testCacheDisabledElement() throws IOException {
+
+        username.setCacheDisabled(true);
+        String testCache = "A test string";
+        username.setCacheContents(testCache);
+        String initMarkup = processor.getMarkup(username);
+
+        verify(processor, times(0)).getMarkupFromCache(username);
+        assertEquals(htmlLoader.getHTMLContentOf("html/usernameField.html"), initMarkup);
+
+        username.setCacheDisabled(false);
+        String finalMarkup = processor.getMarkup(username);
+        assertEquals(finalMarkup, testCache);
+
+        verify(processor, times(1)).getMarkupFromCache(username);
+
 
     }
 

@@ -9,6 +9,7 @@ import java.beans.PropertyChangeSupport;
 public abstract class CacheableElement {
 
     protected final PropertyChangeSupport propertyChangeSupport;
+
     @Getter
     protected CacheStatus cacheStatus = CacheStatus.EMPTY;
 
@@ -18,6 +19,10 @@ public abstract class CacheableElement {
     @Getter
     @Setter
     private boolean hasChildren = false;
+
+    @Getter
+    @Setter
+    protected boolean cacheDisabled;
 
     public enum CacheStatus {
         EMPTY,

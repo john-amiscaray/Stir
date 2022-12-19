@@ -220,11 +220,14 @@ public class ElementProcessor {
 
     public String getMarkup(Object obj){
 
-        if(obj instanceof CacheableElement){
+        boolean cacheEnabled = false;
+
+        if(obj instanceof CacheableElement && !((CacheableElement) obj).isCacheDisabled()){
             String result = getMarkupFromCache((CacheableElement) obj);
             if(result != null && !result.isEmpty()){
                 return result;
             }
+            cacheEnabled = true;
         }
 
         String tagName = getTagName(obj.getClass());
@@ -245,11 +248,15 @@ public class ElementProcessor {
                 field.setAccessible(true);
                 if(field.isAnnotationPresent(Label.class) && field.get(obj) != null){
                     buildLabel(builder, field, obj);
-                    buildLabel(cacheBuilder, field, obj);
+                    if(cacheEnabled){
+                        buildLabel(cacheBuilder, field, obj);
+                    }
                 }
             }
             buildElementOpeningTag(builder, obj, elementMeta);
-            buildElementOpeningTag(cacheBuilder, obj, elementMeta);
+            if(cacheEnabled){
+                buildElementOpeningTag(cacheBuilder, obj, elementMeta);
+            }
             for (Field field: fields) {
                 Object value = field.get(obj);
                 if(field.isAnnotationPresent(Nested.class)){
@@ -258,7 +265,9 @@ public class ElementProcessor {
                     }
                     hasChildren = true;
                     builder.append(getMarkup(value).indent(ElementProcessor.indentationSize));
-                    cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
+                    if(cacheEnabled){
+                        cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
+                    }
                 }else if(field.isAnnotationPresent(ChildList.class)){
                     if(value == null){
                         continue;
@@ -270,14 +279,18 @@ public class ElementProcessor {
                     List<Object> children = (List<Object>) value;
                     for (Object child : children) {
                         builder.append(getMarkup(child).indent(ElementProcessor.indentationSize));
-                        cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
+                        if(cacheEnabled){
+                            cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
+                        }
                     }
                 }else if(field.isAnnotationPresent(InnerContent.class)){
                     InnerContent content = field.getAnnotation(InnerContent.class);
                     String finalContent = value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue();
                     finalContent = content.encode() ? encode(finalContent) : finalContent;
                     builder.append(finalContent);
-                    cacheBuilder.append(finalContent);
+                    if(cacheEnabled){
+                        cacheBuilder.append(finalContent);
+                    }
                 }else if(field.isAnnotationPresent(ObjectTable.class)){
                     if(value == null){
                         continue;
@@ -287,19 +300,23 @@ public class ElementProcessor {
                     Class<?> clazz = value.getClass();
                     String tableMarkup = getMarkup((Collection<?>) value, clazz).indent(ElementProcessor.indentationSize);
                     builder.append(tableMarkup);
-                    cacheBuilder.append(tableMarkup);
+                    if(cacheEnabled){
+                        cacheBuilder.append(tableMarkup);
+                    }
                 }
             }
             if(elementMeta.hasClosing()){
                 buildElementClosingTag(builder, tagName);
-                buildElementClosingTag(cacheBuilder, tagName);
+                if(cacheEnabled){
+                    buildElementClosingTag(cacheBuilder, tagName);
+                }
             }
 
         }catch(IllegalAccessException ex){
             ex.printStackTrace();
         }
         String finalMarkup = unescapeStringFormats(builder.toString());
-        if(obj instanceof CacheableElement){
+        if(cacheEnabled){
             if(!hasChildren){
                 ((CacheableElement) obj).setCacheContents(finalMarkup);
             }else{
