@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class HTMLDocument {
@@ -142,7 +141,13 @@ public class HTMLDocument {
 
     private List<AbstractUIElement> processQuery(String query, List<AbstractUIElement> elements){
 
-        return findAllOfTagName(query, elements);
+        if(query.startsWith("#")){
+            return findAllOfID(query.substring(1), elements);
+        }else if(query.startsWith(".")) {
+            return findAllOfClass(query.substring(1), elements);
+        }else{
+            return findAllOfTagName(query, elements);
+        }
 
     }
 
@@ -160,6 +165,18 @@ public class HTMLDocument {
             return tagName.equals(elementTag);
 
         }).collect(Collectors.toList());
+
+    }
+
+    private List<AbstractUIElement> findAllOfID(String id, List<AbstractUIElement> elements){
+
+        return elements.stream().filter(element -> element.getId() != null && element.getId().equals(id)).collect(Collectors.toList());
+
+    }
+
+    private List<AbstractUIElement> findAllOfClass(String clazz, List<AbstractUIElement> elements){
+
+        return elements.stream().filter(element -> element.getClassList().contains(clazz)).collect(Collectors.toList());
 
     }
 
