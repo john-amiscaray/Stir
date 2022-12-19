@@ -1,12 +1,10 @@
 package io.john.amiscaray.stir.domain;
 
-import io.john.amiscaray.stir.domain.elements.Meta;
-import io.john.amiscaray.stir.domain.elements.Script;
-import io.john.amiscaray.stir.domain.elements.LinkedStyle;
-import io.john.amiscaray.stir.domain.elements.Style;
+import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class HTMLDocument {
@@ -52,6 +50,11 @@ public class HTMLDocument {
 
         public HTMLDocument.Builder addElement(Object element){
             doc.elements.add(element);
+            return this;
+        }
+
+        public HTMLDocument.Builder addCollectionAsTable(Collection<?> collection, Class<?> clazz){
+            doc.elements.add(new CollectionTableAdapter(collection, clazz));
             return this;
         }
 
