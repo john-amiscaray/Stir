@@ -7,6 +7,7 @@ import io.john.amiscaray.stir.domain.elements.CacheableElement;
 import io.john.amiscaray.stir.domain.elements.CollectionTableAdapter;
 import io.john.amiscaray.stir.domain.elements.CssRule;
 import lombok.Getter;
+import lombok.Setter;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.lang.annotation.Annotation;
@@ -18,7 +19,12 @@ public class ElementProcessor {
 
     private static ElementProcessor instance;
     @Getter
+    @Setter
     private static int indentationSize = 4;
+
+    @Getter
+    @Setter
+    private static boolean cacheDisabled = false;
 
     private ElementProcessor(){}
 
@@ -222,7 +228,7 @@ public class ElementProcessor {
 
         boolean cacheEnabled = false;
 
-        if(obj instanceof CacheableElement && !((CacheableElement) obj).isCacheDisabled()){
+        if(obj instanceof CacheableElement && !((CacheableElement) obj).isCacheDisabled() && !ElementProcessor.cacheDisabled){
             String result = getMarkupFromCache((CacheableElement) obj);
             if(result != null && !result.isEmpty()){
                 return result;

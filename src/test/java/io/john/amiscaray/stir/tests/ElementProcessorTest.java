@@ -310,4 +310,15 @@ public class ElementProcessorTest {
 
     }
 
+    @Test
+    public void testCacheDisabledProcessor() {
+
+        ElementProcessor.setCacheDisabled(true);
+        username.setCacheContents("A test string");
+        processor.getMarkup(username);
+        verify(processor, times(0)).getMarkupFromCache(username);
+        ElementProcessor.setCacheDisabled(false);
+
+    }
+
 }
