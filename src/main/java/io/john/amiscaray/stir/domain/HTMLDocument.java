@@ -1,15 +1,20 @@
 package io.john.amiscaray.stir.domain;
 
+import io.john.amiscaray.stir.annotation.HTMLElement;
+import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class HTMLDocument {
 
-    private final List<Object> elements = new ArrayList<>();
+    private final List<AbstractUIElement> elements = new ArrayList<>();
     private final List<LinkedStyle> linkedStyles = new ArrayList<>();
     private Style style;
     private final List<Script> headerScripts = new ArrayList<>();
@@ -48,7 +53,7 @@ public class HTMLDocument {
             doc = new HTMLDocument();
         }
 
-        public HTMLDocument.Builder addElement(Object element){
+        public HTMLDocument.Builder addElement(AbstractUIElement element){
             doc.elements.add(element);
             return this;
         }
@@ -117,6 +122,45 @@ public class HTMLDocument {
                 !elementsMarkup.isEmpty() ? "\n" + elementsMarkup : "",
                 !footerScriptsMarkup.isEmpty() ? "\n" + footerScriptsMarkup : ""
         );
+    }
+
+    public List<AbstractUIElement> querySelector(String query){
+
+        return querySelector(query, this.elements);
+
+    }
+
+    private List<AbstractUIElement> querySelector(String query, List<AbstractUIElement> elements){
+
+        String[] subQueries = query.split(",");
+        return Arrays.stream(subQueries)
+                .map(subQuery -> processQuery(subQuery, elements))
+                .flatMap(Collection::stream)
+                .collect(Collectors.toList());
+
+    }
+
+    private List<AbstractUIElement> processQuery(String query, List<AbstractUIElement> elements){
+
+        return findAllOfTagName(query, elements);
+
+    }
+
+    private List<AbstractUIElement> findAllOfTagName(String tagName, List<AbstractUIElement> elements){
+
+        return elements.stream().filter(element -> {
+            Class<?> clazz = element.getClass();
+            if(!clazz.isAnnotationPresent(HTMLElement.class) && !(element instanceof CollectionTableAdapter)){
+                throw new IllegalElementException("The class " + clazz.getName() + " is not marked as a valid UI HTML element");
+            }
+            String elementTag = clazz.isAnnotationPresent(HTMLElement.class) ?
+                    clazz.getAnnotation(HTMLElement.class).tagName() :
+                    "table";
+            // The element must be a table if it does not have the HTMLElement annotation
+            return tagName.equals(elementTag);
+
+        }).collect(Collectors.toList());
+
     }
 
 }

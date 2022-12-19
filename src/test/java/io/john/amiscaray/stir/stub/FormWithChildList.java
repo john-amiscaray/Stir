@@ -2,13 +2,14 @@ package io.john.amiscaray.stir.stub;
 
 import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.Input;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @HTMLElement(tagName = "form")
-public class FormWithChildList {
+public class FormWithChildList extends AbstractUIElement {
 
     @ChildList
     private List<Input> fields = new ArrayList<>();
