@@ -4,9 +4,11 @@ import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.Paragraph;
+import io.john.amiscaray.stir.stub.Student;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -362,5 +364,20 @@ public class HTMLDocumentTest {
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithTitleMalicious.html"), doc.generateDocumentString());
 
     }
+
+    @Test
+    public void testDocWithStudentTable() throws IOException{
+
+        List<Student> students = List.of(
+                new Student(1, "John", 1.0f),
+                new Student(2, "Ben", 4.0f)
+        );
+        HTMLDocument doc = HTMLDocument.builder()
+                .addCollectionAsTable(students, Student.class)
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithStudentTable.html"), doc.generateDocumentString());
+
+    }
+
 
 }

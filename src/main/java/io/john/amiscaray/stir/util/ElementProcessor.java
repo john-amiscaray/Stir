@@ -4,6 +4,7 @@ import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTable;
 import io.john.amiscaray.stir.domain.elements.CacheableElement;
+import io.john.amiscaray.stir.domain.elements.CollectionTableAdapter;
 import io.john.amiscaray.stir.domain.elements.CssRule;
 import lombok.Getter;
 import org.apache.commons.text.StringEscapeUtils;
@@ -56,7 +57,13 @@ public class ElementProcessor {
 
         return String.format("%s".repeat(elements.size()),
                 elements.stream()
-                        .map(element -> getMarkup(element).indent(ElementProcessor.getIndentationSize() * indentationLevel))
+                        .map(element -> {
+
+                            if(element instanceof CollectionTableAdapter){
+                                return getMarkup((CollectionTableAdapter) element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
+                            }
+                            return getMarkup(element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
+                        })
                         .toArray()).stripTrailing();
 
     }
@@ -200,6 +207,14 @@ public class ElementProcessor {
                 </table>
                 """);
         return builder.toString();
+
+    }
+
+    public String getMarkup(CollectionTableAdapter adapter){
+
+        Collection<?> collection = adapter.getCollection();
+        Class<?> clazz = adapter.getClazz();
+        return getMarkup(collection, clazz);
 
     }
 

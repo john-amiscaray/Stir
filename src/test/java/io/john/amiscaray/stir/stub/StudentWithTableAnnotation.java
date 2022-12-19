@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class StudentWithTableAnnotation {
+public class StudentWithTableAnnotation implements Comparable{
 
     @TableData(columnName = "Student ID")
     private Integer studentId;
@@ -19,4 +19,8 @@ public class StudentWithTableAnnotation {
     @TableData(columnName = "GPA")
     private Float gpa;
 
+    @Override
+    public int compareTo(Object o) {
+        return ((StudentWithTableAnnotation) o).studentId.compareTo(this.studentId);
+    }
 }

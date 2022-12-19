@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -229,6 +232,60 @@ public class ElementProcessorTest {
         );
         assertEquals(htmlLoader.getHTMLContentOf("html/simpleTableOfAnnotatedPojo.html"),
                 processor.getMarkup(students, StudentWithTableAnnotation.class));
+
+    }
+
+    @Test
+    public void testSetAsTable() {
+
+        Set<StudentWithTableAnnotation> set = Set.of(
+                new StudentWithTableAnnotation(1, "John", 1.0f),
+                new StudentWithTableAnnotation(2, "Ben", 4.0f)
+        );
+        String markup = processor.getMarkup(set, StudentWithTableAnnotation.class);
+        /*
+        Testing what the string contains instead of it as a whole because the set is unordered and so the order of table
+        entries will vary
+         */
+        assertTrue(markup.contains("""
+                        <tr>
+                            <td>2</td>
+                            <td>Ben</td>
+                            <td>4.0</td>
+                        </tr>
+                """));
+        assertTrue(markup.contains("""
+                        <tr>
+                            <td>1</td>
+                            <td>John</td>
+                            <td>1.0</td>
+                        </tr>
+                """));
+
+        assertTrue(markup.contains("""
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>GPA</th>
+                        </tr>
+                    </thead>
+                """));
+
+    }
+
+    @Test
+    public void testPriorityQueueAsTable() throws IOException {
+
+        Queue<StudentWithTableAnnotation> queue = new PriorityQueue<>();
+
+        queue.add(new StudentWithTableAnnotation(1, "John", 1.0f));
+        queue.add(new StudentWithTableAnnotation(2, "Ben", 4.0f));
+
+        assertEquals(
+                    htmlLoader.getHTMLContentOf("html/pojoTablePriorityQueue.html"),
+                    processor.getMarkup(queue, StudentWithTableAnnotation.class)
+                );
 
     }
 
