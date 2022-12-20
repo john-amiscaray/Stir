@@ -9,10 +9,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 import lombok.Getter;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -149,9 +146,12 @@ public class HTMLDocument {
 
     private static List<AbstractUIElement> processQuery(String query, List<AbstractUIElement> elements){
 
+        if(elements.isEmpty()){
+            return elements;
+        }
+
         String[] tokens = query.split(" ");
         List<AbstractUIElement> lastResult = null;
-        List<AbstractUIElement> finalResult = new ArrayList<>();
         String lastToken = null;
         for (String token : tokens) {
             if(!isCssSelectorOperator(token)){
@@ -181,7 +181,21 @@ public class HTMLDocument {
             lastToken = token;
         }
 
-        return lastResult;
+        List<AbstractUIElement> finalResult = new ArrayList<>();
+        if(lastResult != null){
+            finalResult.addAll(lastResult);
+        }
+        finalResult.addAll(
+                processQuery(query,
+                        elements
+                                .stream()
+                                .map(HTMLDocument::getAllDirectDescendents)
+                                .flatMap(Collection::stream)
+                                .collect(Collectors.toList())
+                )
+        );
+
+        return new ArrayList<>(new LinkedHashSet<>(finalResult));
 
     }
 
@@ -230,7 +244,7 @@ public class HTMLDocument {
 
     }
 
-    private static List<AbstractUIElement> getAllDirectDescendents(AbstractUIElement ancestor){
+    public static List<AbstractUIElement> getAllDirectDescendents(AbstractUIElement ancestor){
 
         Class<?> clazz = ancestor.getClass();
         List<AbstractUIElement> children = new ArrayList<>();
@@ -251,7 +265,7 @@ public class HTMLDocument {
 
     }
 
-    private static List<AbstractUIElement> getAllDescendents(AbstractUIElement ancestor){
+    public static List<AbstractUIElement> getAllDescendents(AbstractUIElement ancestor){
 
         List<AbstractUIElement> directDescendents = getAllDirectDescendents(ancestor);
         return Stream.concat(directDescendents.stream()

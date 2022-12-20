@@ -1,14 +1,15 @@
 package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.HTMLDocument;
+import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
-import io.john.amiscaray.stir.stub.Div;
-import io.john.amiscaray.stir.stub.FormWithInputs;
-import io.john.amiscaray.stir.stub.Paragraph;
+import io.john.amiscaray.stir.stub.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -21,21 +22,21 @@ public class QueryTest {
             .addClass("form")
             .addField(in)
             .build();
-
     private final FormWithInputs stubForm = new FormWithInputs();
-
+    private final ListItemStub listItem = new ListItemStub("Heyo");
+    private final ListStub list = new ListStub(listItem);
+    private final ListItemStub shallowListItem = new ListItemStub("This is a thing");
     private final Div deeplyNestedDiv = Div.builder()
             .id("myDiv")
             .build();
-
     private final Div directParent = Div.builder()
             .addChild(deeplyNestedDiv)
+            .addChild(list)
             .build();
-
     private final Div ancestorDiv = Div.builder()
             .addChild(directParent)
+            .addChild(shallowListItem)
             .build();
-
     private final HTMLDocument testDoc = HTMLDocument.builder()
             .addElement(stubForm)
             .addElement(myParagraph)
@@ -90,14 +91,21 @@ public class QueryTest {
     @Test
     public void testWildCardSelector() {
 
-        assertEquals(testDoc.getElements(), testDoc.querySelector("*"));
+        List<AbstractUIElement> allElements = testDoc.getElements();
+        allElements.addAll(
+                allElements.stream()
+                        .map(HTMLDocument::getAllDescendents)
+                        .flatMap(Collection::stream)
+                        .collect(Collectors.toList())
+        );
+        assertEquals(allElements, testDoc.querySelector("*"));
 
     }
 
     @Test
     public void testDirectDescendentSelector() {
 
-        assertEquals(List.of(directParent), testDoc.querySelector("div > div"));
+        assertEquals(List.of(directParent, deeplyNestedDiv), testDoc.querySelector("div > div"));
 
     }
 
@@ -112,6 +120,20 @@ public class QueryTest {
     public void testGrandChildDiv() {
 
         assertEquals(List.of(deeplyNestedDiv), testDoc.querySelector("div div div"));
+
+    }
+
+    @Test
+    public void testDirectListItemChild() {
+
+        assertEquals(List.of(shallowListItem), testDoc.querySelector("div > li"));
+
+    }
+
+    @Test
+    public void testDescendentListItems() {
+
+        assertEquals(List.of(listItem, shallowListItem), testDoc.querySelector("div li"));
 
     }
 

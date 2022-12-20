@@ -59,4 +59,12 @@ public class Div extends AbstractUIElement {
 
     }
 
+    @Override
+    public String toString() {
+        return "Div{" +
+                "id='" + id + '\'' +
+                ", classList=" + classList +
+                ", children=" + children +
+                '}';
+    }
 }
