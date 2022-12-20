@@ -16,6 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QueryTest {
 
     private final Paragraph myParagraph = new Paragraph("Hello World!");
+    private final Paragraph paragraph2 = new Paragraph("I am a thing");
     private final Input in = new Input("text", "Hello World", "AAAAAAAA");
     private final Form libForm = Form.builder()
             .id("myForm")
@@ -42,6 +43,7 @@ public class QueryTest {
             .addElement(myParagraph)
             .addElement(libForm)
             .addElement(ancestorDiv)
+            .addElement(paragraph2)
             .build();
 
     @Test
@@ -56,7 +58,7 @@ public class QueryTest {
     @Test
     public void testFindAllParagraphs() {
 
-        assertEquals(List.of(myParagraph), testDoc.querySelector("p"));
+        assertEquals(List.of(myParagraph, paragraph2), testDoc.querySelector("p"));
 
     }
 
@@ -134,6 +136,27 @@ public class QueryTest {
     public void testDescendentListItems() {
 
         assertEquals(List.of(listItem, shallowListItem), testDoc.querySelector("div li"));
+
+    }
+
+    @Test
+    public void testNextSiblingSelector() {
+
+        assertEquals(List.of(ancestorDiv), testDoc.querySelector("form + div"));
+
+    }
+
+    @Test
+    public void testParagraphsAfterForms() {
+
+        assertEquals(List.of(myParagraph), testDoc.querySelector("form + p"));
+
+    }
+
+    @Test
+    public void testFormAfterParagraph() {
+
+        assertEquals(List.of(libForm), testDoc.querySelector("p + form"));
 
     }
 

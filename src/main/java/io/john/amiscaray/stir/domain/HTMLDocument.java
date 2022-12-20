@@ -166,7 +166,18 @@ public class HTMLDocument {
                                         .flatMap(Collection::stream)
                                         .collect(Collectors.toList())
                         );
-                    }else {
+                    }else if (lastToken.equals("+")){
+                        lastResult = processToken(
+                                token,
+                                lastResult.stream()
+                                        .map(element -> {
+                                            int idx = elements.indexOf(element);
+                                            return idx < elements.size() - 1 ? elements.get(idx + 1) : null;
+                                        })
+                                        .filter(Objects::nonNull)
+                                        .collect(Collectors.toList())
+                        );
+                    }else{
                         lastResult = processToken(
                                 token,
                                 lastResult.stream()
