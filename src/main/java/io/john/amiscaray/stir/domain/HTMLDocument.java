@@ -1,14 +1,19 @@
 package io.john.amiscaray.stir.domain;
 
+import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import io.john.amiscaray.stir.annotation.Nested;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 public class HTMLDocument {
@@ -141,6 +146,47 @@ public class HTMLDocument {
 
     private List<AbstractUIElement> processQuery(String query, List<AbstractUIElement> elements){
 
+        String[] tokens = query.split(" ");
+        List<AbstractUIElement> lastResult = null;
+        for (String token : tokens) {
+            if(!isCssSelectorOperator(token)){
+                if(lastResult == null){
+                    lastResult = processToken(token, elements);
+                }else{
+                    lastResult = processToken(
+                            token,
+                            lastResult.stream()
+                                    // TODO Map to child elements and flatten
+                                    .map(element -> {
+                                        Class<?> clazz = element.getClass();
+                                        List<AbstractUIElement> children = new ArrayList<>();
+                                        try {
+                                            for (Field field : clazz.getDeclaredFields()) {
+                                                field.setAccessible(true);
+                                                if (field.isAnnotationPresent(Nested.class)) {
+                                                    children.add((AbstractUIElement) field.get(element));
+                                                }else if(field.isAnnotationPresent(ChildList.class)) {
+                                                    children.addAll((Collection<? extends AbstractUIElement>) field.get(element));
+                                                }
+                                            }
+                                        } catch (IllegalAccessException e) {
+                                            e.printStackTrace();
+                                        }
+                                        return children;
+                                    })
+                                    .flatMap(Collection::stream)
+                                    .collect(Collectors.toList())
+                    );
+                }
+            }
+        }
+
+        return lastResult;
+
+    }
+
+    private List<AbstractUIElement> processToken(String query, List<AbstractUIElement> elements){
+
         if(query.startsWith("#")){
             return findAllOfID(query.substring(1), elements);
         }else if(query.startsWith(".")) {
@@ -152,6 +198,10 @@ public class HTMLDocument {
     }
 
     private List<AbstractUIElement> findAllOfTagName(String tagName, List<AbstractUIElement> elements){
+
+        if(tagName.equals("*")){
+            return elements;
+        }
 
         return elements.stream().filter(element -> {
             Class<?> clazz = element.getClass();
@@ -177,6 +227,14 @@ public class HTMLDocument {
     private List<AbstractUIElement> findAllOfClass(String clazz, List<AbstractUIElement> elements){
 
         return elements.stream().filter(element -> element.getClassList().contains(clazz)).collect(Collectors.toList());
+
+    }
+
+    private boolean isCssSelectorOperator(String token){
+
+        Pattern pattern = Pattern.compile("^[>+~]$");
+        Matcher matcher = pattern.matcher(token);
+        return matcher.find();
 
     }
 
