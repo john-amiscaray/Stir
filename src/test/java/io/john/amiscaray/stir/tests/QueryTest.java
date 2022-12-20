@@ -28,10 +28,12 @@ public class QueryTest {
             .id("myDiv")
             .build();
 
+    private final Div directParent = Div.builder()
+            .addChild(deeplyNestedDiv)
+            .build();
+
     private final Div ancestorDiv = Div.builder()
-            .addChild(Div.builder()
-                    .addChild(deeplyNestedDiv)
-                    .build())
+            .addChild(directParent)
             .build();
 
     private final HTMLDocument testDoc = HTMLDocument.builder()
@@ -88,7 +90,28 @@ public class QueryTest {
     @Test
     public void testWildCardSelector() {
 
-        assertEquals(List.of(stubForm, myParagraph, libForm), testDoc.querySelector("*"));
+        assertEquals(testDoc.getElements(), testDoc.querySelector("*"));
+
+    }
+
+    @Test
+    public void testDirectDescendentSelector() {
+
+        assertEquals(List.of(directParent), testDoc.querySelector("div > div"));
+
+    }
+
+    @Test
+    public void testDescendentDivs() {
+
+        assertEquals(List.of(deeplyNestedDiv, directParent), testDoc.querySelector("div div"));
+
+    }
+
+    @Test
+    public void testGrandChildDiv() {
+
+        assertEquals(List.of(deeplyNestedDiv), testDoc.querySelector("div div div"));
 
     }
 

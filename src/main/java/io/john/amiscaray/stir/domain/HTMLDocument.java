@@ -6,6 +6,7 @@ import io.john.amiscaray.stir.annotation.Nested;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
+import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
@@ -15,9 +16,11 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class HTMLDocument {
 
+    @Getter
     private final List<AbstractUIElement> elements = new ArrayList<>();
     private final List<LinkedStyle> linkedStyles = new ArrayList<>();
     private Style style;
@@ -134,7 +137,7 @@ public class HTMLDocument {
 
     }
 
-    private List<AbstractUIElement> querySelector(String query, List<AbstractUIElement> elements){
+    private static List<AbstractUIElement> querySelector(String query, List<AbstractUIElement> elements){
 
         String[] subQueries = query.split(",");
         return Arrays.stream(subQueries)
@@ -144,48 +147,45 @@ public class HTMLDocument {
 
     }
 
-    private List<AbstractUIElement> processQuery(String query, List<AbstractUIElement> elements){
+    private static List<AbstractUIElement> processQuery(String query, List<AbstractUIElement> elements){
 
         String[] tokens = query.split(" ");
         List<AbstractUIElement> lastResult = null;
+        List<AbstractUIElement> finalResult = new ArrayList<>();
+        String lastToken = null;
         for (String token : tokens) {
             if(!isCssSelectorOperator(token)){
                 if(lastResult == null){
                     lastResult = processToken(token, elements);
                 }else{
-                    lastResult = processToken(
-                            token,
-                            lastResult.stream()
-                                    // TODO Map to child elements and flatten
-                                    .map(element -> {
-                                        Class<?> clazz = element.getClass();
-                                        List<AbstractUIElement> children = new ArrayList<>();
-                                        try {
-                                            for (Field field : clazz.getDeclaredFields()) {
-                                                field.setAccessible(true);
-                                                if (field.isAnnotationPresent(Nested.class)) {
-                                                    children.add((AbstractUIElement) field.get(element));
-                                                }else if(field.isAnnotationPresent(ChildList.class)) {
-                                                    children.addAll((Collection<? extends AbstractUIElement>) field.get(element));
-                                                }
-                                            }
-                                        } catch (IllegalAccessException e) {
-                                            e.printStackTrace();
-                                        }
-                                        return children;
-                                    })
-                                    .flatMap(Collection::stream)
-                                    .collect(Collectors.toList())
-                    );
+                    if(lastToken.equals(">")){
+                        lastResult = processToken(
+                                token,
+                                lastResult.stream()
+                                        .map(HTMLDocument::getAllDirectDescendents)
+                                        .flatMap(Collection::stream)
+                                        .collect(Collectors.toList())
+                        );
+                    }else {
+                        lastResult = processToken(
+                                token,
+                                lastResult.stream()
+                                        .map(HTMLDocument::getAllDescendents)
+                                        .flatMap(Collection::stream)
+                                        .collect(Collectors.toList())
+                        );
+                    }
                 }
             }
+
+            lastToken = token;
         }
 
         return lastResult;
 
     }
 
-    private List<AbstractUIElement> processToken(String query, List<AbstractUIElement> elements){
+    private static List<AbstractUIElement> processToken(String query, List<AbstractUIElement> elements){
 
         if(query.startsWith("#")){
             return findAllOfID(query.substring(1), elements);
@@ -197,7 +197,7 @@ public class HTMLDocument {
 
     }
 
-    private List<AbstractUIElement> findAllOfTagName(String tagName, List<AbstractUIElement> elements){
+    private static List<AbstractUIElement> findAllOfTagName(String tagName, List<AbstractUIElement> elements){
 
         if(tagName.equals("*")){
             return elements;
@@ -218,19 +218,50 @@ public class HTMLDocument {
 
     }
 
-    private List<AbstractUIElement> findAllOfID(String id, List<AbstractUIElement> elements){
+    private static List<AbstractUIElement> findAllOfID(String id, List<AbstractUIElement> elements){
 
         return elements.stream().filter(element -> element.getId() != null && element.getId().equals(id)).collect(Collectors.toList());
 
     }
 
-    private List<AbstractUIElement> findAllOfClass(String clazz, List<AbstractUIElement> elements){
+    private static List<AbstractUIElement> findAllOfClass(String clazz, List<AbstractUIElement> elements){
 
         return elements.stream().filter(element -> element.getClassList().contains(clazz)).collect(Collectors.toList());
 
     }
 
-    private boolean isCssSelectorOperator(String token){
+    private static List<AbstractUIElement> getAllDirectDescendents(AbstractUIElement ancestor){
+
+        Class<?> clazz = ancestor.getClass();
+        List<AbstractUIElement> children = new ArrayList<>();
+        try {
+            for (Field field : clazz.getDeclaredFields()) {
+                field.setAccessible(true);
+                if (field.isAnnotationPresent(Nested.class)) {
+                    children.add((AbstractUIElement) field.get(ancestor));
+                }else if(field.isAnnotationPresent(ChildList.class)) {
+                    List<AbstractUIElement> childList = (List<AbstractUIElement>) field.get(ancestor);
+                    children.addAll(childList);
+                }
+            }
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return children;
+
+    }
+
+    private static List<AbstractUIElement> getAllDescendents(AbstractUIElement ancestor){
+
+        List<AbstractUIElement> directDescendents = getAllDirectDescendents(ancestor);
+        return Stream.concat(directDescendents.stream()
+                .map(HTMLDocument::getAllDescendents)
+                .flatMap(Collection::stream), directDescendents.stream())
+                .collect(Collectors.toList());
+
+    }
+
+    private static boolean isCssSelectorOperator(String token){
 
         Pattern pattern = Pattern.compile("^[>+~]$");
         Matcher matcher = pattern.matcher(token);
