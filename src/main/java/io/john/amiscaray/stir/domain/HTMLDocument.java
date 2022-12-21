@@ -166,7 +166,7 @@ public class HTMLDocument {
                                         .flatMap(Collection::stream)
                                         .collect(Collectors.toList())
                         );
-                    }else if (lastToken.equals("+")){
+                    }else if(lastToken.equals("+")){
                         lastResult = processToken(
                                 token,
                                 lastResult.stream()
@@ -175,6 +175,21 @@ public class HTMLDocument {
                                             return idx < elements.size() - 1 ? elements.get(idx + 1) : null;
                                         })
                                         .filter(Objects::nonNull)
+                                        .collect(Collectors.toList())
+                        );
+                    }else if(lastToken.equals("~")) {
+                        if(lastResult.isEmpty()){
+                            continue;
+                        }
+                        AbstractUIElement lastElement = lastResult.get(0);
+                        int indexOfLastEl = elements.indexOf(lastElement);
+                        lastResult = processToken(
+                                token,
+                                elements.stream()
+                                        .filter(element -> {
+                                            int idx = elements.indexOf(element);
+                                            return idx > indexOfLastEl && !processToken(token, List.of(element)).isEmpty();
+                                        })
                                         .collect(Collectors.toList())
                         );
                     }else{
@@ -196,14 +211,14 @@ public class HTMLDocument {
         if(lastResult != null){
             finalResult.addAll(lastResult);
         }
+
         finalResult.addAll(
-                processQuery(query,
-                        elements
-                                .stream()
-                                .map(HTMLDocument::getAllDirectDescendents)
-                                .flatMap(Collection::stream)
-                                .collect(Collectors.toList())
-                )
+            elements
+                    .stream()
+                    .map(HTMLDocument::getAllDirectDescendents)
+                    .map(list -> processQuery(query, list))
+                    .flatMap(Collection::stream)
+                    .collect(Collectors.toList())
         );
 
         return new ArrayList<>(new LinkedHashSet<>(finalResult));
@@ -212,13 +227,34 @@ public class HTMLDocument {
 
     private static List<AbstractUIElement> processToken(String query, List<AbstractUIElement> elements){
 
-        if(query.startsWith("#")){
-            return findAllOfID(query.substring(1), elements);
-        }else if(query.startsWith(".")) {
-            return findAllOfClass(query.substring(1), elements);
-        }else{
+        if(!query.contains("#") && !query.contains(".")){
             return findAllOfTagName(query, elements);
         }
+
+        List<Character> terminators = List.of('#', '.');
+        List<String> names = Arrays.stream(query.split("[#.]"))
+                .filter(str -> !str.isEmpty())
+                .collect(Collectors.toList());
+        List<Character> queryTypes = query.chars()
+                .mapToObj(e -> (char) e)
+                .filter(terminators::contains)
+                .collect(Collectors.toList());
+
+        assert names.size() == queryTypes.size();
+
+        List<AbstractUIElement> currentElements = elements;
+
+        for(int i = 0; i < names.size(); i++){
+
+            if(queryTypes.get(i).equals('#')){
+                currentElements = findAllOfID(names.get(i), currentElements);
+            }else if(queryTypes.get(i).equals('.')){
+                currentElements = findAllOfClass(names.get(i), currentElements);
+            }
+
+        }
+
+        return currentElements;
 
     }
 

@@ -16,7 +16,16 @@ import static org.junit.jupiter.api.Assertions.*;
 public class QueryTest {
 
     private final Paragraph myParagraph = new Paragraph("Hello World!");
-    private final Paragraph paragraph2 = new Paragraph("I am a thing");
+    private final Paragraph paragraph2 = Paragraph.builder()
+            .addClass("content")
+            .addClass("spooky")
+            .content("This is some spooky content")
+            .build();
+    private final Paragraph paragraph3 = Paragraph.builder()
+            .addClass("content")
+            .addClass("spooky")
+            .content("Other spooky content")
+            .build();
     private final Input in = new Input("text", "Hello World", "AAAAAAAA");
     private final Form libForm = Form.builder()
             .id("myForm")
@@ -32,11 +41,14 @@ public class QueryTest {
             .build();
     private final Div directParent = Div.builder()
             .addChild(deeplyNestedDiv)
+            .addChild(paragraph3)
             .addChild(list)
             .build();
     private final Div ancestorDiv = Div.builder()
             .addChild(directParent)
             .addChild(shallowListItem)
+            .build();
+    private final Div emptyDiv = Div.builder()
             .build();
     private final HTMLDocument testDoc = HTMLDocument.builder()
             .addElement(stubForm)
@@ -44,6 +56,7 @@ public class QueryTest {
             .addElement(libForm)
             .addElement(ancestorDiv)
             .addElement(paragraph2)
+            .addElement(emptyDiv)
             .build();
 
     @Test
@@ -58,7 +71,7 @@ public class QueryTest {
     @Test
     public void testFindAllParagraphs() {
 
-        assertEquals(List.of(myParagraph, paragraph2), testDoc.querySelector("p"));
+        assertEquals(List.of(myParagraph, paragraph2, paragraph3), testDoc.querySelector("p"));
 
     }
 
@@ -157,6 +170,41 @@ public class QueryTest {
     public void testFormAfterParagraph() {
 
         assertEquals(List.of(libForm), testDoc.querySelector("p + form"));
+
+    }
+
+    @Test
+    public void testTildeOperator() {
+
+        assertEquals(List.of(ancestorDiv, emptyDiv), testDoc.querySelector("#myForm ~ div"));
+
+    }
+
+    @Test
+    public void testListItemsAfterDiv() {
+
+        assertEquals(List.of(shallowListItem), testDoc.querySelector("div ~ li"));
+
+    }
+
+    @Test
+    public void testIdAndClass(){
+
+        assertEquals(List.of(libForm), testDoc.querySelector("#myForm.form"));
+
+    }
+
+    @Test
+    public void testMultipleClasses(){
+
+        assertEquals(List.of(paragraph2, paragraph3), testDoc.querySelector(".content.spooky"));
+
+    }
+
+    @Test
+    public void testNestedMultiClass(){
+
+        assertEquals(List.of(paragraph3), testDoc.querySelector("div .content.spooky"));
 
     }
 
