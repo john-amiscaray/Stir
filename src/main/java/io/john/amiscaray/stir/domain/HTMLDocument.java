@@ -158,16 +158,15 @@ public class HTMLDocument {
                 if(lastResult == null){
                     lastResult = processToken(token, elements);
                 }else{
-                    if(lastToken.equals(">")){
-                        lastResult = processToken(
+                    switch (lastToken) {
+                        case ">" -> lastResult = processToken(
                                 token,
                                 lastResult.stream()
                                         .map(HTMLDocument::getAllDirectDescendents)
                                         .flatMap(Collection::stream)
                                         .collect(Collectors.toList())
                         );
-                    }else if(lastToken.equals("+")){
-                        lastResult = processToken(
+                        case "+" -> lastResult = processToken(
                                 token,
                                 lastResult.stream()
                                         .map(element -> {
@@ -177,23 +176,23 @@ public class HTMLDocument {
                                         .filter(Objects::nonNull)
                                         .collect(Collectors.toList())
                         );
-                    }else if(lastToken.equals("~")) {
-                        if(lastResult.isEmpty()){
-                            continue;
+                        case "~" -> {
+                            if (lastResult.isEmpty()) {
+                                continue;
+                            }
+                            AbstractUIElement lastElement = lastResult.get(0);
+                            int indexOfLastEl = elements.indexOf(lastElement);
+                            lastResult = processToken(
+                                    token,
+                                    elements.stream()
+                                            .filter(element -> {
+                                                int idx = elements.indexOf(element);
+                                                return idx > indexOfLastEl && !processToken(token, List.of(element)).isEmpty();
+                                            })
+                                            .collect(Collectors.toList())
+                            );
                         }
-                        AbstractUIElement lastElement = lastResult.get(0);
-                        int indexOfLastEl = elements.indexOf(lastElement);
-                        lastResult = processToken(
-                                token,
-                                elements.stream()
-                                        .filter(element -> {
-                                            int idx = elements.indexOf(element);
-                                            return idx > indexOfLastEl && !processToken(token, List.of(element)).isEmpty();
-                                        })
-                                        .collect(Collectors.toList())
-                        );
-                    }else{
-                        lastResult = processToken(
+                        default -> lastResult = processToken(
                                 token,
                                 lastResult.stream()
                                         .map(HTMLDocument::getAllDescendents)
