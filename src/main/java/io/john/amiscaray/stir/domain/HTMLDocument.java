@@ -128,6 +128,12 @@ public class HTMLDocument {
         );
     }
 
+    /**
+     * Retrieves a list of elements added to the document that match with the given CSS query. Note that this implementation
+     * does not currently support pseudo-elements nor pseudo-classes. TODO add support for attribute selectors
+     * @param query The CSS selector to select elements with
+     * @return All elements that match that query
+     */
     public List<AbstractUIElement> querySelector(String query){
 
         return querySelector(query, this.elements);
