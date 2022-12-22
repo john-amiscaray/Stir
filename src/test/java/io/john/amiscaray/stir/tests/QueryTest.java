@@ -17,6 +17,7 @@ public class QueryTest {
 
     private final Paragraph myParagraph = new Paragraph("Hello World!");
     private final Paragraph paragraph2 = Paragraph.builder()
+            .id("p2")
             .addClass("content")
             .addClass("spooky")
             .content("This is some spooky content")
@@ -205,6 +206,97 @@ public class QueryTest {
     public void testNestedMultiClass(){
 
         assertEquals(List.of(paragraph3), testDoc.querySelector("div .content.spooky"));
+
+    }
+
+    @Test
+    public void testClassAttributeSelector(){
+
+        assertEquals(List.of(libForm), testDoc.querySelector("form[class=form]"));
+
+    }
+
+    @Test
+    public void testClassAttributeContains(){
+
+        assertEquals(List.of(paragraph2, paragraph3), testDoc.querySelector("p[class*=spooky]"));
+
+    }
+
+    @Test
+    public void testClassAttributeTildeTent(){
+
+        assertEquals(List.of(), testDoc.querySelector("p[class~=tent]"));
+
+    }
+
+    @Test
+    public void testClassAttributeContainsTent(){
+
+        assertEquals(List.of(paragraph2, paragraph3), testDoc.querySelector("p[class*=tent]"));
+
+    }
+
+    @Test
+    public void testClassAttributeTildeSpooky(){
+
+        assertEquals(List.of(paragraph2, paragraph3), testDoc.querySelector("p[class~=spooky]"));
+
+    }
+
+    @Test
+    public void testIdStartsWithMy(){
+
+        assertEquals(List.of(libForm, deeplyNestedDiv), testDoc.querySelector("*[id^=my]"));
+
+    }
+
+    @Test
+    public void testIdEndsWithRM(){
+
+        assertEquals(List.of(libForm), testDoc.querySelector("*[id$=rm]"));
+
+    }
+
+    @Test
+    public void testSelectAnyWithClasses(){
+
+        assertEquals(List.of(libForm, paragraph2, paragraph3), testDoc.querySelector("*[class]"));
+
+    }
+
+    @Test
+    public void testSelectAnyWithClassesAndId(){
+
+        assertEquals(List.of(libForm, paragraph2), testDoc.querySelector("*[class][id]"));
+
+    }
+
+    @Test
+    public void testSelectAnyWithClassesAndIdStartsWithMy(){
+
+        assertEquals(List.of(libForm), testDoc.querySelector("*[class][id^=my]"));
+
+    }
+
+    @Test
+    public void testSelectAnyWithClassesAndIdEndsWith2(){
+
+        assertEquals(List.of(paragraph2), testDoc.querySelector("*[class][id$=2]"));
+
+    }
+
+    @Test
+    public void testSelectParagraphWithClasses(){
+
+        assertEquals(List.of(paragraph2, paragraph3), testDoc.querySelector("p[class]"));
+
+    }
+
+    @Test
+    public void testClassAttributeInQuotes(){
+
+        assertEquals(List.of(paragraph2, paragraph3), testDoc.querySelector("p[class=\"content spooky\"]"));
 
     }
 

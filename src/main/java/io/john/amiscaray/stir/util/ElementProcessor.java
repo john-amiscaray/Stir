@@ -48,7 +48,7 @@ public class ElementProcessor {
 
     }
 
-    public Field[] getAllFields(Class type){
+    public Field[] getAllFields(Class<?> type){
 
         Field[] declared = type.getDeclaredFields();
         Field[] superFields = type.getSuperclass().getDeclaredFields();

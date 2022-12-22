@@ -1,5 +1,6 @@
 package io.john.amiscaray.stir.domain;
 
+import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Nested;
@@ -10,6 +11,7 @@ import lombok.Getter;
 
 import java.lang.reflect.Field;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -156,7 +158,13 @@ public class HTMLDocument {
             return elements;
         }
 
-        String[] tokens = query.split(" ");
+        List<String> tokens = new ArrayList<>();
+        Pattern pattern = Pattern.compile("[^.\\\"]*\\[.*\\]|[^ \\[\\]]+");
+        Matcher matcher = pattern.matcher(query);
+        while (matcher.find()){
+            tokens.add(matcher.group());
+        }
+
         List<AbstractUIElement> lastResult = null;
         String lastToken = null;
         for (String token : tokens) {
@@ -231,6 +239,15 @@ public class HTMLDocument {
     }
 
     private static List<AbstractUIElement> processToken(String query, List<AbstractUIElement> elements){
+
+        Pattern pattern = Pattern.compile("(\\[[^\\[\\]]+])+$");
+        Matcher matcher = pattern.matcher(query);
+        if(matcher.find()){
+            int idx = matcher.start();
+            String attributeSelectors = query.substring(idx);
+            elements = processAttributeSelector(attributeSelectors, elements);
+            query = query.substring(0, idx);
+        }
 
         if(!query.contains("#") && !query.contains(".")){
             return findAllOfTagName(query, elements);
@@ -327,12 +344,109 @@ public class HTMLDocument {
 
     }
 
+    public static List<AbstractUIElement> processAttributeSelector(String query, List<AbstractUIElement> elements){
+
+        // TODO make this pattern not match any spaces in the square brackets and not in quotes
+        Pattern pattern = Pattern.compile("\\[[^\\[\\]]+]");
+        Matcher matcher = pattern.matcher(query);
+        //List<String> operators = List.of("=", "~=", "|=", "^=", "$=", "*=");
+        List<AbstractUIElement> currentElements = elements;
+        while(matcher.find()){
+            String match = matcher.group();
+            match = match.substring(1, match.length() - 1);
+            String[] keyValue = match.split("=|~=|\\|=|\\^=|\\$=|\\*=", 2);
+            assert keyValue.length == 2 || keyValue.length == 1;
+            String key = keyValue[0];
+            String value = keyValue.length == 2 ? keyValue[1] : null;
+            if(value != null && value.charAt(0) == '"' && value.charAt(value.length() - 1) == '"'){
+                value = value.substring(1, value.length() - 1);
+            }
+            if(match.contains("~=")){
+                String finalValue = value;
+                currentElements = filterForAttributes(key, v -> {
+                    if(v.equals(finalValue)){
+                        return true;
+                    }
+                    String pat = "(^" + finalValue + " )|( " + finalValue + " )|( "+ finalValue +"$)";
+                    Pattern p = Pattern.compile(pat);
+                    Matcher m = p.matcher(v);
+                    assert finalValue != null;
+                    return m.find() && v.contains(finalValue);
+                }, currentElements);
+            }else if(match.contains("|=")) {
+                String finalValue = value;
+                currentElements = filterForAttributes(key, v -> {
+                        if(v.equals(finalValue)){
+                            return true;
+                        }
+                        Pattern p = Pattern.compile(".+(-.*)+");
+                        Matcher m = p.matcher(v);
+                        assert finalValue != null;
+                        return m.matches() && v.contains(finalValue);
+                    }, currentElements);
+            }else if(match.contains("^=")) {
+                String finalValue = value;
+                assert finalValue != null;
+                currentElements = filterForAttributes(key, v -> v.startsWith(finalValue), currentElements);
+            }else if(match.contains("$=")){
+                String finalValue = value;
+                assert finalValue != null;
+                currentElements = filterForAttributes(key, v -> v.endsWith(finalValue), currentElements);
+            }else if(match.contains("*=")) {
+                String finalValue = value;
+                assert finalValue != null;
+                currentElements = filterForAttributes(key, v -> v.contains(finalValue), currentElements);
+            }else if(match.contains("=")) {
+                String finalValue = value;
+                currentElements = filterForAttributes(key, v -> v.equals(finalValue), currentElements);
+            }else{
+                currentElements = filterForAttributes(key, v -> true, currentElements);
+            }
+        }
+
+        return currentElements;
+
+    }
+
     private static boolean isCssSelectorOperator(String token){
 
         Pattern pattern = Pattern.compile("^[>+~]$");
         Matcher matcher = pattern.matcher(token);
         return matcher.find();
 
+    }
+
+    private static List<AbstractUIElement> filterForAttributes(String attributeName, Predicate<String> predicate,
+                                                               List<AbstractUIElement> elements){
+
+        ElementProcessor processor = ElementProcessor.getInstance();
+
+        return elements.stream()
+                .filter(element -> {
+
+                    if(attributeName.equals("class")){
+                        String classAttValue = element.getClassList().stream().reduce("", (s1, s2) -> s1 + " " + s2).trim();
+                        return element.getClassList() != null
+                                && !element.getClassList().isEmpty()
+                                && predicate.test(classAttValue);
+                    }else if(attributeName.equals("id")){
+                        return element.getId() != null && predicate.test(element.getId());
+                    }
+
+                    Field[] fields = processor.getAllFields(element.getClass());
+                    for(Field field : fields){
+                        field.setAccessible(true);
+                        if(!field.isAnnotationPresent(Attribute.class) || !attributeName.equals(field.getName())){
+                            continue;
+                        }
+                        try {
+                            return predicate.test(field.get(element).toString());
+                        } catch (IllegalAccessException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return false;
+                }).collect(Collectors.toList());
     }
 
 }
