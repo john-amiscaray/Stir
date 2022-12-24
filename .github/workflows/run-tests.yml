@@ -1,0 +1,35 @@
+name: Run Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 15
+        uses: actions/setup-java@v2
+        with:
+          java-version: '15'
+          distribution: 'temurin'
+          cache: maven
+      - name: Test with maven
+        run: mvn test
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_SECRET }}
+          directory: ./coverage/reports/
+          env_vars: OS
+          fail_ci_if_error: true
+          files: /home/runner/work/stir/stir/target/site/jacoco/jacoco.xml
+          flags: unittests
+          name: codecov-umbrella
+          path_to_write_report: ./coverage/codecov_report.txt
+          verbose: true
