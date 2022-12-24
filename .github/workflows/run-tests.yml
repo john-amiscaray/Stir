@@ -27,7 +27,7 @@ jobs:
           directory: ./coverage/reports/
           env_vars: OS
           fail_ci_if_error: true
-          files: /home/runner/work/stir/stir/target/site/jacoco/jacoco.xml
+          files: /home/runner/work/Stir/Stir/target/site/jacoco/jacoco.xml
           flags: unittests
           name: codecov-umbrella
           path_to_write_report: ./coverage/codecov_report.txt
