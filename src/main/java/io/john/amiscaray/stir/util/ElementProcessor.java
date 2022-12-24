@@ -2,7 +2,8 @@ package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
-import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTable;
+import io.john.amiscaray.stir.annotation.exceptions.InvalidClassListException;
+import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTableException;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.CacheableElement;
 import io.john.amiscaray.stir.domain.elements.CollectionTableAdapter;
@@ -101,6 +102,23 @@ public class ElementProcessor {
                     continue;
                 }
                 builder.append(" id=\"").append(encode(value.toString())).append("\"");
+            }else if(f.isAnnotationPresent(ClassList.class)){
+                if(!(value instanceof List)){
+                    throw new InvalidClassListException();
+                }
+                if(((List<?>) value).isEmpty()){
+                    continue;
+                }
+                builder.append(" class=\"");
+                try{
+                    StringBuilder styleClassBuilder = new StringBuilder();
+                    for (String styleClazz : (List<String>) value) {
+                        styleClassBuilder.append(styleClazz).append(" ");
+                    }
+                    builder.append(styleClassBuilder.toString().trim()).append("\"");
+                }catch (ClassCastException ex){
+                    throw new InvalidClassListException();
+                }
             }
         }
 
@@ -174,13 +192,12 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkup(Collection<?> collection, Class<?> type){
+    private String getInnerTableMarkup(Collection<?> collection, Class<?> type){
 
         StringBuilder builder = new StringBuilder();
         builder.append("""
-                <table>
-                    <thead>
-                        <tr>
+                <thead>
+                    <tr>
                 """);
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
@@ -192,28 +209,37 @@ public class ElementProcessor {
                     name = columnMetaName;
                 }
             }
-            builder.append(String.format("<th>%s</th>", name).indent(ElementProcessor.indentationSize * 3));
+            builder.append(String.format("<th>%s</th>", name).indent(ElementProcessor.indentationSize * 2));
         }
-        builder.append("</tr>\n".indent(ElementProcessor.indentationSize * 2));
-        builder.append("</thead>\n".indent(ElementProcessor.indentationSize));
-        builder.append("<tbody>\n".indent(ElementProcessor.indentationSize));
+        builder.append("</tr>\n".indent(ElementProcessor.indentationSize));
+        builder.append("</thead>\n");
+        builder.append("<tbody>\n");
         try{
             for (Object obj : collection) {
-                builder.append("<tr>\n".indent(ElementProcessor.indentationSize * 2));
+                builder.append("<tr>\n".indent(ElementProcessor.indentationSize));
                 for (Field field : fields) {
                     Object value = field.get(type.cast(obj));
-                    builder.append(String.format("<td>%s</td>", value).indent(ElementProcessor.indentationSize * 3));
+                    builder.append(String.format("<td>%s</td>", value).indent(ElementProcessor.indentationSize * 2));
                 }
-                builder.append("</tr>".indent(ElementProcessor.indentationSize * 2));
+                builder.append("</tr>".indent(ElementProcessor.indentationSize));
             }
         }catch (IllegalAccessException ex){
             ex.printStackTrace();
         }
-        builder.append("""
-                    </tbody>
-                </table>
-                """);
+        builder.append("</tbody>\n");
         return builder.toString();
+
+    }
+
+    public String getMarkup(Collection<?> collection, Class<?> type){
+
+        return """
+                <table>
+                """ +
+                getInnerTableMarkup(collection, type).indent(ElementProcessor.indentationSize) +
+                """
+                </table>
+                """;
 
     }
 
@@ -298,14 +324,17 @@ public class ElementProcessor {
                     if(cacheEnabled){
                         cacheBuilder.append(finalContent);
                     }
-                }else if(field.isAnnotationPresent(ObjectTable.class)){
+                }else if(field.isAnnotationPresent(TableEntries.class)){
                     if(value == null){
                         continue;
                     }else if(!(value instanceof Collection)){
-                        throw new InvalidObjectTable(value.getClass());
+                        throw new InvalidObjectTableException(value.getClass());
+                    }else if(((Collection<?>) value).isEmpty()){
+                        continue;
                     }
-                    Class<?> clazz = value.getClass();
-                    String tableMarkup = getMarkup((Collection<?>) value, clazz).indent(ElementProcessor.indentationSize);
+                    Collection<?> collection = ((Collection<?>) value);
+                    Class<?> clazz = collection.toArray()[0].getClass();
+                    String tableMarkup = getInnerTableMarkup(collection, clazz).indent(ElementProcessor.indentationSize);
                     builder.append(tableMarkup);
                     if(cacheEnabled){
                         cacheBuilder.append(tableMarkup);

@@ -1,5 +1,6 @@
 package io.john.amiscaray.stir.domain.elements;
 
+import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Div extends AbstractUIElement{
 
+    @ChildList
     private List<AbstractUIElement> children = new ArrayList<>();
 
     public static Builder builder(){
