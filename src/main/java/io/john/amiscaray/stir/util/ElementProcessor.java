@@ -6,7 +6,7 @@ import io.john.amiscaray.stir.annotation.exceptions.InvalidClassListException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTableException;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.CacheableElement;
-import io.john.amiscaray.stir.domain.elements.CollectionTableAdapter;
+import io.john.amiscaray.stir.domain.elements.Table;
 import io.john.amiscaray.stir.domain.elements.CssRule;
 import lombok.Getter;
 import lombok.Setter;
@@ -67,8 +67,8 @@ public class ElementProcessor {
                 elements.stream()
                         .map(element -> {
 
-                            if(element instanceof CollectionTableAdapter){
-                                return getMarkup((CollectionTableAdapter) element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
+                            if(element instanceof Table){
+                                return getMarkup((Table) element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
                             }
                             return getMarkup(element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
                         })
@@ -243,9 +243,9 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkup(CollectionTableAdapter adapter){
+    public String getMarkup(Table adapter){
 
-        Collection<?> collection = adapter.getCollection();
+        Collection<?> collection = adapter.getEntries();
         Class<?> clazz = adapter.getClazz();
         return getMarkup(collection, clazz);
 
@@ -388,9 +388,9 @@ public class ElementProcessor {
 
     }
 
-    public <T> CollectionTableAdapter collectionToTableElement(Collection<T> collection, Class<T> clazz){
+    public <T> Table collectionToTableElement(Collection<T> collection, Class<T> clazz){
 
-        return new CollectionTableAdapter(collection, clazz);
+        return new Table(collection, clazz);
 
     }
 

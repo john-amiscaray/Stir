@@ -12,10 +12,10 @@ import java.util.Collection;
 @Data
 @AllArgsConstructor
 @HTMLElement(tagName = "table")
-public class CollectionTableAdapter extends AbstractUIElement {
+public class Table extends AbstractUIElement {
 
     @TableEntries
-    private Collection<?> collection;
+    private Collection<?> entries;
 
     private Class<?> clazz;
 

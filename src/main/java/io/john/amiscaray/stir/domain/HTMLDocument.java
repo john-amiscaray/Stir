@@ -65,7 +65,7 @@ public class HTMLDocument {
         }
 
         public HTMLDocument.Builder addCollectionAsTable(Collection<?> collection, Class<?> clazz){
-            doc.elements.add(new CollectionTableAdapter(collection, clazz));
+            doc.elements.add(new Table(collection, clazz));
             return this;
         }
 
@@ -288,7 +288,7 @@ public class HTMLDocument {
 
         return elements.stream().filter(element -> {
             Class<?> clazz = element.getClass();
-            if(!clazz.isAnnotationPresent(HTMLElement.class) && !(element instanceof CollectionTableAdapter)){
+            if(!clazz.isAnnotationPresent(HTMLElement.class) && !(element instanceof Table)){
                 throw new IllegalElementException("The class " + clazz.getName() + " is not marked as a valid UI HTML element");
             }
             String elementTag = clazz.isAnnotationPresent(HTMLElement.class) ?
