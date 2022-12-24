@@ -1,5 +1,6 @@
 package io.john.amiscaray.stir.domain.elements;
 
+import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.ClassList;
 import io.john.amiscaray.stir.annotation.Id;
 
@@ -13,6 +14,18 @@ public abstract class AbstractUIElement extends CacheableElement {
 
     @ClassList
     protected List<String> classList = new ArrayList<>();
+
+    @Attribute(name = "style")
+    private String style;
+
+    public String getStyle() {
+        return style;
+    }
+
+    public void setStyle(String style) {
+        propertyChangeSupport.firePropertyChange("style", this.style, style);
+        this.style = style;
+    }
 
     public String getId() {
         return id;
