@@ -9,7 +9,7 @@ import lombok.*;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @HTMLElement(tagName = "meta", hasClosing = false)
-public class Meta extends CacheableElement{
+public class Meta extends AbstractUIElement{
 
     @Attribute(name="http-equiv")
     @Getter

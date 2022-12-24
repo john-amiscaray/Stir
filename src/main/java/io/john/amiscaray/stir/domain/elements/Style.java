@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @HTMLElement(tagName = "style")
 @Data
 @NoArgsConstructor
-public class Style extends CacheableElement{
+public class Style extends AbstractUIElement{
 
     @InnerContent(encode = false)
     private StringBuilder css = new StringBuilder();

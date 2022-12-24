@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.util;
 import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTable;
+import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.CacheableElement;
 import io.john.amiscaray.stir.domain.elements.CollectionTableAdapter;
 import io.john.amiscaray.stir.domain.elements.CssRule;
@@ -59,7 +60,7 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkupForElementList(List<?> elements, int indentationLevel){
+    public String getMarkupForElementList(List<? extends AbstractUIElement> elements, int indentationLevel){
 
         return String.format("%s".repeat(elements.size()),
                 elements.stream()
@@ -153,13 +154,13 @@ public class ElementProcessor {
                         field.setAccessible(true);
                         Object value = field.get(element);
                         if(field.isAnnotationPresent(ChildList.class)){
-                            List<Object> children = (List<Object>) value;
+                            List<AbstractUIElement> children = (List<AbstractUIElement>) value;
                             childContent.addAll(children.stream()
                                     .map(this::getMarkup)
                                     .map(String::stripTrailing)
                                     .collect(Collectors.toList()));
                         }else if(field.isAnnotationPresent(Nested.class)){
-                            childContent.add(getMarkup(value).stripTrailing());
+                            childContent.add(getMarkup((AbstractUIElement) value).stripTrailing());
                         }
                     }
                     return unescapeStringFormats(String.format(element.getCacheContents(), childContent.toArray()));
@@ -224,12 +225,12 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkup(Object obj){
+    public String getMarkup(AbstractUIElement obj){
 
         boolean cacheEnabled = false;
 
-        if(obj instanceof CacheableElement && !((CacheableElement) obj).isCacheDisabled() && !ElementProcessor.cacheDisabled){
-            String result = getMarkupFromCache((CacheableElement) obj);
+        if(!obj.isCacheDisabled() && !ElementProcessor.cacheDisabled){
+            String result = getMarkupFromCache(obj);
             if(result != null && !result.isEmpty()){
                 return result;
             }
@@ -270,7 +271,7 @@ public class ElementProcessor {
                         continue;
                     }
                     hasChildren = true;
-                    builder.append(getMarkup(value).indent(ElementProcessor.indentationSize));
+                    builder.append(getMarkup((AbstractUIElement) value).indent(ElementProcessor.indentationSize));
                     if(cacheEnabled){
                         cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
                     }
@@ -282,8 +283,8 @@ public class ElementProcessor {
                     if(!field.getType().equals(List.class)){
                         throw new IllegalElementException("A child list must be a List");
                     }
-                    List<Object> children = (List<Object>) value;
-                    for (Object child : children) {
+                    List<AbstractUIElement> children = (List<AbstractUIElement>) value;
+                    for (AbstractUIElement child : children) {
                         builder.append(getMarkup(child).indent(ElementProcessor.indentationSize));
                         if(cacheEnabled){
                             cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
