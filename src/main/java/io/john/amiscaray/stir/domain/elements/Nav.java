@@ -30,4 +30,10 @@ public class Nav extends AbstractUIElement{
 
     }
 
+    public void addNavLink(NavLink link){
+
+        list.addNavLink(link);
+
+    }
+
 }

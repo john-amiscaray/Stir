@@ -8,7 +8,6 @@ import lombok.*;
 @HTMLElement(tagName = "li")
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
 public class NavLink extends AbstractUIElement{
 

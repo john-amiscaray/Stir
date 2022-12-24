@@ -16,6 +16,14 @@ public class NavLinkList extends AbstractUIElement{
     @ChildList
     private List<NavLink> navLinks = new ArrayList<>();
 
+    public void addNavLink(NavLink link){
+
+        List<NavLink> old = (List<NavLink>) ((ArrayList<NavLink>) navLinks).clone();
+        navLinks.add(link);
+        propertyChangeSupport.firePropertyChange("navLinks", old, navLinks);
+
+    }
+
     public static Builder builder(){
 
         return new Builder();
