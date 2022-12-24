@@ -358,6 +358,12 @@ public class ElementProcessor {
 
     }
 
+    public <T> CollectionTableAdapter collectionToTableElement(Collection<T> collection, Class<T> clazz){
+
+        return new CollectionTableAdapter(collection, clazz);
+
+    }
+
     public String encodeForEntitiesOnly(String dirty){
 
         return StringEscapeUtils.escapeHtml4(dirty);
