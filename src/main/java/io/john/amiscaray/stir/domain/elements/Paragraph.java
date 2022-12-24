@@ -1,22 +1,26 @@
-package io.john.amiscaray.stir.stub;
+package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
-import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @EqualsAndHashCode(callSuper = true)
-@HTMLElement(tagName = "p")
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
+@HTMLElement(tagName = "p")
 public class Paragraph extends AbstractUIElement {
 
     @InnerContent
+    @Getter
     private String content;
+
+    public void setContent(String content) {
+        propertyChangeSupport.firePropertyChange("content", this.content, content);
+        this.content = content;
+    }
 
     public static Builder builder(){
 
@@ -24,34 +28,34 @@ public class Paragraph extends AbstractUIElement {
 
     }
 
-    public static class Builder{
+    public static class Builder {
 
-        private Paragraph paragraph = new Paragraph();
+        private final Paragraph p = new Paragraph();
 
         public Builder content(String content){
 
-            paragraph.content = content;
-            return this;
-
-        }
-
-        public Builder id(String id){
-
-            paragraph.id = id;
+            p.content = content;
             return this;
 
         }
 
         public Builder addClass(String clazz){
 
-            paragraph.addClass(clazz);
+            p.addClass(clazz);
+            return this;
+
+        }
+
+        public Builder id(String id){
+
+            p.id = id;
             return this;
 
         }
 
         public Paragraph build(){
 
-            return paragraph;
+            return p;
 
         }
 

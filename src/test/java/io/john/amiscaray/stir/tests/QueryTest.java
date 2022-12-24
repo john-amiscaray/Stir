@@ -4,6 +4,7 @@ import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
+import io.john.amiscaray.stir.domain.elements.Paragraph;
 import io.john.amiscaray.stir.stub.*;
 import org.junit.jupiter.api.Test;
 

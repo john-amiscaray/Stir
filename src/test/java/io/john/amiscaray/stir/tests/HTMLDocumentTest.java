@@ -3,7 +3,6 @@ package io.john.amiscaray.stir.tests;
 import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
-import io.john.amiscaray.stir.stub.Paragraph;
 import io.john.amiscaray.stir.stub.Student;
 import org.junit.jupiter.api.Test;
 

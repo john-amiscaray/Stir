@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,7 +64,7 @@ public class CacheableElementTest {
     }
 
     @Test
-    public void testAddClassListenerGivesCorrectOldList() throws ExecutionException, InterruptedException {
+    public void testAddClassListenerGivesCorrectOldList() throws ExecutionException, InterruptedException, TimeoutException {
 
         List<String> classes = new ArrayList<>(Arrays.asList("my-class"));
         CompletableFuture<List<String>> future = new CompletableFuture<>();
@@ -73,7 +75,7 @@ public class CacheableElementTest {
             }
         });
         in.addClass("another-class");
-        assertEquals(List.of("my-class"), future.get());
+        assertEquals(List.of("my-class"), future.get(1, TimeUnit.SECONDS));
 
     }
 
