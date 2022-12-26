@@ -1,6 +1,5 @@
 package io.john.amiscaray.stir.tests;
 
-import io.john.amiscaray.stir.domain.elements.Div;
 import io.john.amiscaray.stir.domain.elements.Footer;
 import io.john.amiscaray.stir.domain.elements.Table;
 import io.john.amiscaray.stir.stub.Student;
@@ -49,7 +48,7 @@ public class FooterTest {
                         .child(new Table(List.of(new Student(1, "John", 4.0f)), Student.class))
                         .build();
 
-        assertEquals(htmlLoader.getHTMLContentOf("html/footerWithFormChild.html"), processor.getMarkup(footer));
+        assertEquals(htmlLoader.getHTMLContentOf("html/footerWithTableChild.html"), processor.getMarkup(footer));
 
     }
 
