@@ -1,13 +1,21 @@
 package io.john.amiscaray.stir.tests;
 
+import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.Div;
+import io.john.amiscaray.stir.domain.elements.Paragraph;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.StudentWithTableAnnotation;
 import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,6 +97,65 @@ public class DivTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/divWithTableChild.html"), processor.getMarkup(div));
+
+    }
+
+    @Test
+    public void testDivPropertyChangeOnChildAdd() throws ExecutionException, InterruptedException, TimeoutException {
+
+        CompletableFuture<List<AbstractUIElement>> oldFuture = new CompletableFuture<>();
+        CompletableFuture<List<AbstractUIElement>> newFuture = new CompletableFuture<>();
+        List<AbstractUIElement> children = new ArrayList<>(List.of(new Paragraph("1"), new Paragraph("2"), new Paragraph("3")));
+        Div.Builder builder = Div.builder();
+        for (AbstractUIElement child : children) {
+            builder.addChild(child);
+        }
+        Div div = builder.build();
+        div.addPropertyChangeListener(prop -> {
+            if(prop.getPropertyName().equals("children")){
+                oldFuture.complete((List<AbstractUIElement>) prop.getOldValue());
+                newFuture.complete((List<AbstractUIElement>) prop.getNewValue());
+            }
+        });
+
+        Paragraph newPara = new Paragraph("4");
+        div.addChild(newPara);
+
+        List<AbstractUIElement> old = oldFuture.get(1, TimeUnit.SECONDS);
+        List<AbstractUIElement> n3w = newFuture.get(1, TimeUnit.SECONDS);
+        assertEquals(children, old);
+        children.add(newPara);
+        assertEquals(children, n3w);
+
+    }
+
+    @Test
+    public void testDivPropertyChangeOnChildRemove() throws ExecutionException, InterruptedException, TimeoutException {
+
+        CompletableFuture<List<AbstractUIElement>> oldFuture = new CompletableFuture<>();
+        CompletableFuture<List<AbstractUIElement>> newFuture = new CompletableFuture<>();
+
+        Paragraph p3 = new Paragraph("3");
+        List<AbstractUIElement> children = new ArrayList<>(List.of(new Paragraph("1"), new Paragraph("2"), p3));
+        Div.Builder builder = Div.builder();
+        for (AbstractUIElement child : children) {
+            builder.addChild(child);
+        }
+        Div div = builder.build();
+        div.addPropertyChangeListener(prop -> {
+            if(prop.getPropertyName().equals("children")){
+                oldFuture.complete((List<AbstractUIElement>) prop.getOldValue());
+                newFuture.complete((List<AbstractUIElement>) prop.getNewValue());
+            }
+        });
+
+        div.removeChild(p3);
+        List<AbstractUIElement> old = oldFuture.get(1, TimeUnit.SECONDS);
+        List<AbstractUIElement> n3w = newFuture.get(1, TimeUnit.SECONDS);
+        assertEquals(children, old);
+        assertEquals(children.stream()
+                        .filter(e -> !e.equals(p3))
+                        .collect(Collectors.toList()), n3w);
 
     }
 

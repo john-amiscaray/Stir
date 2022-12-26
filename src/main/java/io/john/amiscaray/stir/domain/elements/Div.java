@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @HTMLElement(tagName = "div")
 @AllArgsConstructor
@@ -19,6 +20,24 @@ public class Div extends AbstractUIElement{
     public static Builder builder(){
 
         return new Builder();
+
+    }
+
+    public void addChild(AbstractUIElement child){
+
+        List<AbstractUIElement> old = (List<AbstractUIElement>) ((ArrayList<AbstractUIElement>) children).clone();
+        children.add(child);
+        propertyChangeSupport.firePropertyChange("children", old, children);
+
+    }
+
+    public void removeChild(AbstractUIElement child){
+
+        List<AbstractUIElement> old = (List<AbstractUIElement>) ((ArrayList<AbstractUIElement>) children).clone();
+        children = children.stream()
+                .filter(e -> !e.equals(child))
+                .collect(Collectors.toList());
+        propertyChangeSupport.firePropertyChange("children", old, children);
 
     }
 
