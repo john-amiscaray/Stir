@@ -4,10 +4,7 @@ import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidClassListException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTableException;
-import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
-import io.john.amiscaray.stir.domain.elements.CacheableElement;
-import io.john.amiscaray.stir.domain.elements.Table;
-import io.john.amiscaray.stir.domain.elements.CssRule;
+import io.john.amiscaray.stir.domain.elements.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.text.StringEscapeUtils;
@@ -78,10 +75,9 @@ public class ElementProcessor {
 
     }
 
-    private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta) throws IllegalAccessException {
+    private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta, String tagName) throws IllegalAccessException {
 
         Class clazz = obj.getClass();
-        String tagName = getTagName(clazz);
         builder.append("<")
                 .append(tagName);
 
@@ -277,14 +273,15 @@ public class ElementProcessor {
         if(tagName == null){
             throw new IllegalElementException("Argument passed to getMarkup is not a valid element");
         }
-        Class type = obj.getClass();
+        Class<?> type = obj.getClass();
+        tagName += (type.equals(Heading.class) ? ((Heading) obj).getLevel() : "");
         StringBuilder builder = new StringBuilder();
         StringBuilder cacheBuilder = new StringBuilder();
         boolean hasChildren = false;
 
         try{
             Field[] fields = getAllFields(type);
-            HTMLElement elementMeta = (HTMLElement) type.getAnnotation(HTMLElement.class);
+            HTMLElement elementMeta = type.getAnnotation(HTMLElement.class);
 
             for(Field field: fields){
                 field.setAccessible(true);
@@ -297,9 +294,9 @@ public class ElementProcessor {
                     }
                 }
             }
-            buildElementOpeningTag(builder, obj, elementMeta);
+            buildElementOpeningTag(builder, obj, elementMeta, tagName);
             if(cacheEnabled){
-                buildElementOpeningTag(cacheBuilder, obj, elementMeta);
+                buildElementOpeningTag(cacheBuilder, obj, elementMeta, tagName);
             }
             for (Field field: fields) {
                 Object value = field.get(obj);
