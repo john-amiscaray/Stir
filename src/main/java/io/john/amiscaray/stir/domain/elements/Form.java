@@ -82,7 +82,7 @@ public class Form extends AbstractUIElement {
 
         public Builder addClass(String clazz){
 
-            form.classList.add(clazz);
+            form.classes.add(clazz);
             return this;
 
         }

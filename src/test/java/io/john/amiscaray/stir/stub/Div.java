@@ -46,7 +46,7 @@ public class Div extends AbstractUIElement {
 
         public Builder addChild(String clazz){
 
-            result.classList.add(clazz);
+            result.classes.add(clazz);
             return this;
 
         }
@@ -63,7 +63,7 @@ public class Div extends AbstractUIElement {
     public String toString() {
         return "Div{" +
                 "id='" + id + '\'' +
-                ", classList=" + classList +
+                ", classList=" + classes +
                 ", children=" + children +
                 '}';
     }

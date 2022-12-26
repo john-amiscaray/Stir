@@ -309,7 +309,7 @@ public class HTMLDocument {
 
     private static List<AbstractUIElement> findAllOfClass(String clazz, List<AbstractUIElement> elements){
 
-        return elements.stream().filter(element -> element.getClassList().contains(clazz)).collect(Collectors.toList());
+        return elements.stream().filter(element -> element.getClasses().contains(clazz)).collect(Collectors.toList());
 
     }
 
@@ -425,9 +425,9 @@ public class HTMLDocument {
                 .filter(element -> {
 
                     if(attributeName.equals("class")){
-                        String classAttValue = element.getClassList().stream().reduce("", (s1, s2) -> s1 + " " + s2).trim();
-                        return element.getClassList() != null
-                                && !element.getClassList().isEmpty()
+                        String classAttValue = element.getClasses().stream().reduce("", (s1, s2) -> s1 + " " + s2).trim();
+                        return element.getClasses() != null
+                                && !element.getClasses().isEmpty()
                                 && predicate.test(classAttValue);
                     }else if(attributeName.equals("id")){
                         return element.getId() != null && predicate.test(element.getId());

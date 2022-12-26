@@ -69,7 +69,7 @@ public class CacheableElementTest {
         List<String> classes = new ArrayList<>(Arrays.asList("my-class"));
         CompletableFuture<List<String>> oldFuture = new CompletableFuture<>();
         CompletableFuture<List<String>> newFuture = new CompletableFuture<>();
-        in.setClassList(classes);
+        in.setClasses(classes);
         in.addPropertyChangeListener(e -> {
             if(e.getPropertyName().equals("classList")){
                 oldFuture.complete((List<String>) e.getOldValue());

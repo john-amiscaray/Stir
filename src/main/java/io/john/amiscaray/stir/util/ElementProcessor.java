@@ -96,7 +96,14 @@ public class ElementProcessor {
                         continue;
                     }
                 }
-                builder.append(" ").append(meta.name()).append("=\"").append(encode(value.toString())).append("\"");
+                if(f.getType().equals(Boolean.class)){
+                    assert value instanceof Boolean;
+                    if((Boolean) value){
+                        builder.append(" ").append(meta.name());
+                    }
+                }else{
+                    builder.append(" ").append(meta.name()).append("=\"").append(encode(value.toString())).append("\"");
+                }
             }else if(f.isAnnotationPresent(Id.class)){
                 if(value == null){
                     continue;
@@ -279,7 +286,9 @@ public class ElementProcessor {
 
             for(Field field: fields){
                 field.setAccessible(true);
-                if(field.isAnnotationPresent(Label.class) && field.get(obj) != null){
+                boolean hasAnnotation = field.isAnnotationPresent(Label.class);
+                boolean isNotNull = field.get(obj) != null;
+                if(hasAnnotation && isNotNull){
                     buildLabel(builder, field, obj);
                     if(cacheEnabled){
                         buildLabel(cacheBuilder, field, obj);
