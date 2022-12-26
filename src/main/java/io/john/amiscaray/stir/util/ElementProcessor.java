@@ -53,7 +53,9 @@ public class ElementProcessor {
     public Field[] getAllFields(Class<?> type){
 
         Field[] declared = type.getDeclaredFields();
-        Field[] superFields = type.getSuperclass().getDeclaredFields();
+        Class<?> superClazz = type.getSuperclass();
+        Field[] superFields = superClazz.equals(Object.class) || superClazz.equals(CacheableElement.class) ?
+                new Field[0] : getAllFields(superClazz);
         Field[] fields = new Field[declared.length + superFields.length];
         Arrays.setAll(fields, i ->
                 (i < superFields.length ? superFields[i] : declared[i - superFields.length]));

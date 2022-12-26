@@ -21,7 +21,7 @@ public class FooterTest {
     @Test
     public void testEmptyFooter() throws IOException {
 
-        Footer footer = Footer.fromDiv(Div.builder()
+        Footer footer = Footer.fromDiv(Div.divBuilder()
                 .build());
 
         assertEquals(htmlLoader.getHTMLContentOf("html/emptyFooter.html"), processor.getMarkup(footer));
@@ -31,7 +31,7 @@ public class FooterTest {
     @Test
     public void testFooterWithFormChild() throws IOException {
 
-        Footer footer = Footer.fromDiv(Div.builder()
+        Footer footer = Footer.fromDiv(Div.divBuilder()
                         .child(new Table(List.of(new Student(1, "John", 4.0f)), Student.class))
                         .build());
 
@@ -42,7 +42,7 @@ public class FooterTest {
     @Test
     public void testFooterFromDiv() throws IOException {
 
-        Footer footer = Div.builder()
+        Footer footer = Div.divBuilder()
                 .child(new Table(List.of(new Student(1, "John", 4.0f)), Student.class))
                 .build()
                 .toFooter();

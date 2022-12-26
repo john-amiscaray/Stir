@@ -15,7 +15,7 @@ public class Div extends AbstractUIElement{
     @Getter
     private List<AbstractUIElement> children;
 
-    @Builder
+    @Builder(builderMethodName="divBuilder")
     public Div(String id, @Singular List<String> cssClasses, String style, @Singular List<AbstractUIElement> children) {
         super(id, cssClasses, style);
         this.children = children;

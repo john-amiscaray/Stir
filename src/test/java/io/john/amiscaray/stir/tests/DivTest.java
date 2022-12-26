@@ -28,7 +28,7 @@ public class DivTest {
     @Test
     public void testEmptyDiv() throws IOException {
 
-        Div div = Div.builder()
+        Div div = Div.divBuilder()
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/emptyDiv.html"), processor.getMarkup(div));
@@ -38,7 +38,7 @@ public class DivTest {
     @Test
     public void testDivWithId() throws IOException {
 
-        Div div = Div.builder()
+        Div div = Div.divBuilder()
                 .id("myDiv")
                 .build();
 
@@ -49,7 +49,7 @@ public class DivTest {
     @Test
     public void testDivWithClass() throws IOException {
 
-        Div div = Div.builder()
+        Div div = Div.divBuilder()
                 .cssClass("yellow")
                 .build();
 
@@ -60,7 +60,7 @@ public class DivTest {
     @Test
     public void testDivWithMultipleClasses() throws IOException {
 
-        Div div = Div.builder()
+        Div div = Div.divBuilder()
                 .cssClass("yellow")
                 .cssClass("red")
                 .cssClass("blue")
@@ -73,7 +73,7 @@ public class DivTest {
     @Test
     public void testDivWithMultipleClassesAndId() throws IOException {
 
-        Div div = Div.builder()
+        Div div = Div.divBuilder()
                 .id("myDiv")
                 .cssClass("yellow")
                 .cssClass("red")
@@ -93,7 +93,7 @@ public class DivTest {
                 new StudentWithTableAnnotation(3, "Steve", 2.33f)
         );
 
-        Div div = Div.builder()
+        Div div = Div.divBuilder()
                 .child(processor.collectionToTableElement(students, StudentWithTableAnnotation.class))
                 .build();
 
@@ -107,7 +107,7 @@ public class DivTest {
         CompletableFuture<List<AbstractUIElement>> oldFuture = new CompletableFuture<>();
         CompletableFuture<List<AbstractUIElement>> newFuture = new CompletableFuture<>();
         List<AbstractUIElement> children = new ArrayList<>(List.of(new Paragraph("1"), new Paragraph("2"), new Paragraph("3")));
-        Div.DivBuilder builder = Div.builder();
+        Div.DivBuilder builder = Div.divBuilder();
         for (AbstractUIElement child : children) {
             builder.child(child);
         }
@@ -138,7 +138,7 @@ public class DivTest {
 
         Paragraph p3 = new Paragraph("3");
         List<AbstractUIElement> children = Arrays.asList(new AbstractUIElement[]{new Paragraph("1"), new Paragraph("2"), p3});
-        Div.DivBuilder builder = Div.builder();
+        Div.DivBuilder builder = Div.divBuilder();
         for (AbstractUIElement child : children) {
             builder.child(child);
         }

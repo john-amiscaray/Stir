@@ -1,5 +1,7 @@
-package io.john.amiscaray.stir.domain.elements;
+package io.john.amiscaray.stir.tests;
 
+import io.john.amiscaray.stir.domain.elements.ListItem;
+import io.john.amiscaray.stir.domain.elements.UnorderedList;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
@@ -14,61 +16,61 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class OrderedListTest {
+public class UnorderedListTest {
 
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
     private final ElementProcessor elementProcessor = ElementProcessor.getInstance();
 
     @Test
-    public void testEmptyOrderedList() throws IOException {
+    public void testEmptyUnorderedList() throws IOException {
 
-        OrderedList ol = OrderedList.builder()
+        UnorderedList ul = UnorderedList.builder()
                 .build();
 
-        assertEquals(htmlLoader.getHTMLContentOf("html/emptyOl.html"), elementProcessor.getMarkup(ol));
+        assertEquals(htmlLoader.getHTMLContentOf("html/emptyUl.html"), elementProcessor.getMarkup(ul));
 
     }
 
     @Test
-    public void testOrderedListWithClassesAndId() throws IOException {
+    public void testUnorderedListWithClassesAndId() throws IOException {
 
-        OrderedList ol = OrderedList.builder()
-                .id("myOl")
+        UnorderedList ul = UnorderedList.builder()
+                .id("myUl")
                 .cssClass("red")
                 .cssClass("blue")
                 .cssClass("green")
                 .build();
 
-        assertEquals(htmlLoader.getHTMLContentOf("html/olWithClassesAndId.html"), elementProcessor.getMarkup(ol));
+        assertEquals(htmlLoader.getHTMLContentOf("html/ulWithClassesAndId.html"), elementProcessor.getMarkup(ul));
 
     }
 
     @Test
-    public void testOrderedListWithListItems() throws IOException {
+    public void testUnorderedListWithListItems() throws IOException {
 
-        OrderedList ol = OrderedList.builder()
+        UnorderedList ul = UnorderedList.builder()
                 .listItem(new ListItem("Bacon"))
                 .listItem(new ListItem("Tuna"))
                 .build();
 
-        assertEquals(htmlLoader.getHTMLContentOf("html/olWithListItems.html"), elementProcessor.getMarkup(ol));
+        assertEquals(htmlLoader.getHTMLContentOf("html/ulWithListItems.html"), elementProcessor.getMarkup(ul));
 
     }
-    
+
     @Test
     public void testAddListItemPropChangeSupport() throws ExecutionException, InterruptedException, TimeoutException {
 
         CompletableFuture<List<ListItem>> oldFuture = new CompletableFuture<>();
         CompletableFuture<List<ListItem>> newFuture = new CompletableFuture<>();
         List<ListItem> children = new ArrayList<>(List.of(new ListItem("1"), new ListItem("2"), new ListItem("3")));
-        OrderedList.OrderedListBuilder builder = OrderedList.builder();
+        UnorderedList.UnorderedListBuilder builder = UnorderedList.builder();
         for (ListItem child : children) {
             builder.listItem(child);
         }
-        OrderedList orderedList = builder.build();
-        orderedList.addPropertyChangeListener(prop -> {
+        UnorderedList UnorderedList = builder.build();
+        UnorderedList.addPropertyChangeListener(prop -> {
             if(prop.getPropertyName().equals("listItems")){
                 oldFuture.complete((List<ListItem>) prop.getOldValue());
                 newFuture.complete((List<ListItem>) prop.getNewValue());
@@ -76,14 +78,14 @@ public class OrderedListTest {
         });
 
         ListItem newItem = new ListItem("4");
-        orderedList.addListItem(newItem);
+        UnorderedList.addListItem(newItem);
 
         List<ListItem> old = oldFuture.get(1, TimeUnit.SECONDS);
         List<ListItem> n3w = newFuture.get(1, TimeUnit.SECONDS);
         assertEquals(children, old);
         children.add(newItem);
         assertEquals(children, n3w);
-        
+
     }
 
     @Test
@@ -94,19 +96,19 @@ public class OrderedListTest {
 
         ListItem i3 = new ListItem("newItem");
         List<ListItem> children = Arrays.asList(new ListItem("i1"), new ListItem("i2"), i3);
-        OrderedList.OrderedListBuilder builder = OrderedList.builder();
+        UnorderedList.UnorderedListBuilder builder = UnorderedList.builder();
         for (ListItem child : children) {
             builder.listItem(child);
         }
-        OrderedList ol = builder.build();
-        ol.addPropertyChangeListener(prop -> {
+        UnorderedList ul = builder.build();
+        ul.addPropertyChangeListener(prop -> {
             if(prop.getPropertyName().equals("listItems")){
                 oldFuture.complete((List<ListItem>) prop.getOldValue());
                 newFuture.complete((List<ListItem>) prop.getNewValue());
             }
         });
 
-        ol.removeListItem(i3);
+        ul.removeListItem(i3);
         List<ListItem> old = oldFuture.get(1, TimeUnit.SECONDS);
         List<ListItem> n3w = newFuture.get(1, TimeUnit.SECONDS);
         assertEquals(children, old);
@@ -115,5 +117,5 @@ public class OrderedListTest {
                 .collect(Collectors.toList()), n3w);
 
     }
-
+    
 }
