@@ -28,7 +28,7 @@ public class QueryTest {
             .addClass("spooky")
             .content("Other spooky content")
             .build();
-    private final Input in = new Input("text", "Hello World", "AAAAAAAA");
+    private final Input in = new Input("someIn", "text", "Hello World", "AAAAAAAA");
     private final Form libForm = Form.builder()
             .id("myForm")
             .addClass("form")
