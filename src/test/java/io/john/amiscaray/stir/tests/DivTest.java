@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -49,7 +50,7 @@ public class DivTest {
     public void testDivWithClass() throws IOException {
 
         Div div = Div.builder()
-                .addClass("yellow")
+                .cssClass("yellow")
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/divWithClass.html"), processor.getMarkup(div));
@@ -60,9 +61,9 @@ public class DivTest {
     public void testDivWithMultipleClasses() throws IOException {
 
         Div div = Div.builder()
-                .addClass("yellow")
-                .addClass("red")
-                .addClass("blue")
+                .cssClass("yellow")
+                .cssClass("red")
+                .cssClass("blue")
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/multiClassDiv.html"), processor.getMarkup(div));
@@ -74,9 +75,9 @@ public class DivTest {
 
         Div div = Div.builder()
                 .id("myDiv")
-                .addClass("yellow")
-                .addClass("red")
-                .addClass("blue")
+                .cssClass("yellow")
+                .cssClass("red")
+                .cssClass("blue")
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/divWithClassesAndId.html"), processor.getMarkup(div));
@@ -93,7 +94,7 @@ public class DivTest {
         );
 
         Div div = Div.builder()
-                .addChild(processor.collectionToTableElement(students, StudentWithTableAnnotation.class))
+                .child(processor.collectionToTableElement(students, StudentWithTableAnnotation.class))
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/divWithTableChild.html"), processor.getMarkup(div));
@@ -106,9 +107,9 @@ public class DivTest {
         CompletableFuture<List<AbstractUIElement>> oldFuture = new CompletableFuture<>();
         CompletableFuture<List<AbstractUIElement>> newFuture = new CompletableFuture<>();
         List<AbstractUIElement> children = new ArrayList<>(List.of(new Paragraph("1"), new Paragraph("2"), new Paragraph("3")));
-        Div.Builder builder = Div.builder();
+        Div.DivBuilder builder = Div.builder();
         for (AbstractUIElement child : children) {
-            builder.addChild(child);
+            builder.child(child);
         }
         Div div = builder.build();
         div.addPropertyChangeListener(prop -> {
@@ -136,10 +137,10 @@ public class DivTest {
         CompletableFuture<List<AbstractUIElement>> newFuture = new CompletableFuture<>();
 
         Paragraph p3 = new Paragraph("3");
-        List<AbstractUIElement> children = new ArrayList<>(List.of(new Paragraph("1"), new Paragraph("2"), p3));
-        Div.Builder builder = Div.builder();
+        List<AbstractUIElement> children = Arrays.asList(new AbstractUIElement[]{new Paragraph("1"), new Paragraph("2"), p3});
+        Div.DivBuilder builder = Div.builder();
         for (AbstractUIElement child : children) {
-            builder.addChild(child);
+            builder.child(child);
         }
         Div div = builder.build();
         div.addPropertyChangeListener(prop -> {

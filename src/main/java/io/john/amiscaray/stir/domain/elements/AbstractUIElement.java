@@ -20,7 +20,7 @@ public abstract class AbstractUIElement extends CacheableElement {
     protected List<String> classes = new ArrayList<>();
 
     @Attribute(name = "style")
-    private String style;
+    protected String style;
 
     public String getStyle() {
         return style;

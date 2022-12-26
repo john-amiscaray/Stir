@@ -2,38 +2,38 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @HTMLElement(tagName = "div")
-@AllArgsConstructor
-@NoArgsConstructor
 public class Div extends AbstractUIElement{
 
     @ChildList
-    private List<AbstractUIElement> children = new ArrayList<>();
+    @Getter
+    private List<AbstractUIElement> children;
 
-    public static Builder builder(){
-
-        return new Builder();
-
+    @Builder
+    public Div(String id, @Singular List<String> cssClasses, String style, @Singular List<AbstractUIElement> children) {
+        super(id, cssClasses, style);
+        this.children = children;
     }
 
     public void addChild(AbstractUIElement child){
 
-        List<AbstractUIElement> old = (List<AbstractUIElement>) ((ArrayList<AbstractUIElement>) children).clone();
-        children.add(child);
+        List<AbstractUIElement> old = new ArrayList<>(children);
+        List<AbstractUIElement> newList = new ArrayList<>(children);
+        newList.add(child);
+        this.children = newList;
         propertyChangeSupport.firePropertyChange("children", old, children);
 
     }
 
     public void removeChild(AbstractUIElement child){
 
-        List<AbstractUIElement> old = (List<AbstractUIElement>) ((ArrayList<AbstractUIElement>) children).clone();
+        List<AbstractUIElement> old = new ArrayList<>(children);
         children = children.stream()
                 .filter(e -> !e.equals(child))
                 .collect(Collectors.toList());
@@ -41,36 +41,9 @@ public class Div extends AbstractUIElement{
 
     }
 
-    public static class Builder {
+    public Footer toFooter(){
 
-        private final Div div = new Div();
-
-        public Builder addClass(String clazz){
-
-            div.addClass(clazz);
-            return this;
-
-        }
-
-        public Builder id(String id){
-
-            div.id = id;
-            return this;
-
-        }
-
-        public Builder addChild(AbstractUIElement child){
-
-            div.children.add(child);
-            return this;
-
-        }
-
-        public Div build(){
-
-            return div;
-
-        }
+        return new Footer(id, classes, style, children);
 
     }
 
