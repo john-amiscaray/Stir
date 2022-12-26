@@ -26,16 +26,20 @@ public class Style extends AbstractUIElement{
 
     public void addRule(CssRule rule){
 
+        String old = css.toString();
         css.append(processor.processStyle(rule));
+        propertyChangeSupport.firePropertyChange("css", new StringBuilder(old), css);
 
     }
 
     public void addStylesAsRawString(String styles){
 
+        String old = css.toString();
         if(!css.isEmpty()){
             css.append("\n");
         }
         css.append(styles);
+        propertyChangeSupport.firePropertyChange("css", new StringBuilder(old), css);
 
     }
 
