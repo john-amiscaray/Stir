@@ -102,7 +102,7 @@ public class Select extends AbstractUIElement {
 
     public void addOption(Option option) {
 
-        List<Option> old = (List<Option>) ((ArrayList<Option>) options).clone();
+        List<Option> old = new ArrayList<>(options);
         options.add(option);
         propertyChangeSupport.firePropertyChange("options", old, options);
 

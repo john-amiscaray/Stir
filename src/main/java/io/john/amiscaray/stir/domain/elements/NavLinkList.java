@@ -18,7 +18,7 @@ public class NavLinkList extends AbstractUIElement{
 
     public void addNavLink(NavLink link){
 
-        List<NavLink> old = (List<NavLink>) ((ArrayList<NavLink>) navLinks).clone();
+        List<NavLink> old = new ArrayList<>(navLinks);
         navLinks.add(link);
         propertyChangeSupport.firePropertyChange("navLinks", old, navLinks);
 

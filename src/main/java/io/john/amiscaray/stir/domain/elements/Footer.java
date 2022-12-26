@@ -13,7 +13,7 @@ public class Footer extends Div{
 
     public static Footer fromDiv(Div div){
 
-        return new Footer(div.getId(), div.getClasses(), div.getStyle(), div.getChildren());
+        return new Footer(div.getId(), div.getCssClasses(), div.getStyle(), div.getChildren());
 
     }
 

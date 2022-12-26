@@ -17,7 +17,7 @@ public abstract class AbstractUIElement extends CacheableElement {
     protected String id;
 
     @ClassList
-    protected List<String> classes = new ArrayList<>();
+    protected List<String> cssClasses = new ArrayList<>();
 
     @Attribute(name = "style")
     protected String style;
@@ -35,8 +35,8 @@ public abstract class AbstractUIElement extends CacheableElement {
         return id;
     }
 
-    public List<String> getClasses() {
-        return classes;
+    public List<String> getCssClasses() {
+        return cssClasses;
     }
 
     public void setId(String id) {
@@ -44,16 +44,16 @@ public abstract class AbstractUIElement extends CacheableElement {
         this.id = id;
     }
 
-    public void setClasses(List<String> classes) {
-        propertyChangeSupport.firePropertyChange("classList", this.classes, classes);
-        this.classes = classes;
+    public void setCssClasses(List<String> cssClasses) {
+        propertyChangeSupport.firePropertyChange("classList", this.cssClasses, cssClasses);
+        this.cssClasses = cssClasses;
     }
 
     public void addClass(String clazz){
 
-        List<String> old = (List<String>) ((ArrayList<String>) classes).clone();
-        classes.add(clazz);
-        propertyChangeSupport.firePropertyChange("classList", old, classes);
+        List<String> old = new ArrayList<>(cssClasses);
+        cssClasses.add(clazz);
+        propertyChangeSupport.firePropertyChange("classList", old, cssClasses);
 
     }
 

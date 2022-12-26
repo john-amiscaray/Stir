@@ -26,7 +26,7 @@ public class Div extends AbstractUIElement{
         List<AbstractUIElement> old = new ArrayList<>(children);
         List<AbstractUIElement> newList = new ArrayList<>(children);
         newList.add(child);
-        this.children = newList;
+        children = newList;
         propertyChangeSupport.firePropertyChange("children", old, children);
 
     }
@@ -43,7 +43,7 @@ public class Div extends AbstractUIElement{
 
     public Footer toFooter(){
 
-        return new Footer(id, classes, style, children);
+        return new Footer(id, cssClasses, style, children);
 
     }
 
