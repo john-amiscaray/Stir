@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class AbstractElementContainer <T extends AbstractUIElement> extends AbstractUIElement{
+public abstract class AbstractElementContainer <T extends AbstractUIElement> extends AbstractUIElement{
 
     @ChildList
     @Getter

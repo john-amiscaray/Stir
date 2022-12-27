@@ -32,8 +32,8 @@ public class ParagraphTest {
     public void testParagraphWithClasses() throws IOException {
 
         Paragraph p = Paragraph.builder()
-                .addClass("yellow")
-                .addClass("red")
+                .cssClass("yellow")
+                .cssClass("red")
                 .build();
 
         assertEquals(loader.getHTMLContentOf("html/pWithClasses.html"), processor.getMarkup(p));
@@ -44,8 +44,8 @@ public class ParagraphTest {
     public void testParagraphWithClassesAndId() throws IOException {
 
         Paragraph p = Paragraph.builder()
-                .addClass("yellow")
-                .addClass("red")
+                .cssClass("yellow")
+                .cssClass("red")
                 .id("myP")
                 .build();
 
@@ -87,9 +87,9 @@ public class ParagraphTest {
 
         Paragraph p = Paragraph.builder()
                 .content("This is text")
-                .addClass("clazz")
+                .cssClass("clazz")
                 .id("id")
-                .addClass("text")
+                .cssClass("text")
                 .build();
         assertEquals(CacheableElement.CacheStatus.EMPTY, p.getCacheStatus());
         processor.getMarkup(p);

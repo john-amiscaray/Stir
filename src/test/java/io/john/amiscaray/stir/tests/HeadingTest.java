@@ -21,8 +21,14 @@ public class HeadingTest {
 
         Div div = Div.builder()
                 .child(new Heading(1, "This is a BIG plane"))
-                .child(new Heading(2, "This is a smaller plane"))
-                .child(new Heading(3, "This is an even smaller plane"))
+                .child(Heading.builder()
+                        .level(2)
+                        .content("This is a smaller plane")
+                        .build())
+                .child(Heading.builder()
+                        .level(3)
+                        .content("This is an even smaller plane")
+                        .build())
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/testHeadings123.html"), processor.getMarkup(div));

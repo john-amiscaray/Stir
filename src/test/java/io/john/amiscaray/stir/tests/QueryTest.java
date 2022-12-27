@@ -19,13 +19,13 @@ public class QueryTest {
     private final Paragraph myParagraph = new Paragraph("Hello World!");
     private final Paragraph paragraph2 = Paragraph.builder()
             .id("p2")
-            .addClass("content")
-            .addClass("spooky")
+            .cssClass("content")
+            .cssClass("spooky")
             .content("This is some spooky content")
             .build();
     private final Paragraph paragraph3 = Paragraph.builder()
-            .addClass("content")
-            .addClass("spooky")
+            .cssClass("content")
+            .cssClass("spooky")
             .content("Other spooky content")
             .build();
     private final Input in = new Input("someIn", "text", "Hello World", "AAAAAAAA");
