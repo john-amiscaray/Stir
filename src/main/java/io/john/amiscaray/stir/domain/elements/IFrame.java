@@ -9,7 +9,7 @@ import lombok.Singular;
 import java.util.List;
 
 @HTMLElement(tagName = "iframe")
-public class IFrame extends AbstractUIElement{
+public class IFrame extends AbstractContentFrame{
 
     @Attribute(name = "allow")
     @Getter
@@ -18,10 +18,6 @@ public class IFrame extends AbstractUIElement{
     @Attribute(name = "allowfullscreen")
     @Getter
     private Boolean allowFullScreen;
-
-    @Attribute(name = "height")
-    @Getter
-    private Integer height;
 
     @Attribute(name = "loading")
     @Getter
@@ -39,33 +35,22 @@ public class IFrame extends AbstractUIElement{
     @Getter
     private String sandbox;
 
-    @Attribute(name = "src")
-    @Getter
-    private String src;
-
     @Attribute(name = "srcdoc")
     @Getter
     private String srcDoc;
-
-    @Attribute(name = "width")
-    @Getter
-    private Integer width;
 
     @Builder
     public IFrame(String id, @Singular List<String> cssClasses, String style, String allow, Boolean allowFullScreen,
                   Integer height, String loading, String name, String referrerPolicy,
                   String sandbox, String src, String srcDoc, Integer width) {
-        super(id, cssClasses, style);
+        super(id, cssClasses, style, height, src, width);
         this.allow = allow;
         this.allowFullScreen = allowFullScreen;
-        this.height = height;
         this.loading = loading;
         this.name = name;
         this.referrerPolicy = referrerPolicy;
         this.sandbox = sandbox;
-        this.src = src;
         this.srcDoc = srcDoc;
-        this.width = width;
     }
 
     public IFrame(String src) {
@@ -81,11 +66,6 @@ public class IFrame extends AbstractUIElement{
     public void setAllowFullScreen(Boolean allowFullScreen) {
         propertyChangeSupport.firePropertyChange("allowFullScreen", this.allowFullScreen, allowFullScreen);
         this.allowFullScreen = allowFullScreen;
-    }
-
-    public void setHeight(Integer height) {
-        propertyChangeSupport.firePropertyChange("height", this.height, height);
-        this.height = height;
     }
 
     public void setLoading(String loading) {
@@ -108,19 +88,9 @@ public class IFrame extends AbstractUIElement{
         this.sandbox = sandbox;
     }
 
-    public void setSrc(String src) {
-        propertyChangeSupport.firePropertyChange("src", this.src, src);
-        this.src = src;
-    }
-
     public void setSrcDoc(String srcDoc) {
         propertyChangeSupport.firePropertyChange("srcDoc", this.srcDoc, srcDoc);
         this.srcDoc = srcDoc;
-    }
-
-    public void setWidth(Integer width) {
-        propertyChangeSupport.firePropertyChange("width", this.width, width);
-        this.width = width;
     }
 
 }

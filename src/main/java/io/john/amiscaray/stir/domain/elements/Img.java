@@ -8,16 +8,13 @@ import lombok.Singular;
 import java.util.List;
 
 @HTMLElement(tagName = "img", hasClosing = false)
-public class Img extends AbstractUIElement{
+public class Img extends AbstractContentFrame{
 
     @Attribute(name = "alt")
     private String alt;
 
     @Attribute(name = "crossorigin")
     private String crossOrigin;
-
-    @Attribute(name = "height")
-    private Integer height;
 
     @Attribute(name = "ismap")
     private Boolean isMap;
@@ -34,34 +31,25 @@ public class Img extends AbstractUIElement{
     @Attribute(name = "sizes")
     private String sizes;
 
-    @Attribute(name = "src")
-    private String src;
-
     @Attribute(name = "srcset")
     private String srcSet;
 
     @Attribute(name = "usemap")
     private String useMap;
 
-    @Attribute(name = "width")
-    private Integer width;
-
     @Builder
     public Img(String id, @Singular List<String> cssClasses, String style, String alt, String crossOrigin, Integer height,
                Boolean isMap, String loading, String longDesc, String referrerPolicy, String sizes, String src, String srcSet, String useMap, Integer width) {
-        super(id, cssClasses, style);
+        super(id, cssClasses, style, height, src, width);
         this.alt = alt;
         this.crossOrigin = crossOrigin;
-        this.height = height;
         this.isMap = isMap;
         this.loading = loading;
         this.longDesc = longDesc;
         this.referrerPolicy = referrerPolicy;
         this.sizes = sizes;
-        this.src = src;
         this.srcSet = srcSet;
         this.useMap = useMap;
-        this.width = width;
     }
 
     public Img(String alt, String src) {
@@ -77,11 +65,6 @@ public class Img extends AbstractUIElement{
     public void setCrossOrigin(String crossOrigin) {
         propertyChangeSupport.firePropertyChange("crossOrigin", this.crossOrigin, crossOrigin);
         this.crossOrigin = crossOrigin;
-    }
-
-    public void setHeight(Integer height) {
-        propertyChangeSupport.firePropertyChange("height", this.height, height);
-        this.height = height;
     }
 
     public void setMap(Boolean map) {
@@ -109,11 +92,6 @@ public class Img extends AbstractUIElement{
         this.sizes = sizes;
     }
 
-    public void setSrc(String src) {
-        propertyChangeSupport.firePropertyChange("src", this.src, src);
-        this.src = src;
-    }
-
     public void setSrcSet(String srcSet) {
         propertyChangeSupport.firePropertyChange("srcSet", this.srcSet, srcSet);
         this.srcSet = srcSet;
@@ -122,10 +100,5 @@ public class Img extends AbstractUIElement{
     public void setUseMap(String useMap) {
         propertyChangeSupport.firePropertyChange("useMap", this.useMap, useMap);
         this.useMap = useMap;
-    }
-
-    public void setWidth(Integer width) {
-        propertyChangeSupport.firePropertyChange("width", this.width, width);
-        this.width = width;
     }
 }
