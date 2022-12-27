@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -62,18 +64,21 @@ public class CacheableElementTest {
     }
 
     @Test
-    public void testAddClassListenerGivesCorrectOldList() throws ExecutionException, InterruptedException {
+    public void testAddClassListenerGivesCorrectOldList() throws ExecutionException, InterruptedException, TimeoutException {
 
         List<String> classes = new ArrayList<>(Arrays.asList("my-class"));
-        CompletableFuture<List<String>> future = new CompletableFuture<>();
-        in.setClassList(classes);
+        CompletableFuture<List<String>> oldFuture = new CompletableFuture<>();
+        CompletableFuture<List<String>> newFuture = new CompletableFuture<>();
+        in.setCssClasses(classes);
         in.addPropertyChangeListener(e -> {
             if(e.getPropertyName().equals("classList")){
-                future.complete((List<String>) e.getOldValue());
+                oldFuture.complete((List<String>) e.getOldValue());
+                newFuture.complete((List<String>) e.getNewValue());
             }
         });
         in.addClass("another-class");
-        assertEquals(List.of("my-class"), future.get());
+        assertEquals(List.of("my-class"), oldFuture.get(1, TimeUnit.SECONDS));
+        assertEquals(List.of("my-class", "another-class"), newFuture.get(1, TimeUnit.SECONDS));
 
     }
 

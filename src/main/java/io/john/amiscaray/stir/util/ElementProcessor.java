@@ -2,10 +2,9 @@ package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.annotation.*;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
-import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTable;
-import io.john.amiscaray.stir.domain.elements.CacheableElement;
-import io.john.amiscaray.stir.domain.elements.CollectionTableAdapter;
-import io.john.amiscaray.stir.domain.elements.CssRule;
+import io.john.amiscaray.stir.annotation.exceptions.InvalidClassListException;
+import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTableException;
+import io.john.amiscaray.stir.domain.elements.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.apache.commons.text.StringEscapeUtils;
@@ -51,7 +50,9 @@ public class ElementProcessor {
     public Field[] getAllFields(Class<?> type){
 
         Field[] declared = type.getDeclaredFields();
-        Field[] superFields = type.getSuperclass().getDeclaredFields();
+        Class<?> superClazz = type.getSuperclass();
+        Field[] superFields = superClazz.equals(Object.class) || superClazz.equals(CacheableElement.class) ?
+                new Field[0] : getAllFields(superClazz);
         Field[] fields = new Field[declared.length + superFields.length];
         Arrays.setAll(fields, i ->
                 (i < superFields.length ? superFields[i] : declared[i - superFields.length]));
@@ -59,14 +60,14 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkupForElementList(List<?> elements, int indentationLevel){
+    public String getMarkupForElementList(List<? extends AbstractUIElement> elements, int indentationLevel){
 
         return String.format("%s".repeat(elements.size()),
                 elements.stream()
                         .map(element -> {
 
-                            if(element instanceof CollectionTableAdapter){
-                                return getMarkup((CollectionTableAdapter) element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
+                            if(element instanceof Table){
+                                return getMarkup((Table) element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
                             }
                             return getMarkup(element).indent(ElementProcessor.getIndentationSize() * indentationLevel);
                         })
@@ -74,10 +75,9 @@ public class ElementProcessor {
 
     }
 
-    private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta) throws IllegalAccessException {
+    private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta, String tagName) throws IllegalAccessException {
 
         Class clazz = obj.getClass();
-        String tagName = getTagName(clazz);
         builder.append("<")
                 .append(tagName);
 
@@ -94,12 +94,36 @@ public class ElementProcessor {
                         continue;
                     }
                 }
-                builder.append(" ").append(meta.name()).append("=\"").append(encode(value.toString())).append("\"");
+                if(f.getType().equals(Boolean.class)){
+                    assert value instanceof Boolean;
+                    if((Boolean) value){
+                        builder.append(" ").append(meta.name());
+                    }
+                }else{
+                    builder.append(" ").append(meta.name()).append("=\"").append(encode(value.toString())).append("\"");
+                }
             }else if(f.isAnnotationPresent(Id.class)){
                 if(value == null){
                     continue;
                 }
                 builder.append(" id=\"").append(encode(value.toString())).append("\"");
+            }else if(f.isAnnotationPresent(ClassList.class)){
+                if(!(value instanceof List)){
+                    throw new InvalidClassListException();
+                }
+                if(((List<?>) value).isEmpty()){
+                    continue;
+                }
+                builder.append(" class=\"");
+                try{
+                    StringBuilder styleClassBuilder = new StringBuilder();
+                    for (String styleClazz : (List<String>) value) {
+                        styleClassBuilder.append(styleClazz).append(" ");
+                    }
+                    builder.append(styleClassBuilder.toString().trim()).append("\"");
+                }catch (ClassCastException ex){
+                    throw new InvalidClassListException();
+                }
             }
         }
 
@@ -153,13 +177,13 @@ public class ElementProcessor {
                         field.setAccessible(true);
                         Object value = field.get(element);
                         if(field.isAnnotationPresent(ChildList.class)){
-                            List<Object> children = (List<Object>) value;
+                            List<AbstractUIElement> children = (List<AbstractUIElement>) value;
                             childContent.addAll(children.stream()
                                     .map(this::getMarkup)
                                     .map(String::stripTrailing)
                                     .collect(Collectors.toList()));
                         }else if(field.isAnnotationPresent(Nested.class)){
-                            childContent.add(getMarkup(value).stripTrailing());
+                            childContent.add(getMarkup((AbstractUIElement) value).stripTrailing());
                         }
                     }
                     return unescapeStringFormats(String.format(element.getCacheContents(), childContent.toArray()));
@@ -173,13 +197,12 @@ public class ElementProcessor {
 
     }
 
-    public String getMarkup(Collection<?> collection, Class<?> type){
+    private String getInnerTableMarkup(Collection<?> collection, Class<?> type){
 
         StringBuilder builder = new StringBuilder();
         builder.append("""
-                <table>
-                    <thead>
-                        <tr>
+                <thead>
+                    <tr>
                 """);
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
@@ -191,45 +214,54 @@ public class ElementProcessor {
                     name = columnMetaName;
                 }
             }
-            builder.append(String.format("<th>%s</th>", name).indent(ElementProcessor.indentationSize * 3));
+            builder.append(String.format("<th>%s</th>", name).indent(ElementProcessor.indentationSize * 2));
         }
-        builder.append("</tr>\n".indent(ElementProcessor.indentationSize * 2));
-        builder.append("</thead>\n".indent(ElementProcessor.indentationSize));
-        builder.append("<tbody>\n".indent(ElementProcessor.indentationSize));
+        builder.append("</tr>\n".indent(ElementProcessor.indentationSize));
+        builder.append("</thead>\n");
+        builder.append("<tbody>\n");
         try{
             for (Object obj : collection) {
-                builder.append("<tr>\n".indent(ElementProcessor.indentationSize * 2));
+                builder.append("<tr>\n".indent(ElementProcessor.indentationSize));
                 for (Field field : fields) {
                     Object value = field.get(type.cast(obj));
-                    builder.append(String.format("<td>%s</td>", value).indent(ElementProcessor.indentationSize * 3));
+                    builder.append(String.format("<td>%s</td>", value).indent(ElementProcessor.indentationSize * 2));
                 }
-                builder.append("</tr>".indent(ElementProcessor.indentationSize * 2));
+                builder.append("</tr>".indent(ElementProcessor.indentationSize));
             }
         }catch (IllegalAccessException ex){
             ex.printStackTrace();
         }
-        builder.append("""
-                    </tbody>
-                </table>
-                """);
+        builder.append("</tbody>\n");
         return builder.toString();
 
     }
 
-    public String getMarkup(CollectionTableAdapter adapter){
+    public String getMarkup(Collection<?> collection, Class<?> type){
 
-        Collection<?> collection = adapter.getCollection();
+        return """
+                <table>
+                """ +
+                getInnerTableMarkup(collection, type).indent(ElementProcessor.indentationSize) +
+                """
+                </table>
+                """;
+
+    }
+
+    public String getMarkup(Table adapter){
+
+        Collection<?> collection = adapter.getEntries();
         Class<?> clazz = adapter.getClazz();
         return getMarkup(collection, clazz);
 
     }
 
-    public String getMarkup(Object obj){
+    public String getMarkup(AbstractUIElement obj){
 
         boolean cacheEnabled = false;
 
-        if(obj instanceof CacheableElement && !((CacheableElement) obj).isCacheDisabled() && !ElementProcessor.cacheDisabled){
-            String result = getMarkupFromCache((CacheableElement) obj);
+        if(!obj.isCacheDisabled() && !ElementProcessor.cacheDisabled){
+            String result = getMarkupFromCache(obj);
             if(result != null && !result.isEmpty()){
                 return result;
             }
@@ -241,27 +273,30 @@ public class ElementProcessor {
         if(tagName == null){
             throw new IllegalElementException("Argument passed to getMarkup is not a valid element");
         }
-        Class type = obj.getClass();
+        Class<?> type = obj.getClass();
+        tagName += (type.equals(Heading.class) ? ((Heading) obj).getLevel() : "");
         StringBuilder builder = new StringBuilder();
         StringBuilder cacheBuilder = new StringBuilder();
         boolean hasChildren = false;
 
         try{
             Field[] fields = getAllFields(type);
-            HTMLElement elementMeta = (HTMLElement) type.getAnnotation(HTMLElement.class);
+            HTMLElement elementMeta = type.getAnnotation(HTMLElement.class);
 
             for(Field field: fields){
                 field.setAccessible(true);
-                if(field.isAnnotationPresent(Label.class) && field.get(obj) != null){
+                boolean hasAnnotation = field.isAnnotationPresent(Label.class);
+                boolean isNotNull = field.get(obj) != null;
+                if(hasAnnotation && isNotNull){
                     buildLabel(builder, field, obj);
                     if(cacheEnabled){
                         buildLabel(cacheBuilder, field, obj);
                     }
                 }
             }
-            buildElementOpeningTag(builder, obj, elementMeta);
+            buildElementOpeningTag(builder, obj, elementMeta, tagName);
             if(cacheEnabled){
-                buildElementOpeningTag(cacheBuilder, obj, elementMeta);
+                buildElementOpeningTag(cacheBuilder, obj, elementMeta, tagName);
             }
             for (Field field: fields) {
                 Object value = field.get(obj);
@@ -270,7 +305,7 @@ public class ElementProcessor {
                         continue;
                     }
                     hasChildren = true;
-                    builder.append(getMarkup(value).indent(ElementProcessor.indentationSize));
+                    builder.append(getMarkup((AbstractUIElement) value).indent(ElementProcessor.indentationSize));
                     if(cacheEnabled){
                         cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
                     }
@@ -282,8 +317,8 @@ public class ElementProcessor {
                     if(!field.getType().equals(List.class)){
                         throw new IllegalElementException("A child list must be a List");
                     }
-                    List<Object> children = (List<Object>) value;
-                    for (Object child : children) {
+                    List<AbstractUIElement> children = (List<AbstractUIElement>) value;
+                    for (AbstractUIElement child : children) {
                         builder.append(getMarkup(child).indent(ElementProcessor.indentationSize));
                         if(cacheEnabled){
                             cacheBuilder.append("%s".indent(ElementProcessor.indentationSize));
@@ -297,14 +332,17 @@ public class ElementProcessor {
                     if(cacheEnabled){
                         cacheBuilder.append(finalContent);
                     }
-                }else if(field.isAnnotationPresent(ObjectTable.class)){
+                }else if(field.isAnnotationPresent(TableEntries.class)){
                     if(value == null){
                         continue;
                     }else if(!(value instanceof Collection)){
-                        throw new InvalidObjectTable(value.getClass());
+                        throw new InvalidObjectTableException(value.getClass());
+                    }else if(((Collection<?>) value).isEmpty()){
+                        continue;
                     }
-                    Class<?> clazz = value.getClass();
-                    String tableMarkup = getMarkup((Collection<?>) value, clazz).indent(ElementProcessor.indentationSize);
+                    Collection<?> collection = ((Collection<?>) value);
+                    Class<?> clazz = collection.toArray()[0].getClass();
+                    String tableMarkup = getInnerTableMarkup(collection, clazz).indent(ElementProcessor.indentationSize);
                     builder.append(tableMarkup);
                     if(cacheEnabled){
                         cacheBuilder.append(tableMarkup);
@@ -355,6 +393,12 @@ public class ElementProcessor {
         template.append("}");
 
         return unescapeStringFormats(String.format(template.toString(), formatArgs.toArray()));
+
+    }
+
+    public <T> Table collectionToTableElement(Collection<T> collection, Class<T> clazz){
+
+        return new Table(collection, clazz);
 
     }
 

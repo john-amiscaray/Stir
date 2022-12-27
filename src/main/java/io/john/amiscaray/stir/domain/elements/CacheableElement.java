@@ -33,6 +33,9 @@ public abstract class CacheableElement {
     public CacheableElement(){
         propertyChangeSupport = new PropertyChangeSupport(this);
         propertyChangeSupport.addPropertyChangeListener(e -> {
+            if(cacheStatus.equals(CacheStatus.EMPTY)){
+                return;
+            }
             cacheStatus = CacheStatus.DIRTY;
         });
     }

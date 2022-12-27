@@ -74,7 +74,7 @@ public class LinkedStyle extends AbstractUIElement {
         public LinkedStyle build(){
             LinkedStyle result = new LinkedStyle(href, integrity, crossOrigin);
             result.setId(id);
-            result.setClassList(classList);
+            result.setCssClasses(classList);
             return result;
         }
 

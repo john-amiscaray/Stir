@@ -65,7 +65,7 @@ public class HTMLDocument {
         }
 
         public HTMLDocument.Builder addCollectionAsTable(Collection<?> collection, Class<?> clazz){
-            doc.elements.add(new CollectionTableAdapter(collection, clazz));
+            doc.elements.add(new Table(collection, clazz));
             return this;
         }
 
@@ -288,7 +288,7 @@ public class HTMLDocument {
 
         return elements.stream().filter(element -> {
             Class<?> clazz = element.getClass();
-            if(!clazz.isAnnotationPresent(HTMLElement.class) && !(element instanceof CollectionTableAdapter)){
+            if(!clazz.isAnnotationPresent(HTMLElement.class) && !(element instanceof Table)){
                 throw new IllegalElementException("The class " + clazz.getName() + " is not marked as a valid UI HTML element");
             }
             String elementTag = clazz.isAnnotationPresent(HTMLElement.class) ?
@@ -309,7 +309,7 @@ public class HTMLDocument {
 
     private static List<AbstractUIElement> findAllOfClass(String clazz, List<AbstractUIElement> elements){
 
-        return elements.stream().filter(element -> element.getClassList().contains(clazz)).collect(Collectors.toList());
+        return elements.stream().filter(element -> element.getCssClasses().contains(clazz)).collect(Collectors.toList());
 
     }
 
@@ -425,9 +425,9 @@ public class HTMLDocument {
                 .filter(element -> {
 
                     if(attributeName.equals("class")){
-                        String classAttValue = element.getClassList().stream().reduce("", (s1, s2) -> s1 + " " + s2).trim();
-                        return element.getClassList() != null
-                                && !element.getClassList().isEmpty()
+                        String classAttValue = element.getCssClasses().stream().reduce("", (s1, s2) -> s1 + " " + s2).trim();
+                        return element.getCssClasses() != null
+                                && !element.getCssClasses().isEmpty()
                                 && predicate.test(classAttValue);
                     }else if(attributeName.equals("id")){
                         return element.getId() != null && predicate.test(element.getId());

@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
+import io.john.amiscaray.stir.domain.elements.Paragraph;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
 import io.john.amiscaray.stir.util.ElementProcessor;

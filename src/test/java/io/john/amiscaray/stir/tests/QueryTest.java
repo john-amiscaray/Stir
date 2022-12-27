@@ -4,6 +4,7 @@ import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
+import io.john.amiscaray.stir.domain.elements.Paragraph;
 import io.john.amiscaray.stir.stub.*;
 import org.junit.jupiter.api.Test;
 
@@ -18,16 +19,16 @@ public class QueryTest {
     private final Paragraph myParagraph = new Paragraph("Hello World!");
     private final Paragraph paragraph2 = Paragraph.builder()
             .id("p2")
-            .addClass("content")
-            .addClass("spooky")
+            .cssClass("content")
+            .cssClass("spooky")
             .content("This is some spooky content")
             .build();
     private final Paragraph paragraph3 = Paragraph.builder()
-            .addClass("content")
-            .addClass("spooky")
+            .cssClass("content")
+            .cssClass("spooky")
             .content("Other spooky content")
             .build();
-    private final Input in = new Input("text", "Hello World", "AAAAAAAA");
+    private final Input in = new Input("someIn", "text", "Hello World", "AAAAAAAA");
     private final Form libForm = Form.builder()
             .id("myForm")
             .addClass("form")
