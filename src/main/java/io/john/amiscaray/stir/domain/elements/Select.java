@@ -11,29 +11,11 @@ import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @HTMLElement(tagName = "select")
-@AllArgsConstructor
-@RequiredArgsConstructor
-public class Select extends AbstractUIElement {
-
-    @Attribute(name="autofocus")
-    @Getter
-    private Boolean autoFocus;
-
-    @Attribute(name="disabled")
-    @Getter
-    private Boolean disabled;
-
-    @Attribute(name="form")
-    @Getter
-    private String form;
+public class Select extends AbstractFormField {
 
     @Attribute(name="multiple")
     @Getter
     private Boolean multiple;
-
-    @Attribute(name="name")
-    @Getter
-    private final String name;
 
     @Attribute(name="required")
     @Getter
@@ -45,15 +27,16 @@ public class Select extends AbstractUIElement {
 
     @ChildList
     @Getter
-    private List<Option> options = new ArrayList<>();
+    private List<Option> options;
 
     @Label(defaultText = "select")
+    @Getter
     private String label;
 
     @Builder
     public Select(String id, @Singular List<String> cssClasses, String style, Boolean autoFocus, Boolean disabled, String form,
                   Boolean multiple, String name, Boolean required, Integer size, @Singular List<Option> options, String label) {
-        super(id, cssClasses, style);
+        super(id, cssClasses, style, autoFocus, disabled, form, name);
         this.autoFocus = autoFocus;
         this.label = label;
         this.disabled = disabled;
@@ -98,6 +81,11 @@ public class Select extends AbstractUIElement {
     public void setOptions(List<Option> options) {
         propertyChangeSupport.firePropertyChange("options", this.options, options);
         this.options = options;
+    }
+
+    public void setLabel(String label) {
+        propertyChangeSupport.firePropertyChange("label", this.label, label);
+        this.label = label;
     }
 
     public void addOption(Option option) {
