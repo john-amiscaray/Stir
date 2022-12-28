@@ -31,4 +31,5 @@ jobs:
       - name: Publish to GitHub Packages Apache Maven
         run: mvn deploy -s $GITHUB_WORKSPACE/.github/workflows/maven-settings.xml
         env:
-          GITHUB_TOKEN: ${{ github.token }}
+          ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+          USERNAME: ${{ secrets.USERNAME }}
