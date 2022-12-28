@@ -34,6 +34,14 @@
         <url>https://github.com/john-amiscaray/Stir/tree/master</url>
     </scm>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub john-amiscaray Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/john-amiscaray/stir</url>
+        </repository>
+    </distributionManagement>
+
     <properties>
         <maven.compiler.source>15</maven.compiler.source>
         <maven.compiler.target>15</maven.compiler.target>
