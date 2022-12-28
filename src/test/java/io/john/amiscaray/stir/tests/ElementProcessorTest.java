@@ -76,8 +76,8 @@ public class ElementProcessorTest {
     public void testFormWithChildList() throws IOException {
 
         FormWithChildList form = FormWithChildList.builder()
-                .addInput(username)
-                .addInput(message)
+                .field(username)
+                .field(message)
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/formWithChildListExpected.html"), processor.getMarkup(form));
 

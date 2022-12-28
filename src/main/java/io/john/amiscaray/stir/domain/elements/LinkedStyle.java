@@ -26,6 +26,14 @@ public class LinkedStyle extends AbstractUIElement {
     @Getter
     private String crossOrigin;
 
+    @Builder
+    public LinkedStyle(String id, @Singular List<String> cssClasses, String style, String href, String integrity, String crossOrigin) {
+        super(id, cssClasses, style);
+        this.href = href;
+        this.integrity = integrity;
+        this.crossOrigin = crossOrigin;
+    }
+
     public void setIntegrity(String integrity) {
         propertyChangeSupport.firePropertyChange("integrity", this.integrity, integrity);
         this.integrity = integrity;
@@ -34,50 +42,6 @@ public class LinkedStyle extends AbstractUIElement {
     public void setCrossOrigin(String crossOrigin) {
         propertyChangeSupport.firePropertyChange("crossOrigin", this.crossOrigin, crossOrigin);
         this.crossOrigin = crossOrigin;
-    }
-
-    public static Builder builder(){ return new Builder(); }
-
-    public static class Builder {
-
-        private String href;
-        private String integrity;
-        private String crossOrigin;
-        private String id;
-        private final List<String> classList = new ArrayList<>();
-
-        public Builder href(String href){
-            this.href = href;
-            return this;
-        }
-
-        public Builder integrity(String integrity){
-            this.integrity = integrity;
-            return this;
-        }
-
-        public Builder crossOrigin(String crossOrigin){
-            this.crossOrigin = crossOrigin;
-            return this;
-        }
-
-        public Builder id(String id){
-            this.id = id;
-            return this;
-        }
-
-        public Builder addClass(String clazz){
-            classList.add(clazz);
-            return this;
-        }
-
-        public LinkedStyle build(){
-            LinkedStyle result = new LinkedStyle(href, integrity, crossOrigin);
-            result.setId(id);
-            result.setCssClasses(classList);
-            return result;
-        }
-
     }
 
 }

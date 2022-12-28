@@ -1,18 +1,17 @@
 package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.HTMLDocument;
-import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
-import io.john.amiscaray.stir.domain.elements.Form;
-import io.john.amiscaray.stir.domain.elements.Input;
-import io.john.amiscaray.stir.domain.elements.Paragraph;
+import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.stub.*;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static io.john.amiscaray.stir.setup.StirAssertions.*;
 
 public class QueryTest {
 
@@ -42,23 +41,23 @@ public class QueryTest {
             .id("myDiv")
             .build();
     private final Div directParent = Div.builder()
-            .addChild(deeplyNestedDiv)
-            .addChild(paragraph3)
-            .addChild(list)
+            .child(deeplyNestedDiv)
+            .child(paragraph3)
+            .child(list)
             .build();
     private final Div ancestorDiv = Div.builder()
-            .addChild(directParent)
-            .addChild(shallowListItem)
+            .child(directParent)
+            .child(shallowListItem)
             .build();
     private final Div emptyDiv = Div.builder()
             .build();
     private final HTMLDocument testDoc = HTMLDocument.builder()
-            .addElement(stubForm)
-            .addElement(myParagraph)
-            .addElement(libForm)
-            .addElement(ancestorDiv)
-            .addElement(paragraph2)
-            .addElement(emptyDiv)
+            .element(stubForm)
+            .element(myParagraph)
+            .element(libForm)
+            .element(ancestorDiv)
+            .element(paragraph2)
+            .element(emptyDiv)
             .build();
 
     @Test
@@ -108,14 +107,15 @@ public class QueryTest {
     @Test
     public void testWildCardSelector() {
 
-        List<AbstractUIElement> allElements = testDoc.getElements();
-        allElements.addAll(
-                allElements.stream()
+        List<AbstractUIElement> expected = new ArrayList<>(testDoc.getElements());
+        expected.addAll(
+                expected.stream()
                         .map(HTMLDocument::getAllDescendents)
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList())
         );
-        assertEquals(allElements, testDoc.querySelector("*"));
+        List<AbstractUIElement> actual = testDoc.querySelector("*");
+        assertListEquality(expected, actual);
 
     }
 

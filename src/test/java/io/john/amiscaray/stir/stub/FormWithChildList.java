@@ -4,6 +4,8 @@ import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.Input;
+import lombok.Builder;
+import lombok.Singular;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,35 +14,12 @@ import java.util.List;
 public class FormWithChildList extends AbstractUIElement {
 
     @ChildList
-    private List<Input> fields = new ArrayList<>();
+    private List<Input> fields;
 
-    public static Builder builder(){
-        return new Builder();
-    }
-
-    public static class Builder{
-
-        private final FormWithChildList form;
-
-        public Builder(){
-
-            form = new FormWithChildList();
-
-        }
-
-        public Builder addInput(Input field){
-
-            form.fields.add(field);
-            return this;
-
-        }
-
-        public FormWithChildList build(){
-
-            return form;
-
-        }
-
+    @Builder
+    public FormWithChildList(String id, @Singular List<String> cssClasses, String style, @Singular List<Input> fields) {
+        super(id, cssClasses, style);
+        this.fields = fields;
     }
 
 }

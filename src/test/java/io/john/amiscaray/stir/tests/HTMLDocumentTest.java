@@ -92,13 +92,13 @@ public class HTMLDocumentTest {
     public void testLibFormAsDocWithStyles() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .addElement(sampleLibForm)
-                .addLinkedStyle(new LinkedStyle(
+                .element(sampleLibForm)
+                .linkedStyle(new LinkedStyle(
                         "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
                         "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
                         "anonymous"
                 ))
-                .addLinkedStyle(new LinkedStyle("./styles.css"))
+                .linkedStyle(new LinkedStyle("./styles.css"))
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/libFormAsDocExpected.html"), doc.generateDocumentString());
@@ -109,8 +109,8 @@ public class HTMLDocumentTest {
     public void testLibFormAsDocWithFooterScript() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .addElement(sampleLibForm)
-                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.FOOTER)
+                .element(sampleLibForm)
+                .footerScript(new Script("./main.js"))
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithFooterScriptExpected.html"), doc.generateDocumentString());
@@ -121,8 +121,8 @@ public class HTMLDocumentTest {
     public void testLibFormAsDocWithHeaderScript() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .addElement(sampleLibForm)
-                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
+                .element(sampleLibForm)
+                .headerScript(new Script("./main.js"))
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithHeaderScriptExpected.html"), doc.generateDocumentString());
@@ -133,14 +133,14 @@ public class HTMLDocumentTest {
     public void testDocWithHeaderScriptAndStyles() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .addElement(sampleLibForm)
-                .addLinkedStyle(new LinkedStyle(
+                .element(sampleLibForm)
+                .linkedStyle(new LinkedStyle(
                         "https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css",
                         "sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65",
                         "anonymous"
                 ))
-                .addLinkedStyle(new LinkedStyle("./styles.css"))
-                .addScript(new Script("./main.js"), HTMLDocument.DocumentPosition.HEADER)
+                .linkedStyle(new LinkedStyle("./styles.css"))
+                .headerScript(new Script("./main.js"))
                 .title("Hello")
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithHeaderScriptAndStyleExpected.html"), doc.generateDocumentString());
@@ -151,9 +151,9 @@ public class HTMLDocumentTest {
     public void testDocWithMeta() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .addMeta(new Meta("viewport", "width=device-width, initial-scale=1.0"))
-                .addMeta(new Meta("robots", "noindex"))
-                .addMeta(Meta.builder().httpEquiv("refresh").content("30").build())
+                .metaTag(new Meta("viewport", "width=device-width, initial-scale=1.0"))
+                .metaTag(new Meta("robots", "noindex"))
+                .metaTag(Meta.builder().httpEquiv("refresh").content("30").build())
                 .title("Hello")
                 .build();
 
@@ -165,7 +165,7 @@ public class HTMLDocumentTest {
     public void testDocWithParagraphStringFormat() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .addElement(new Paragraph("%s%s%s"))
+                .element(new Paragraph("%s%s%s"))
                 .title("%s%s%s")
                 .build();
 
@@ -177,7 +177,7 @@ public class HTMLDocumentTest {
     public void testDocWithInputStringFormat() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .addElement(new Input("myText", "text", "%s%s%s", "myText"))
+                .element(new Input("myText", "text", "%s%s%s", "myText"))
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithInputStringFormat.html"), doc.generateDocumentString());
 
@@ -372,7 +372,7 @@ public class HTMLDocumentTest {
                 new Student(2, "Ben", 4.0f)
         );
         HTMLDocument doc = HTMLDocument.builder()
-                .addCollectionAsTable(students, Student.class)
+                .element(new Table(students, Student.class))
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithStudentTable.html"), doc.generateDocumentString());
 

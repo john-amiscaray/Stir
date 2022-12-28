@@ -7,7 +7,9 @@ import io.john.amiscaray.stir.annotation.Nested;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.Singular;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -17,15 +19,21 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+@Builder
 public class HTMLDocument {
 
     @Getter
-    private final List<AbstractUIElement> elements = new ArrayList<>();
-    private final List<LinkedStyle> linkedStyles = new ArrayList<>();
+    @Singular
+    private List<AbstractUIElement> elements = new ArrayList<>();
+    @Singular
+    private List<LinkedStyle> linkedStyles = new ArrayList<>();
     private Style style;
-    private final List<Script> headerScripts = new ArrayList<>();
-    private final List<Script> footerScripts = new ArrayList<>();
-    private final List<Meta> metaList = new ArrayList<>();
+    @Singular
+    private List<Script> headerScripts = new ArrayList<>();
+    @Singular
+    private List<Script> footerScripts = new ArrayList<>();
+    @Singular
+    private List<Meta> metaTags = new ArrayList<>();
     private String title;
     private final ElementProcessor processor = ElementProcessor.getInstance();
     private String language = "en";
@@ -42,76 +50,9 @@ public class HTMLDocument {
                 </body>
             </html>""";
 
-    public static Builder builder(){
-        return new Builder();
-    }
-
-    public enum DocumentPosition{
-        HEADER,
-        FOOTER
-    }
-
-    public static class Builder{
-
-        private final HTMLDocument doc;
-
-        public Builder(){
-            doc = new HTMLDocument();
-        }
-
-        public HTMLDocument.Builder addElement(AbstractUIElement element){
-            doc.elements.add(element);
-            return this;
-        }
-
-        public HTMLDocument.Builder addCollectionAsTable(Collection<?> collection, Class<?> clazz){
-            doc.elements.add(new Table(collection, clazz));
-            return this;
-        }
-
-        public HTMLDocument.Builder addScript(Script script, DocumentPosition position){
-            if(position.equals(DocumentPosition.HEADER)){
-                doc.headerScripts.add(script);
-            }else{
-                doc.footerScripts.add(script);
-            }
-            return this;
-        }
-
-        public HTMLDocument.Builder language(String language){
-            doc.language = language;
-            return this;
-        }
-
-        public HTMLDocument.Builder title(String title){
-            doc.title = title;
-            return this;
-        }
-
-        public HTMLDocument.Builder addLinkedStyle(LinkedStyle style){
-            doc.linkedStyles.add(style);
-            return this;
-        }
-
-        public HTMLDocument.Builder style(Style style){
-            doc.style = style;
-            return this;
-        }
-
-        public HTMLDocument.Builder addMeta(Meta meta){
-            doc.metaList.add(meta);
-            return this;
-        }
-
-        public HTMLDocument build(){
-            return doc;
-        }
-
-    }
-
     public String generateDocumentString(){
         String finalLanguage = processor.encodeForEntitiesOnly(language != null && !language.isEmpty() ? language : "en");
-        String metaMarkup = processor.getMarkupForElementList(metaList, 2);
+        String metaMarkup = processor.getMarkupForElementList(metaTags, 2);
         String finalTitle = processor.encodeForEntitiesOnly(title != null ? title : "Title");
         String headerScriptsMarkup = processor.getMarkupForElementList(headerScripts, 2);
         String linkedStylesMarkup = processor.getMarkupForElementList(linkedStyles, 2);
@@ -317,8 +258,9 @@ public class HTMLDocument {
 
         Class<?> clazz = ancestor.getClass();
         List<AbstractUIElement> children = new ArrayList<>();
+        ElementProcessor processor = ElementProcessor.getInstance();
         try {
-            for (Field field : clazz.getDeclaredFields()) {
+            for (Field field : processor.getAllFields(clazz)) {
                 field.setAccessible(true);
                 if (field.isAnnotationPresent(Nested.class)) {
                     children.add((AbstractUIElement) field.get(ancestor));

@@ -43,9 +43,9 @@ public class NavTest {
     public void testNavLinkListBuilder() throws IOException {
 
         NavLinkList nll = NavLinkList.builder()
-                .addNavLink(NavLink.fromLabelAndHref("Home", "/home"))
-                .addNavLink(NavLink.fromLabelAndHref("Products", "/products"))
-                .addNavLinkFromHrefAndLabel("About Us", "/about")
+                .navLink(NavLink.fromLabelAndHref("Home", "/home"))
+                .navLink(NavLink.fromLabelAndHref("Products", "/products"))
+                .navLink(NavLink.fromLabelAndHref("About Us", "/about"))
                 .build();
 
         assertEquals(loader.getHTMLContentOf("html/basicLinkList.html"), processor.getMarkup(nll));
