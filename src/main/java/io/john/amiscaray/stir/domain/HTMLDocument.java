@@ -19,21 +19,15 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-@Builder
 public class HTMLDocument {
 
     @Getter
-    @Singular
-    private List<AbstractUIElement> elements = new ArrayList<>();
-    @Singular
-    private List<LinkedStyle> linkedStyles = new ArrayList<>();
-    private Style style;
-    @Singular
-    private List<Script> headerScripts = new ArrayList<>();
-    @Singular
-    private List<Script> footerScripts = new ArrayList<>();
-    @Singular
-    private List<Meta> metaTags = new ArrayList<>();
+    private final List<AbstractUIElement> elements;
+    private final List<LinkedStyle> linkedStyles;
+    private final Style style;
+    private final List<Script> headerScripts;
+    private final List<Script> footerScripts;
+    private final List<Meta> metaTags;
     private String title;
     private final ElementProcessor processor = ElementProcessor.getInstance();
     private String language = "en";
@@ -49,6 +43,40 @@ public class HTMLDocument {
                 <body>%s%s
                 </body>
             </html>""";
+
+    @Builder
+    public HTMLDocument(@Singular List<AbstractUIElement> elements, @Singular List<LinkedStyle> linkedStyles, Style style,
+                        @Singular List<Script> headerScripts, @Singular List<Script> footerScripts, @Singular List<Meta> metaTags,
+                        boolean withBootStrap, boolean withBootStrapPopper, String title, String language) {
+        this.elements = elements;
+        this.linkedStyles = new ArrayList<>(linkedStyles);
+        this.style = style;
+        this.headerScripts = new ArrayList<>(headerScripts);
+        this.footerScripts = new ArrayList<>(footerScripts);
+        this.metaTags = metaTags;
+        this.title = title;
+        this.language = language;
+        if(withBootStrap){
+            this.footerScripts.add(Script.builder()
+                            .src("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js")
+                            .integrity("sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofN4zfuZxLkoj1gXtW8ANNCe9d5Y3eG5eD")
+                            .crossOrigin("anonymous")
+                            .build());
+
+            this.linkedStyles.add(LinkedStyle.builder()
+                            .href("https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css")
+                            .integrity("sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD")
+                            .crossOrigin("anonymous")
+                            .build());
+        }
+        if(withBootStrapPopper){
+            this.footerScripts.add(Script.builder()
+                    .src("https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js")
+                    .integrity("sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3")
+                    .crossOrigin("anonymous")
+                    .build());
+        }
+    }
 
     public String generateDocumentString(){
         String finalLanguage = processor.encodeForEntitiesOnly(language != null && !language.isEmpty() ? language : "en");

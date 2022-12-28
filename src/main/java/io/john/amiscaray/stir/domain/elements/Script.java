@@ -32,6 +32,9 @@ public class Script extends AbstractUIElement {
     @Attribute(name="async")
     @Getter
     private String async;
+    @Attribute(name="crossorigin")
+    @Getter
+    private String crossOrigin;
 
     public void setType(String type) {
         propertyChangeSupport.firePropertyChange("type", this.type, type);
@@ -62,4 +65,10 @@ public class Script extends AbstractUIElement {
         propertyChangeSupport.firePropertyChange("async", this.async, async);
         this.async = async;
     }
+
+    public void setCrossOrigin(String crossOrigin) {
+        propertyChangeSupport.firePropertyChange("crossOrigin", this.crossOrigin, crossOrigin);
+        this.crossOrigin = crossOrigin;
+    }
+
 }
