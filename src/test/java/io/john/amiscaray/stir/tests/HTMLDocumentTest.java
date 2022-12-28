@@ -378,5 +378,31 @@ public class HTMLDocumentTest {
 
     }
 
+    @Test
+    public void testEmptyDocWithBootStrapSupportWithPopper() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .withBootStrap(true)
+                .withBootStrapPopper(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/emptyDocWithBootstrap.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithBootStrapSupportAndTable() throws IOException{
+
+        List<Student> students = List.of(new Student(1, "John", 4.0f));
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .element(new Table(students, Student.class))
+                .withBootStrap(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithTableAndBootstrap.html"), doc.generateDocumentString());
+
+    }
+
 
 }
