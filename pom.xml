@@ -5,8 +5,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>io.john-amiscaray.stir</groupId>
-    <artifactId>Stir</artifactId>
-    <version>0.1.0-beta</version>
+    <artifactId>stir</artifactId>
+    <version>0.1.2-beta</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
