@@ -30,8 +30,8 @@ public class QueryTest {
     private final Input in = new Input("someIn", "text", "Hello World", "AAAAAAAA");
     private final Form libForm = Form.builder()
             .id("myForm")
-            .addClass("form")
-            .addField(in)
+            .cssClass("form")
+            .field(in)
             .build();
     private final FormWithInputs stubForm = new FormWithInputs();
     private final ListItemStub listItem = new ListItemStub("Heyo");

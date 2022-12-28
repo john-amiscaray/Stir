@@ -71,7 +71,7 @@ public class StyleTest {
 
         CssRule rule = CssRule.builder()
                 .selector("div")
-                .addStyle("color", "red")
+                .style("color", "red")
                 .build();
 
         style.addRule(rule);

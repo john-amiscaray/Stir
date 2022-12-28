@@ -3,22 +3,17 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @EqualsAndHashCode(callSuper = true)
 @HTMLElement(tagName = "form")
-@NoArgsConstructor
 @AllArgsConstructor
 public class Form extends AbstractUIElement {
 
     @ChildList
-    private List<Input> fields = new ArrayList<>();
+    private List<Input> fields;
 
     @Attribute(name = "method", defaultValue = "get")
     @Getter
@@ -28,6 +23,14 @@ public class Form extends AbstractUIElement {
     @Getter
     private String action;
 
+    @Builder
+    public Form(String id, @Singular List<String> cssClasses, String style, @Singular List<Input> fields, String method, String action) {
+        super(id, cssClasses, style);
+        this.fields = fields;
+        this.method = method;
+        this.action = action;
+    }
+
     public void setMethod(String method) {
         propertyChangeSupport.firePropertyChange("method", this.method, method);
         this.method = method;
@@ -36,63 +39,6 @@ public class Form extends AbstractUIElement {
     public void setAction(String action) {
         propertyChangeSupport.firePropertyChange("action", this.action, action);
         this.action = action;
-    }
-
-    public static Builder builder(){
-        return new Builder();
-    }
-
-    public static class Builder{
-
-        private final Form form;
-
-        public Builder(){
-
-            form = new Form();
-
-        }
-
-        public Builder addField(Input input){
-
-            form.fields.add(input);
-            return this;
-
-        }
-
-        public Builder method(String method){
-
-            form.method = method;
-            return this;
-
-        }
-
-        public Builder action(String action){
-
-            form.action = action;
-            return this;
-
-        }
-
-        public Builder id(String id){
-
-            form.id = id;
-            return this;
-
-        }
-
-        public Builder addClass(String clazz){
-
-            form.cssClasses.add(clazz);
-            return this;
-
-        }
-
-        public Form build(){
-
-            return form;
-
-        }
-
     }
 
 }

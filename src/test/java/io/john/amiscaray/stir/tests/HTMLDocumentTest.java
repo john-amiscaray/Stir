@@ -19,52 +19,52 @@ public class HTMLDocumentTest {
     private final Input message = new Input("text1", "text", "Some Message", null);
 
     private final Form sampleLibForm = Form.builder()
-            .addField(username)
-            .addField(message)
+            .field(username)
+            .field(message)
             .action("/path")
             .method("post")
             .build();
 
     private final CssRule animation = CssRule.builder()
             .selector("@keyframes example")
-            .addNested(
+            .nestedRule(
                     CssRule.builder()
                             .selector("0%")
-                            .addStyle("background-color", "red")
-                            .addStyle("left", "0")
-                            .addStyle("top", "0")
+                            .style("background-color", "red")
+                            .style("left", "0")
+                            .style("top", "0")
                             .build()
             )
-            .addNested(
+            .nestedRule(
                     CssRule.builder()
                             .selector("25%")
-                            .addStyle("background-color", "yellow")
-                            .addStyle("left", "200px")
-                            .addStyle("top", "0")
+                            .style("background-color", "yellow")
+                            .style("left", "200px")
+                            .style("top", "0")
                             .build()
             )
-            .addNested(
+            .nestedRule(
                     CssRule.builder()
                             .selector("50%")
-                            .addStyle("background-color", "blue")
-                            .addStyle("left", "200px")
-                            .addStyle("top", "200px")
+                            .style("background-color", "blue")
+                            .style("left", "200px")
+                            .style("top", "200px")
                             .build()
             )
-            .addNested(
+            .nestedRule(
                     CssRule.builder()
                             .selector("75%")
-                            .addStyle("background-color", "green")
-                            .addStyle("left", "0")
-                            .addStyle("top", "200px")
+                            .style("background-color", "green")
+                            .style("left", "0")
+                            .style("top", "200px")
                             .build()
             )
-            .addNested(
+            .nestedRule(
                     CssRule.builder()
                             .selector("100%")
-                            .addStyle("background-color", "red")
-                            .addStyle("left", "0")
-                            .addStyle("top", "0")
+                            .style("background-color", "red")
+                            .style("left", "0")
+                            .style("top", "0")
                             .build()
             )
             .build();
@@ -188,11 +188,11 @@ public class HTMLDocumentTest {
 
         CssRule background = CssRule.builder()
                 .selector("body")
-                .addStyle("color", "red")
-                .addStyle("background-color", "#777777")
+                .style("color", "red")
+                .style("background-color", "#777777")
                 .build();
         Style style = Style.builder()
-                .addRule(background)
+                .rule(background)
                 .build();
         HTMLDocument doc = HTMLDocument.builder()
                 .style(style)
@@ -207,49 +207,49 @@ public class HTMLDocumentTest {
 
         CssRule animation = CssRule.builder()
                 .selector("@keyframes example")
-                .addNested(
+                .nestedRule(
                         CssRule.builder()
                                 .selector("0%")
-                                .addStyle("background-color", "red")
-                                .addStyle("left", "0")
-                                .addStyle("top", "0")
+                                .style("background-color", "red")
+                                .style("left", "0")
+                                .style("top", "0")
                                 .build()
                 )
-                .addNested(
+                .nestedRule(
                         CssRule.builder()
                                 .selector("25%")
-                                .addStyle("background-color", "yellow")
-                                .addStyle("left", "200px")
-                                .addStyle("top", "0")
+                                .style("background-color", "yellow")
+                                .style("left", "200px")
+                                .style("top", "0")
                                 .build()
                 )
-                .addNested(
+                .nestedRule(
                         CssRule.builder()
                                 .selector("50%")
-                                .addStyle("background-color", "blue")
-                                .addStyle("left", "200px")
-                                .addStyle("top", "200px")
+                                .style("background-color", "blue")
+                                .style("left", "200px")
+                                .style("top", "200px")
                                 .build()
                 )
-                .addNested(
+                .nestedRule(
                         CssRule.builder()
                                 .selector("75%")
-                                .addStyle("background-color", "green")
-                                .addStyle("left", "0")
-                                .addStyle("top", "200px")
+                                .style("background-color", "green")
+                                .style("left", "0")
+                                .style("top", "200px")
                                 .build()
                 )
-                .addNested(
+                .nestedRule(
                         CssRule.builder()
                                 .selector("100%")
-                                .addStyle("background-color", "red")
-                                .addStyle("left", "0")
-                                .addStyle("top", "0")
+                                .style("background-color", "red")
+                                .style("left", "0")
+                                .style("top", "0")
                                 .build()
                 )
                 .build();
         Style style = Style.builder()
-                .addRule(animation)
+                .rule(animation)
                 .build();
         HTMLDocument doc = HTMLDocument.builder()
                 .style(style)
@@ -264,11 +264,11 @@ public class HTMLDocumentTest {
 
         CssRule body = CssRule.builder()
                 .selector("body")
-                .addStyle("content", "'Hello World &&&'")
+                .style("content", "'Hello World &&&'")
                 .build();
 
         Style style = Style.builder()
-                .addRule(body)
+                .rule(body)
                 .build();
         HTMLDocument doc = HTMLDocument.builder()
                 .style(style)
@@ -294,8 +294,8 @@ public class HTMLDocumentTest {
     public void testDocWithStyleLiteralAndBuiltStyle() throws IOException{
 
         Style style = Style.builder()
-                .addRule(animation)
-                .addLiteralCss(sampleCss)
+                .rule(animation)
+                .literalCssString(sampleCss)
                 .build();
         HTMLDocument doc = HTMLDocument.builder()
                 .style(style)
@@ -309,8 +309,8 @@ public class HTMLDocumentTest {
     public void testAddBuiltStyleToEnd() throws IOException{
 
         Style style = Style.builder()
-                .addLiteralCss(sampleCss)
-                .addRule(animation)
+                .literalCssString(sampleCss)
+                .rule(animation)
                 .build();
         HTMLDocument doc = HTMLDocument.builder()
                 .style(style)

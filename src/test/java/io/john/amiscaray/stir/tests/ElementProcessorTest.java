@@ -27,8 +27,8 @@ public class ElementProcessorTest {
     private final Input username = new Input("text", "text", "John", null);
     private final Input message = new Input("text1", "text", "Some Message", null);
     private final Form sampleLibForm = Form.builder()
-            .addField(username)
-            .addField(message)
+            .field(username)
+            .field(message)
             .action("/path")
             .method("post")
             .build();
@@ -95,7 +95,7 @@ public class ElementProcessorTest {
 
         Input username = new Input("text", "text", "John", "Username");
         Form form = Form.builder()
-                .addField(username)
+                .field(username)
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/formWithLabelExpected.html"), processor.getMarkup(form));
 
@@ -164,8 +164,8 @@ public class ElementProcessorTest {
     public void testFormWithStringFormatActionCache() throws IOException {
 
         Form form = Form.builder()
-                .addField(username)
-                .addField(message)
+                .field(username)
+                .field(message)
                 .method("post")
                 .action("%s%s%s")
                 .build();
@@ -180,8 +180,8 @@ public class ElementProcessorTest {
     public void testFormWithAllFormatAction() throws IOException {
 
         Form form = Form.builder()
-                .addField(username)
-                .addField(message)
+                .field(username)
+                .field(message)
                 .method("post")
                 .action(ALL_FORMATS)
                 .build();

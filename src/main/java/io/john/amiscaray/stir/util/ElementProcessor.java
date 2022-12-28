@@ -381,7 +381,7 @@ public class ElementProcessor {
 
         formatArgs.add(encodeForStringFormats(rule.getSelector()));
 
-        for (CssRule nestedRule : rule.getNested()) {
+        for (CssRule nestedRule : rule.getNestedRules()) {
             String nested = processStyle(nestedRule);
             template.append(encodeForStringFormats(nested.indent(ElementProcessor.indentationSize)));
         }
