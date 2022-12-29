@@ -7,9 +7,6 @@ import io.john.amiscaray.stir.annotation.Nested;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Singular;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -21,7 +18,6 @@ import java.util.stream.Stream;
 
 public class HTMLDocument {
 
-    @Getter
     private final List<AbstractUIElement> elements;
     private final List<LinkedStyle> linkedStyles;
     private final Style style;
@@ -44,9 +40,8 @@ public class HTMLDocument {
                 </body>
             </html>""";
 
-    @Builder
-    public HTMLDocument(@Singular List<AbstractUIElement> elements, @Singular List<LinkedStyle> linkedStyles, Style style,
-                        @Singular List<Script> headerScripts, @Singular List<Script> footerScripts, @Singular List<Meta> metaTags,
+    public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
+                        List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
                         boolean withBootStrap, boolean withBootStrapPopper, String title, String language) {
         this.elements = elements;
         this.linkedStyles = new ArrayList<>(linkedStyles);
@@ -76,6 +71,10 @@ public class HTMLDocument {
                     .crossOrigin("anonymous")
                     .build());
         }
+    }
+
+    public static HTMLDocumentBuilder builder() {
+        return new HTMLDocumentBuilder();
     }
 
     public String generateDocumentString(){
@@ -419,4 +418,202 @@ public class HTMLDocument {
                 }).collect(Collectors.toList());
     }
 
+    public List<AbstractUIElement> getElements() {
+        return this.elements;
+    }
+
+    public static class HTMLDocumentBuilder {
+        private ArrayList<AbstractUIElement> elements;
+        private ArrayList<LinkedStyle> linkedStyles;
+        private Style style;
+        private ArrayList<Script> headerScripts;
+        private ArrayList<Script> footerScripts;
+        private ArrayList<Meta> metaTags;
+        private boolean withBootStrap;
+        private boolean withBootStrapPopper;
+        private String title;
+        private String language;
+
+        HTMLDocumentBuilder() {
+        }
+
+        public HTMLDocumentBuilder element(AbstractUIElement element) {
+            if (this.elements == null) this.elements = new ArrayList<AbstractUIElement>();
+            this.elements.add(element);
+            return this;
+        }
+
+        public HTMLDocumentBuilder elements(Collection<? extends AbstractUIElement> elements) {
+            if (this.elements == null) this.elements = new ArrayList<AbstractUIElement>();
+            this.elements.addAll(elements);
+            return this;
+        }
+
+        public HTMLDocumentBuilder clearElements() {
+            if (this.elements != null)
+                this.elements.clear();
+            return this;
+        }
+
+        public HTMLDocumentBuilder linkedStyle(LinkedStyle linkedStyle) {
+            if (this.linkedStyles == null) this.linkedStyles = new ArrayList<LinkedStyle>();
+            this.linkedStyles.add(linkedStyle);
+            return this;
+        }
+
+        public HTMLDocumentBuilder linkedStyles(Collection<? extends LinkedStyle> linkedStyles) {
+            if (this.linkedStyles == null) this.linkedStyles = new ArrayList<LinkedStyle>();
+            this.linkedStyles.addAll(linkedStyles);
+            return this;
+        }
+
+        public HTMLDocumentBuilder clearLinkedStyles() {
+            if (this.linkedStyles != null)
+                this.linkedStyles.clear();
+            return this;
+        }
+
+        public HTMLDocumentBuilder style(Style style) {
+            this.style = style;
+            return this;
+        }
+
+        public HTMLDocumentBuilder headerScript(Script headerScript) {
+            if (this.headerScripts == null) this.headerScripts = new ArrayList<Script>();
+            this.headerScripts.add(headerScript);
+            return this;
+        }
+
+        public HTMLDocumentBuilder headerScripts(Collection<? extends Script> headerScripts) {
+            if (this.headerScripts == null) this.headerScripts = new ArrayList<Script>();
+            this.headerScripts.addAll(headerScripts);
+            return this;
+        }
+
+        public HTMLDocumentBuilder clearHeaderScripts() {
+            if (this.headerScripts != null)
+                this.headerScripts.clear();
+            return this;
+        }
+
+        public HTMLDocumentBuilder footerScript(Script footerScript) {
+            if (this.footerScripts == null) this.footerScripts = new ArrayList<Script>();
+            this.footerScripts.add(footerScript);
+            return this;
+        }
+
+        public HTMLDocumentBuilder footerScripts(Collection<? extends Script> footerScripts) {
+            if (this.footerScripts == null) this.footerScripts = new ArrayList<Script>();
+            this.footerScripts.addAll(footerScripts);
+            return this;
+        }
+
+        public HTMLDocumentBuilder clearFooterScripts() {
+            if (this.footerScripts != null)
+                this.footerScripts.clear();
+            return this;
+        }
+
+        public HTMLDocumentBuilder metaTag(Meta metaTag) {
+            if (this.metaTags == null) this.metaTags = new ArrayList<Meta>();
+            this.metaTags.add(metaTag);
+            return this;
+        }
+
+        public HTMLDocumentBuilder metaTags(Collection<? extends Meta> metaTags) {
+            if (this.metaTags == null) this.metaTags = new ArrayList<Meta>();
+            this.metaTags.addAll(metaTags);
+            return this;
+        }
+
+        public HTMLDocumentBuilder clearMetaTags() {
+            if (this.metaTags != null)
+                this.metaTags.clear();
+            return this;
+        }
+
+        public HTMLDocumentBuilder withBootStrap(boolean withBootStrap) {
+            this.withBootStrap = withBootStrap;
+            return this;
+        }
+
+        public HTMLDocumentBuilder withBootStrapPopper(boolean withBootStrapPopper) {
+            this.withBootStrapPopper = withBootStrapPopper;
+            return this;
+        }
+
+        public HTMLDocumentBuilder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public HTMLDocumentBuilder language(String language) {
+            this.language = language;
+            return this;
+        }
+
+        public HTMLDocument build() {
+            List<AbstractUIElement> elements;
+            switch (this.elements == null ? 0 : this.elements.size()) {
+                case 0:
+                    elements = Collections.emptyList();
+                    break;
+                case 1:
+                    elements = Collections.singletonList(this.elements.get(0));
+                    break;
+                default:
+                    elements = Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.elements));
+            }
+            List<LinkedStyle> linkedStyles;
+            switch (this.linkedStyles == null ? 0 : this.linkedStyles.size()) {
+                case 0:
+                    linkedStyles = Collections.emptyList();
+                    break;
+                case 1:
+                    linkedStyles = Collections.singletonList(this.linkedStyles.get(0));
+                    break;
+                default:
+                    linkedStyles = Collections.unmodifiableList(new ArrayList<LinkedStyle>(this.linkedStyles));
+            }
+            List<Script> headerScripts;
+            switch (this.headerScripts == null ? 0 : this.headerScripts.size()) {
+                case 0:
+                    headerScripts = Collections.emptyList();
+                    break;
+                case 1:
+                    headerScripts = Collections.singletonList(this.headerScripts.get(0));
+                    break;
+                default:
+                    headerScripts = Collections.unmodifiableList(new ArrayList<Script>(this.headerScripts));
+            }
+            List<Script> footerScripts;
+            switch (this.footerScripts == null ? 0 : this.footerScripts.size()) {
+                case 0:
+                    footerScripts = Collections.emptyList();
+                    break;
+                case 1:
+                    footerScripts = Collections.singletonList(this.footerScripts.get(0));
+                    break;
+                default:
+                    footerScripts = Collections.unmodifiableList(new ArrayList<Script>(this.footerScripts));
+            }
+            List<Meta> metaTags;
+            switch (this.metaTags == null ? 0 : this.metaTags.size()) {
+                case 0:
+                    metaTags = Collections.emptyList();
+                    break;
+                case 1:
+                    metaTags = Collections.singletonList(this.metaTags.get(0));
+                    break;
+                default:
+                    metaTags = Collections.unmodifiableList(new ArrayList<Meta>(this.metaTags));
+            }
+
+            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, title, language);
+        }
+
+        public String toString() {
+            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", title=" + this.title + ", language=" + this.language + ")";
+        }
+    }
 }

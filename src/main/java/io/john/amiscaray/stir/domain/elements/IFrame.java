@@ -6,41 +6,35 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.Singular;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @HTMLElement(tagName = "iframe")
 public class IFrame extends AbstractContentFrame{
 
     @Attribute(name = "allow")
-    @Getter
     private String allow;
 
     @Attribute(name = "allowfullscreen")
-    @Getter
     private Boolean allowFullScreen;
 
     @Attribute(name = "loading")
-    @Getter
     private String loading;
 
     @Attribute(name = "name")
-    @Getter
     private String name;
 
     @Attribute(name = "referrerpolicy")
-    @Getter
     private String referrerPolicy;
 
     @Attribute(name = "sandbox")
-    @Getter
     private String sandbox;
 
     @Attribute(name = "srcdoc")
-    @Getter
     private String srcDoc;
 
-    @Builder
-    public IFrame(String id, @Singular List<String> cssClasses, String style, String allow, Boolean allowFullScreen,
+    public IFrame(String id, List<String> cssClasses, String style, String allow, Boolean allowFullScreen,
                   Integer height, String loading, String name, String referrerPolicy,
                   String sandbox, String src, String srcDoc, Integer width) {
         super(id, cssClasses, style, height, src, width);
@@ -56,6 +50,10 @@ public class IFrame extends AbstractContentFrame{
     public IFrame(String src) {
         propertyChangeSupport.firePropertyChange("src", this.src, src);
         this.src = src;
+    }
+
+    public static IFrameBuilder builder() {
+        return new IFrameBuilder();
     }
 
     public void setAllow(String allow) {
@@ -93,4 +91,148 @@ public class IFrame extends AbstractContentFrame{
         this.srcDoc = srcDoc;
     }
 
+    public String getAllow() {
+        return this.allow;
+    }
+
+    public Boolean getAllowFullScreen() {
+        return this.allowFullScreen;
+    }
+
+    public String getLoading() {
+        return this.loading;
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public String getReferrerPolicy() {
+        return this.referrerPolicy;
+    }
+
+    public String getSandbox() {
+        return this.sandbox;
+    }
+
+    public String getSrcDoc() {
+        return this.srcDoc;
+    }
+
+    public static class IFrameBuilder {
+        private String id;
+        private ArrayList<String> cssClasses;
+        private String style;
+        private String allow;
+        private Boolean allowFullScreen;
+        private Integer height;
+        private String loading;
+        private String name;
+        private String referrerPolicy;
+        private String sandbox;
+        private String src;
+        private String srcDoc;
+        private Integer width;
+
+        IFrameBuilder() {
+        }
+
+        public IFrameBuilder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public IFrameBuilder cssClass(String cssClass) {
+            if (this.cssClasses == null) this.cssClasses = new ArrayList<String>();
+            this.cssClasses.add(cssClass);
+            return this;
+        }
+
+        public IFrameBuilder cssClasses(Collection<? extends String> cssClasses) {
+            if (this.cssClasses == null) this.cssClasses = new ArrayList<String>();
+            this.cssClasses.addAll(cssClasses);
+            return this;
+        }
+
+        public IFrameBuilder clearCssClasses() {
+            if (this.cssClasses != null)
+                this.cssClasses.clear();
+            return this;
+        }
+
+        public IFrameBuilder style(String style) {
+            this.style = style;
+            return this;
+        }
+
+        public IFrameBuilder allow(String allow) {
+            this.allow = allow;
+            return this;
+        }
+
+        public IFrameBuilder allowFullScreen(Boolean allowFullScreen) {
+            this.allowFullScreen = allowFullScreen;
+            return this;
+        }
+
+        public IFrameBuilder height(Integer height) {
+            this.height = height;
+            return this;
+        }
+
+        public IFrameBuilder loading(String loading) {
+            this.loading = loading;
+            return this;
+        }
+
+        public IFrameBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public IFrameBuilder referrerPolicy(String referrerPolicy) {
+            this.referrerPolicy = referrerPolicy;
+            return this;
+        }
+
+        public IFrameBuilder sandbox(String sandbox) {
+            this.sandbox = sandbox;
+            return this;
+        }
+
+        public IFrameBuilder src(String src) {
+            this.src = src;
+            return this;
+        }
+
+        public IFrameBuilder srcDoc(String srcDoc) {
+            this.srcDoc = srcDoc;
+            return this;
+        }
+
+        public IFrameBuilder width(Integer width) {
+            this.width = width;
+            return this;
+        }
+
+        public IFrame build() {
+            List<String> cssClasses;
+            switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
+                case 0:
+                    cssClasses = java.util.Collections.emptyList();
+                    break;
+                case 1:
+                    cssClasses = java.util.Collections.singletonList(this.cssClasses.get(0));
+                    break;
+                default:
+                    cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+            }
+
+            return new IFrame(id, cssClasses, style, allow, allowFullScreen, height, loading, name, referrerPolicy, sandbox, src, srcDoc, width);
+        }
+
+        public String toString() {
+            return "IFrame.IFrameBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", allow=" + this.allow + ", allowFullScreen=" + this.allowFullScreen + ", height=" + this.height + ", loading=" + this.loading + ", name=" + this.name + ", referrerPolicy=" + this.referrerPolicy + ", sandbox=" + this.sandbox + ", src=" + this.src + ", srcDoc=" + this.srcDoc + ", width=" + this.width + ")";
+        }
+    }
 }
