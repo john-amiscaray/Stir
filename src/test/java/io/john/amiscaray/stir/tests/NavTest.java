@@ -1,5 +1,6 @@
 package io.john.amiscaray.stir.tests;
 
+import io.john.amiscaray.stir.domain.elements.Anchor;
 import io.john.amiscaray.stir.domain.elements.Nav;
 import io.john.amiscaray.stir.domain.elements.NavLink;
 import io.john.amiscaray.stir.domain.elements.NavLinkList;
@@ -77,6 +78,35 @@ public class NavTest {
         assertEquals(n3w.get(0), links.get(0));
         assertEquals(n3w.get(1), newLink);
 
+    }
+
+    @Test
+    public void testNavWithClassesAndId() throws IOException {
+
+        Nav nav = Nav.builder()
+                .id("nav")
+                .cssClasses(new ArrayList<>(List.of("red", "blue")))
+                .cssClass("green")
+                .list(NavLinkList.builder()
+                        .id("nav-list")
+                        .cssClass("red")
+                        .cssClasses(new ArrayList<>(List.of("blue", "green")))
+                        .navLink(NavLink.builder()
+                                .id("nav-link")
+                                .cssClasses(new ArrayList<>(List.of("red", "blue")))
+                                .cssClass("green")
+                                .a(Anchor.builder()
+                                        .id("a")
+                                        .label("Home")
+                                        .href("/home")
+                                        .cssClasses(new ArrayList<>(List.of("red", "blue")))
+                                        .cssClass("green")
+                                        .build())
+                                .build())
+                        .build())
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/navWithClasses.html"), processor.getMarkup(nav));
 
     }
 
