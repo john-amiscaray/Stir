@@ -103,6 +103,8 @@ The above Java code outputs the following markup:
 </html>
 ```
 
+The backbone for how all this markup gets generated is the `ElementProcessor` class whose role is to take elements using its `getMarkup` method or styles with its `processStyle` method and generate the appropriate HTML or CSS. Use of this class should be handled within the `HTMLDocument` class but if you need to use it manually, you can get an instance of it using the static `getInstance` method.
+
 ## Supported Elements
 
 As of the latest version, Stir has built-in support for the following elements:
@@ -134,11 +136,11 @@ As of the latest version, Stir has built-in support for the following elements:
 
 See the Javadocs in this repository for more info on the classes for each of these elements
 
-> NOTE: At the time of writing this the javadocs have not yet been adding to this repository, but you can expect to see them soon.
+> NOTE: At the time of writing this the javadocs have not yet been added to this repository, but you can expect to see them soon.
 
 ## Creating Custom Elements or Components
 
-This framework provides custom annotations for creating your own custom elements or components if the need arises. Every class representing HTML elements must be annotated with the `@HTMLElement` annotation so the `ElementProcessor` class knows what to do with it. This annotation has options such as the tagName and whether the element type requires a closing tag or not. Additionally, every element must extend the `AbstractUIElement` class which contains a list of CSS classes, an element ID, and comes with caching support from the `CacheableElement` class.
+This framework provides custom annotations for creating your own elements or components if the need arises. Every class representing HTML elements must be annotated with the `@HTMLElement` annotation so the `ElementProcessor` class knows what to do with it. This annotation has options such as the tag name and whether the element type requires a closing tag or not. Additionally, every element must extend the `AbstractUIElement` class which contains a list of CSS classes, an element ID, and comes with caching support from the `CacheableElement` class.
 
 ### Adding Attributes
 
@@ -146,7 +148,7 @@ Attributes for your HTML element can be specified using the `@Attribute` annotat
 
 ### Adding Child Elements
 
-Child elements can be added using the `@ChildList` annotation, the `@Nested` annotation, or a combination of either. The `@ChildList` marks any `List` field that contains children of the HTML element, whereas the `@Nested` field marks a single HTML element field as a child of the HTML element representing the class.
+Child elements can be added using the `@ChildList` annotation, the `@Nested` annotation, or a combination of either. `@ChildList` marks any `List` field that contains children of the HTML element, whereas the `@Nested` field marks a single HTML element field as a child of the HTML element representing the class.
 
 ### Inner Content
 
@@ -164,3 +166,6 @@ As an optimization to the HTML generation, we added support for the caching for 
 
 To disable caching for an element, update the `cacheDisabled` field using the appropriate setter.
 
+## Document Querying
+
+The `HTMLDocument` class provides support for querying its elements using the familiar `querySelector` method which takes a CSS query and returns a list of all the elements added to the document which match that query. At the time of writing this, the `querySelector` method supports every CSS query feature except for pseudo-classes and pseudo-elements.
