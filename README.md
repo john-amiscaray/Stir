@@ -7,6 +7,9 @@ A Java Framework for generating HTML content and UI development. Perfect for ser
 - [Installation](#installation)
 - [Building a Simple Page](#building-a-simple-page)
 - [Supported Elements](#supported-elements)
+- [Creating Custom Elements or Components](#creating-custom-elements-or-components)
+- [Caching Support](#caching-support)
+- [Document Querying](#document-querying)
 
 ## Installation
 
