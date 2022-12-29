@@ -4,15 +4,25 @@ import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Nested;
 import lombok.*;
 
+import java.util.List;
+
 @EqualsAndHashCode(callSuper = true)
 @HTMLElement(tagName = "li")
 @Data
-@Builder
-@AllArgsConstructor
 public class NavLink extends AbstractUIElement{
 
     @Nested
     private Anchor a;
+
+    @Builder
+    public NavLink(String id, @Singular List<String> cssClasses, String style, Anchor a) {
+        super(id, cssClasses, style);
+        this.a = a;
+    }
+
+    public NavLink(Anchor a) {
+        this.a = a;
+    }
 
     public static NavLink fromLabelAndHref(String label, String href){
 
