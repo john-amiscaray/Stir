@@ -9,12 +9,21 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * A pojo representing an option element for a {@link Select select} element
+ */
 @HTMLElement(tagName = "option")
 public class Option extends AbstractUIElement{
 
+    /**
+     * The value attribute of the option element
+     */
     @Attribute(name = "value")
     private String value;
 
+    /**
+     * The inner content of the option element
+     */
     @InnerContent
     private String optionName;
 

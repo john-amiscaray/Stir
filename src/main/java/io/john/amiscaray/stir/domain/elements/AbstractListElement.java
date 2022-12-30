@@ -6,8 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A parent class for the two list types (ul and ol)
+ */
 public abstract class AbstractListElement extends AbstractUIElement{
 
+    /**
+     * The inner list items of the list
+     */
     @ChildList
     protected List<ListItem> listItems;
 

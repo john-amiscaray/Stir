@@ -4,8 +4,14 @@ import io.john.amiscaray.stir.annotation.InnerContent;
 
 import java.util.List;
 
+/**
+ * A parent class for elements meant to display text
+ */
 public abstract class AbstractTextElement extends AbstractUIElement {
 
+    /**
+     * The inner content of the element
+     */
     @InnerContent
     protected String content;
 

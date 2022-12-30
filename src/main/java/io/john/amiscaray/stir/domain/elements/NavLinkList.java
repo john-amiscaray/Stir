@@ -7,9 +7,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a list of nav links
+ */
 @HTMLElement(tagName = "ul")
 public class NavLinkList extends AbstractUIElement{
 
+    /**
+     * The inner {@link NavLink nav links }
+     */
     @ChildList
     private List<NavLink> navLinks = new ArrayList<>();
 

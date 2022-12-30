@@ -4,17 +4,32 @@ import io.john.amiscaray.stir.annotation.Attribute;
 
 import java.util.List;
 
+/**
+ * A parent class for common form field attributes
+ */
 public abstract class AbstractFormField extends AbstractUIElement{
 
+    /**
+     * The autofocus attribute of the element
+     */
     @Attribute(name = "autofocus")
     protected Boolean autoFocus;
 
+    /**
+     * The disabled attribute of the element
+     */
     @Attribute(name = "disabled")
     protected Boolean disabled;
 
+    /**
+     * The form attribute of the element
+     */
     @Attribute(name = "form")
     protected String form;
 
+    /**
+     * The name attribute of the element
+     */
     @Attribute(name = "name")
     protected String name;
 

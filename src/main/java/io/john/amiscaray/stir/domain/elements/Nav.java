@@ -9,9 +9,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A pojo representing a nav element
+ */
 @HTMLElement(tagName = "nav")
 public class Nav extends AbstractUIElement{
 
+    /**
+     * The inner list of {@link NavLinkList nav links}
+     */
     @Nested
     private NavLinkList list;
 
@@ -23,6 +29,11 @@ public class Nav extends AbstractUIElement{
     public Nav() {
     }
 
+    /**
+     * Constructs a Nav from a map where the keys are the inner text of a nav link and the values are the hrefs
+     * @param labelHref The map mentioned above
+     * @return A new Nav instance
+     */
     public static Nav fromLabelHrefMap(LinkedHashMap<String, String> labelHref){
 
         LinkedHashMap<String, String> linkedMap = new LinkedHashMap<>(labelHref);
@@ -40,6 +51,10 @@ public class Nav extends AbstractUIElement{
         return new NavBuilder();
     }
 
+    /**
+     * Adds a navlink to the nav
+     * @param link The link to add to the nav
+     */
     public void addNavLink(NavLink link){
 
         list.addNavLink(link);

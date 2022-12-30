@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing an hgroup element
+ */
 @HTMLElement(tagName = "hgroup")
 public class HGroup extends AbstractElementContainer<AbstractTextElement>{
 

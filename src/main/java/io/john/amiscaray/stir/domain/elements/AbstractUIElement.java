@@ -6,14 +6,26 @@ import io.john.amiscaray.stir.annotation.Id;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * The base class for all classes that represent HTML elements
+ */
 public abstract class AbstractUIElement extends CacheableElement {
 
+    /**
+     * The ID of the element
+     */
     @Id
     protected String id;
 
+    /**
+     * A list of CSS classes for the element
+     */
     @ClassList
     protected List<String> cssClasses = new ArrayList<>();
 
+    /**
+     * The style attribute of the element
+     */
     @Attribute(name = "style")
     protected String style;
 
@@ -53,6 +65,10 @@ public abstract class AbstractUIElement extends CacheableElement {
         this.cssClasses = cssClasses;
     }
 
+    /**
+     * Adds a CSS class to the element
+     * @param clazz The CSS class to add to the element
+     */
     public void addClass(String clazz){
 
         List<String> old = new ArrayList<>(cssClasses);

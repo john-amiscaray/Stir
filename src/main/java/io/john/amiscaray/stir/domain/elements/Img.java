@@ -2,40 +2,68 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.Builder;
-import lombok.Singular;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing an img element
+ */
 @HTMLElement(tagName = "img", hasClosing = false)
 public class Img extends AbstractContentFrame{
 
+    /**
+     * The alt attribute of the img
+     */
     @Attribute(name = "alt")
     private String alt;
 
+    /**
+     * The crossorigin attribute of the img
+     */
     @Attribute(name = "crossorigin")
     private String crossOrigin;
 
+    /**
+     * The ismap attribute of the img
+     */
     @Attribute(name = "ismap")
     private Boolean isMap;
 
+    /**
+     * The loading attribute of the img
+     */
     @Attribute(name = "loading")
     private String loading;
 
+    /**
+     * The longdesc attribute of the img
+     */
     @Attribute(name = "longdesc")
     private String longDesc;
 
+    /**
+     * The referrerpolicy attribute of the img
+     */
     @Attribute(name = "referrerpolicy")
     private String referrerPolicy;
 
+    /**
+     * The sizes attribute of the img
+     */
     @Attribute(name = "sizes")
     private String sizes;
 
+    /**
+     * The srcset attribute of the img
+     */
     @Attribute(name = "srcset")
     private String srcSet;
 
+    /**
+     * The usemap attribute of the img
+     */
     @Attribute(name = "usemap")
     private String useMap;
 

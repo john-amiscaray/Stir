@@ -3,16 +3,34 @@ package io.john.amiscaray.stir.domain.elements;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * The base class for element cache operations
+ */
 public abstract class CacheableElement {
 
+    /**
+     * Used to listen for object property change events to appropriately update the cache
+     */
     protected final PropertyChangeSupport propertyChangeSupport;
 
+    /**
+     * Used to keep track of the cache freshness. See the {@link CacheStatus CacheStatus enum}
+     */
     protected CacheStatus cacheStatus = CacheStatus.EMPTY;
 
+    /**
+     * The cache contents for the element
+     */
     private String cacheContents;
 
+    /**
+     * Whether the element has children elements (used for caching purposes)
+     */
     private boolean hasChildren = false;
 
+    /**
+     * Whether to disable caching on the element
+     */
     protected boolean cacheDisabled;
 
     public CacheStatus getCacheStatus() {
@@ -65,6 +83,10 @@ public abstract class CacheableElement {
         cacheStatus = CacheStatus.EMPTY;
     }
 
+    /**
+     * Adds an event listener for any changes to the object
+     * @param listener A {@link PropertyChangeListener PropertyChangeListener} for when an object property changes
+     */
     public void addPropertyChangeListener(PropertyChangeListener listener){
         propertyChangeSupport.addPropertyChangeListener(listener);
     }

@@ -7,15 +7,30 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a linked stylesheet
+ */
 @HTMLElement(tagName="link", hasClosing = false)
 public class LinkedStyle extends AbstractUIElement {
 
+    /**
+     * The href of the stylesheet
+     */
     @Attribute(name="href", defaultValue="./styles.css")
     private final String href;
+    /**
+     * The rel attribute of the link element (always stylesheet)
+     */
     @Attribute(name="rel")
     private final String rel = "stylesheet";
+    /**
+     * The rel attribute of the link element
+     */
     @Attribute(name="integrity")
     private String integrity;
+    /**
+     * The crossorigin attribute of the link element
+     */
     @Attribute(name="crossorigin")
     private String crossOrigin;
 

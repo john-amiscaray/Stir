@@ -5,12 +5,21 @@ import io.john.amiscaray.stir.annotation.TableEntries;
 
 import java.util.Collection;
 
+/**
+ * A pojo representing a table element
+ */
 @HTMLElement(tagName = "table")
 public class Table extends AbstractUIElement {
 
+    /**
+     * A collection of objects representing the entries of the table
+     */
     @TableEntries
     private Collection<?> entries;
 
+    /**
+     * The class of the elements of the {@link Table#entries entries collection}
+     */
     private Class<?> clazz;
 
     public Table(Collection<?> entries, Class<?> clazz) {

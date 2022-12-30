@@ -4,99 +4,195 @@ import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Label;
 
+/**
+ * A pojo representing an input element
+ */
 @HTMLElement(tagName = "input", hasClosing = false)
 public class Input extends AbstractUIElement {
 
+    /**
+     * The type attribute of the input
+     */
     @Attribute(name="type", defaultValue="text")
     private final String type;
 
+    /**
+     * The value attribute of the input
+     */
     @Attribute(name="value", defaultValue="")
     private String value;
 
+    /**
+     * The label for the input
+     */
     @Label(defaultText="")
     private final String label;
 
+    /**
+     * The accept attribute of the input
+     */
     @Attribute(name="accept")
     private String accept;
 
+    /**
+     * The alt attribute of the input
+     */
     @Attribute(name="alt")
     private String alt;
 
+    /**
+     * The autocomplete attribute of the input
+     */
     @Attribute(name="autocomplete")
     private String autoComplete;
 
+    /**
+     * The autofocus attribute of the input
+     */
     @Attribute(name="autofocus")
     private Boolean autoFocus;
 
+    /**
+     * The checked attribute of the input
+     */
     @Attribute(name="checked")
     private Boolean checked;
 
+    /**
+     * The dirname attribute of the input
+     */
     @Attribute(name="dirname")
     private String dirName;
 
+    /**
+     * The disabled attribute of the input
+     */
     @Attribute(name="disabled")
     private Boolean disabled;
 
+    /**
+     * The form attribute of the input
+     */
     @Attribute(name="form")
     private String form;
 
+    /**
+     * The formaction attribute of the input
+     */
     @Attribute(name="formaction")
     private String formAction;
 
+    /**
+     * The formenctype attribute of the input
+     */
     @Attribute(name="formenctype")
     private String formEnctype;
 
+    /**
+     * The formmethod attribute of the input
+     */
     @Attribute(name="formmethod")
     private String formMethod;
 
+    /**
+     * The formnovalidate attribute of the input
+     */
     @Attribute(name="formnovalidate")
     private Boolean formNoValidate;
 
+    /**
+     * The formtarget attribute of the input
+     */
     @Attribute(name="formtarget")
     private String formTarget;
 
+    /**
+     * The height attribute of the input
+     */
     @Attribute(name="height")
     private Integer height;
 
+    /**
+     * The list attribute of the input
+     */
     @Attribute(name="list")
     private String list;
 
+    /**
+     * The max attribute of the input
+     */
     @Attribute(name="max")
     private Double max;
 
+    /**
+     * The maxlength attribute of the input
+     */
     @Attribute(name="maxlength")
     private Integer maxLength;
 
+    /**
+     * The min attribute of the input
+     */
     @Attribute(name="min")
     private Double min;
 
+    /**
+     * The minlength attribute of the input
+     */
     @Attribute(name="minlength")
     private Integer minLength;
 
+    /**
+     * The multiple attribute of the input
+     */
     @Attribute(name="multiple")
     private Boolean multiple;
 
+    /**
+     * The pattern attribute of the input
+     */
     @Attribute(name="pattern")
     private String pattern;
 
+    /**
+     * The placeholder attribute of the input
+     */
     @Attribute(name="placeholder")
     private String placeHolder;
 
+    /**
+     * The readonly attribute of the input
+     */
     @Attribute(name="readonly")
     private Boolean readOnly;
 
+    /**
+     * The required attribute of the input
+     */
     @Attribute(name="required")
     private Boolean required;
 
+    /**
+     * The size attribute of the input
+     */
     @Attribute(name="size")
     private Integer size;
 
+    /**
+     * The src attribute of the input
+     */
     @Attribute(name="src")
     private String src;
 
+    /**
+     * The step attribute of the input
+     */
     @Attribute(name="step")
     private Double step;
 
+    /**
+     * The width attribute of the input
+     */
     @Attribute(name="width")
     private Integer width;
 

@@ -14,13 +14,23 @@ import java.lang.reflect.Field;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * A class responsible for generating the appropriate HTML markup
+ */
 public class ElementProcessor {
 
     private static ElementProcessor instance;
+
+    /**
+     * The indentation size (in spaces) for the document
+     */
     @Getter
     @Setter
     private static int indentationSize = 4;
 
+    /**
+     * An option to disable caching globally
+     */
     @Getter
     @Setter
     private static boolean cacheDisabled = false;
@@ -34,7 +44,12 @@ public class ElementProcessor {
         return instance;
     }
 
-    public String getTagName(Class clazz){
+    /**
+     * Gets the HTML tag for some class representing an HTML element
+     * @param clazz The given class
+     * @return The HTML tag for the class
+     */
+    public String getTagName(Class<?> clazz){
 
         Annotation[] annotations = clazz.getAnnotations();
 
@@ -47,6 +62,11 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Retrieves the fields of a given class along with its superclasses up to (but not including) CacheableElement or Object
+     * @param type The given class
+     * @return The fields that make up the class and its superclasses up to (but not including) CacheableElement or Object
+     */
     public Field[] getAllFields(Class<?> type){
 
         Field[] declared = type.getDeclaredFields();
@@ -60,6 +80,12 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Generates the HTML markup of a list of elements
+     * @param elements The list of elements
+     * @param indentationLevel Base indentation level to use for the elements
+     * @return The final HTML markup of the elements
+     */
     public String getMarkupForElementList(List<? extends AbstractUIElement> elements, int indentationLevel){
 
         return String.format("%s".repeat(elements.size()),
@@ -75,9 +101,17 @@ public class ElementProcessor {
 
     }
 
-    private void buildElementOpeningTag(StringBuilder builder, Object obj, HTMLElement elMeta, String tagName) throws IllegalAccessException {
+    /**
+     * Builds the opening tag for an HTML element, putting it in the StringBuilder passed to the method
+     * @param builder The String builder for the entire HTML content of the element
+     * @param obj The object to build the opening tag for
+     * @param elMeta The HTMLElement meta for the element
+     * @param tagName The tag name of the element
+     * @throws IllegalAccessException From the Java reflection API
+     */
+    private void buildElementOpeningTag(StringBuilder builder, AbstractUIElement obj, HTMLElement elMeta, String tagName) throws IllegalAccessException {
 
-        Class clazz = obj.getClass();
+        Class<?> clazz = obj.getClass();
         builder.append("<")
                 .append(tagName);
 
@@ -134,6 +168,11 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Generates the closing tag of an element
+     * @param builder The StringBuilder for the HTML content of the element
+     * @param tagName The tag name of the element
+     */
     private void buildElementClosingTag(StringBuilder builder, String tagName){
 
         builder.append("</")
@@ -142,6 +181,13 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Builds a label for the HTML element
+     * @param builder The StringBuilder for the HTML content to be generated
+     * @param label The label field of the object
+     * @param parent The object containing the label field
+     * @throws IllegalAccessException From the Java Reflection API
+     */
     private void buildLabel(StringBuilder builder, Field label, Object parent) throws IllegalAccessException {
 
         String parentId = null;
@@ -163,6 +209,11 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Retrieves the HTML content of an element using its cache
+     * @param element The element to get the cached markup from
+     * @return The Markup of the element
+     */
     public String getMarkupFromCache(CacheableElement element) {
 
         if(element.getCacheStatus().equals(CacheableElement.CacheStatus.CLEAN)){
@@ -197,6 +248,12 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * The markup of the entries within a table represented by a collection
+     * @param collection The table entries
+     * @param type The type of the entries of the collection
+     * @return The markup of the table entries
+     */
     private String getInnerTableMarkup(Collection<?> collection, Class<?> type){
 
         StringBuilder builder = new StringBuilder();
@@ -236,6 +293,12 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Retrieves the markup of a collection as a table
+     * @param collection The table entries
+     * @param type The type of the entries of the collection
+     * @return The markup of the table entries
+     */
     public String getMarkup(Collection<?> collection, Class<?> type){
 
         return """
@@ -248,6 +311,11 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Generates markup for a Table element
+     * @param adapter The table element
+     * @return The markup of the table element
+     */
     public String getMarkup(Table adapter){
 
         Collection<?> collection = adapter.getEntries();
@@ -256,6 +324,11 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Generates markup for an HTML element
+     * @param obj The element to generate markup for
+     * @return The HTML string of the element
+     */
     public String getMarkup(AbstractUIElement obj){
 
         boolean cacheEnabled = false;
@@ -372,6 +445,11 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Generates CSS content from a CssRule object
+     * @param rule The object to generate CSS from
+     * @return The CSS content corresponding to the object
+     */
     public String processStyle(CssRule rule){
 
         StringBuilder template = new StringBuilder("""
@@ -396,30 +474,57 @@ public class ElementProcessor {
 
     }
 
+    /**
+     * Converts a Collection to a table Element TODO deprecate this
+     * @param collection The collection to convert to a table
+     * @param clazz The type of the elements of the collection
+     * @param <T> The type of the elements of the collection
+     * @return A new table instance
+     */
     public <T> Table collectionToTableElement(Collection<T> collection, Class<T> clazz){
 
         return new Table(collection, clazz);
 
     }
 
+    /**
+     * Encodes a string for HTML elements
+     * @param dirty The string to encode
+     * @return The HTML entity encoded string
+     */
     public String encodeForEntitiesOnly(String dirty){
 
         return StringEscapeUtils.escapeHtml4(dirty);
 
     }
 
+    /**
+     * Encodes a string to escape % characters used for string formats and HTML entities
+     * @param dirty The string to encode
+     * @return The encoded string
+     */
     public String encode(String dirty){
 
         return StringEscapeUtils.escapeHtml4(dirty.replaceAll("%", "%%"));
 
     }
 
+    /**
+     * Encodes a string for % characters used for string formates
+     * @param dirty The string to encode
+     * @return The encoded string
+     */
     public String encodeForStringFormats(String dirty){
 
         return dirty.replaceAll("%", "%%");
 
     }
-    
+
+    /**
+     * Unescapes the % characters in a String
+     * @param encoded The encoded string
+     * @return The unescaped string
+     */
     public String unescapeStringFormats(String encoded){
         
         return encoded.replaceAll("%%", "%");

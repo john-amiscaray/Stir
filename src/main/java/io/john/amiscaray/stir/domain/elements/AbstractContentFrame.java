@@ -4,14 +4,26 @@ import io.john.amiscaray.stir.annotation.Attribute;
 
 import java.util.List;
 
+/**
+ * A parent class for any elements displaying external content
+ */
 public abstract class AbstractContentFrame extends AbstractUIElement {
 
+    /**
+     * The height attribute of the element
+     */
     @Attribute(name = "height")
     protected Integer height;
 
+    /**
+     * The src attribute of the element
+     */
     @Attribute(name = "src")
     protected String src;
 
+    /**
+     * The width attribute of the element
+     */
     @Attribute(name = "width")
     protected Integer width;
 

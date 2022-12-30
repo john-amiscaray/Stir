@@ -2,16 +2,20 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
-import lombok.Builder;
-import lombok.Singular;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a list item
+ */
 @HTMLElement(tagName = "li")
 public class ListItem extends AbstractUIElement{
 
+    /**
+     * The inner content of the list item
+     */
     @InnerContent
     private final String content;
 

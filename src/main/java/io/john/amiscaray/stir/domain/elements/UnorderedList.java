@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing an unordered list
+ */
 @HTMLElement(tagName = "ul")
 public class UnorderedList extends AbstractListElement{
 
