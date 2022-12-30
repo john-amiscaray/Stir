@@ -3,30 +3,57 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 
+/**
+ * A pojo representing a script element
+ */
 @HTMLElement(tagName = "script", newLineAfterOpening = false)
 public class Script extends AbstractUIElement {
 
+    /**
+     * The src attribute of the script
+     */
     @Attribute(name="src")
     private final String src;
 
+    /**
+     * The type attribute of the script
+     */
     @Attribute(name="type")
     private String type;
 
+    /**
+     * The defer attribute of the script
+     */
     @Attribute(name="defer")
     private String defer;
 
+    /**
+     * The integrity attribute of the script
+     */
     @Attribute(name="integrity")
     private String integrity;
 
+    /**
+     * The nomodule attribute of the script
+     */
     @Attribute(name="nomodule")
     private Boolean noModule;
 
+    /**
+     * The referrerpolicy attribute of the script
+     */
     @Attribute(name="referrerpolicy")
     private String referrerPolicy;
 
+    /**
+     * The async attribute of the script
+     */
     @Attribute(name="async")
     private String async;
 
+    /**
+     * The crossorigin attribute of the script
+     */
     @Attribute(name="crossorigin")
     private String crossOrigin;
 

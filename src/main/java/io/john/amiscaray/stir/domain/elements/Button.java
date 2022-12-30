@@ -8,30 +8,57 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a button element
+ */
 @HTMLElement(tagName = "button")
 public class Button extends AbstractFormField{
 
+    /**
+     * Inner content of the button
+     */
     @InnerContent
     private String content;
 
+    /**
+     * The formaction attribute of the button
+     */
     @Attribute(name = "formaction")
     private String formAction;
 
+    /**
+     * The formenctype attribute of the button
+     */
     @Attribute(name = "formenctype")
     private String formEnctype;
 
+    /**
+     * The formmethod attribute of the button
+     */
     @Attribute(name = "formmethod")
     private String formMethod;
 
+    /**
+     * The formnovalidate attribute of the button
+     */
     @Attribute(name = "formnovalidate")
     private Boolean formNoValidate;
 
+    /**
+     * The formtarget attribute of the button
+     */
     @Attribute(name = "formtarget")
     private String formTarget;
 
+    /**
+     * The type attribute of the button
+     */
     @Attribute(name = "type")
     private String type;
 
+    /**
+     * The value attribute of the button
+     */
     @Attribute(name = "value")
     private String value;
 

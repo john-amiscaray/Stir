@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing an ordered list element
+ */
 @HTMLElement(tagName = "ol")
 public class OrderedList extends AbstractListElement {
 

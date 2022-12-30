@@ -8,15 +8,27 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a form element
+ */
 @HTMLElement(tagName = "form")
 public class Form extends AbstractUIElement {
 
+    /**
+     * The input fields within the form
+     */
     @ChildList
     private List<Input> fields;
 
+    /**
+     * The method attribute of the form
+     */
     @Attribute(name = "method", defaultValue = "get")
     private String method;
 
+    /**
+     * The action attribute of the form
+     */
     @Attribute(name="action", defaultValue = "/")
     private String action;
 

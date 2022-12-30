@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing an article element
+ */
 @HTMLElement(tagName = "article")
 public class Article extends AbstractElementContainer<AbstractUIElement>{
 

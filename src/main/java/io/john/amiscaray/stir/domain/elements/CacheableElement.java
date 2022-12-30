@@ -1,28 +1,61 @@
 package io.john.amiscaray.stir.domain.elements;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
+/**
+ * The base class for element cache operations
+ */
 public abstract class CacheableElement {
 
+    /**
+     * Used to listen for object property change events to appropriately update the cache
+     */
     protected final PropertyChangeSupport propertyChangeSupport;
 
-    @Getter
+    /**
+     * Used to keep track of the cache freshness. See the {@link CacheStatus CacheStatus enum}
+     */
     protected CacheStatus cacheStatus = CacheStatus.EMPTY;
 
-    @Getter
+    /**
+     * The cache contents for the element
+     */
     private String cacheContents;
 
-    @Getter
-    @Setter
+    /**
+     * Whether the element has children elements (used for caching purposes)
+     */
     private boolean hasChildren = false;
 
-    @Getter
-    @Setter
+    /**
+     * Whether to disable caching on the element
+     */
     protected boolean cacheDisabled;
+
+    public CacheStatus getCacheStatus() {
+        return this.cacheStatus;
+    }
+
+    public String getCacheContents() {
+        return this.cacheContents;
+    }
+
+    public boolean isHasChildren() {
+        return this.hasChildren;
+    }
+
+    public boolean isCacheDisabled() {
+        return this.cacheDisabled;
+    }
+
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
+    }
+
+    public void setCacheDisabled(boolean cacheDisabled) {
+        this.cacheDisabled = cacheDisabled;
+    }
 
     public enum CacheStatus {
         EMPTY,
@@ -50,6 +83,10 @@ public abstract class CacheableElement {
         cacheStatus = CacheStatus.EMPTY;
     }
 
+    /**
+     * Adds an event listener for any changes to the object
+     * @param listener A {@link PropertyChangeListener PropertyChangeListener} for when an object property changes
+     */
     public void addPropertyChangeListener(PropertyChangeListener listener){
         propertyChangeSupport.addPropertyChangeListener(listener);
     }

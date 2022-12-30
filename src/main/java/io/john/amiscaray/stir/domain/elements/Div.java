@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a div element
+ */
 @HTMLElement(tagName = "div")
 public class Div extends AbstractElementContainer<AbstractUIElement>{
 

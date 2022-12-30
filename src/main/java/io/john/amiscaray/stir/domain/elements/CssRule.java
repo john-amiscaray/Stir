@@ -2,10 +2,22 @@ package io.john.amiscaray.stir.domain.elements;
 
 import java.util.*;
 
+/**
+ * A pojo representing a CSS rule
+ */
 public class CssRule {
 
+    /**
+     * The CSS selector for the rule
+     */
     private final String selector;
+    /**
+     * A map representing the property and value of each CSS style
+     */
     private Map<String, String> styles;
+    /**
+     * A list of nested CSS rules (used for things like media queries and CSS animations which have nested structures)
+     */
     private List<CssRule> nestedRules;
 
     public CssRule(String selector, Map<String, String> styles, List<CssRule> nestedRules) {

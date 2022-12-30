@@ -1,16 +1,20 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.ChildList;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * A parent class for the two list types (ul and ol)
+ */
 public abstract class AbstractListElement extends AbstractUIElement{
 
+    /**
+     * The inner list items of the list
+     */
     @ChildList
-    @Getter
     protected List<ListItem> listItems;
 
     public AbstractListElement(String id, List<String> cssClasses, String style, List<ListItem> listItems) {
@@ -36,6 +40,10 @@ public abstract class AbstractListElement extends AbstractUIElement{
         listItems = newList;
         propertyChangeSupport.firePropertyChange("listItems", old, listItems);
 
+    }
+
+    public List<ListItem> getListItems() {
+        return this.listItems;
     }
 
 }

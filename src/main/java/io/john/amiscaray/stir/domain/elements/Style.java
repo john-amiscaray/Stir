@@ -8,9 +8,15 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a style element
+ */
 @HTMLElement(tagName = "style")
 public class Style extends AbstractUIElement{
 
+    /**
+     * The inner CSS
+     */
     @InnerContent(encode = false)
     private StringBuilder css = new StringBuilder();
 
@@ -37,6 +43,10 @@ public class Style extends AbstractUIElement{
         return new StyleBuilder();
     }
 
+    /**
+     * Adds a CSS rule to the style
+     * @param rule the {@link CssRule CSSRule} to add to the style
+     */
     public void addRule(CssRule rule){
 
         String old = css.toString();
@@ -45,6 +55,10 @@ public class Style extends AbstractUIElement{
 
     }
 
+    /**
+     * Adds CSS as a raw string
+     * @param styles A string with the styles to add
+     */
     public void addStylesAsRawString(String styles){
 
         String old = css.toString();

@@ -9,21 +9,39 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a select element
+ */
 @HTMLElement(tagName = "select")
 public class Select extends AbstractFormField {
 
+    /**
+     * The multiple attribute of the select element
+     */
     @Attribute(name="multiple")
     private Boolean multiple;
 
+    /**
+     * The required attribute of the select element
+     */
     @Attribute(name="required")
     private Boolean required;
 
+    /**
+     * The size attribute of the select element
+     */
     @Attribute(name="size")
     private Integer size;
 
+    /**
+     * The inner options of the select element
+     */
     @ChildList
     private List<Option> options;
 
+    /**
+     * A label for the select element
+     */
     @Label(defaultText = "select")
     private String label;
 

@@ -2,35 +2,56 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Singular;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing an iframe element
+ */
 @HTMLElement(tagName = "iframe")
 public class IFrame extends AbstractContentFrame{
 
+    /**
+     * The allow attribute of the IFrame
+     */
     @Attribute(name = "allow")
     private String allow;
 
+    /**
+     * The allowfullscreen attribute of the IFrame
+     */
     @Attribute(name = "allowfullscreen")
     private Boolean allowFullScreen;
 
+    /**
+     * The loading attribute of the IFrame
+     */
     @Attribute(name = "loading")
     private String loading;
 
+    /**
+     * The name attribute of the IFrame
+     */
     @Attribute(name = "name")
     private String name;
 
+    /**
+     * The referrerpolicy of the IFrame
+     */
     @Attribute(name = "referrerpolicy")
     private String referrerPolicy;
 
+    /**
+     * The sandbox attribute of the IFrame
+     */
     @Attribute(name = "sandbox")
     private String sandbox;
 
+    /**
+     * The srcdoc of the IFrame
+     */
     @Attribute(name = "srcdoc")
     private String srcDoc;
 

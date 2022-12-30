@@ -16,17 +16,47 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * A pojo representing an HTML document
+ */
 public class HTMLDocument {
 
+    /**
+     * The elements within the body of the document
+     */
     private final List<AbstractUIElement> elements;
+    /**
+     * The styles linked to the document
+     */
     private final List<LinkedStyle> linkedStyles;
+    /**
+     * A style tag in the header of the document
+     */
     private final Style style;
+    /**
+     * The scripts in the head of the document
+     */
     private final List<Script> headerScripts;
+    /**
+     * The scripts in the bottom of the body
+     */
     private final List<Script> footerScripts;
+    /**
+     * The meta tags of the document
+     */
     private final List<Meta> metaTags;
+    /**
+     * The title of the page
+     */
     private String title;
     private final ElementProcessor processor = ElementProcessor.getInstance();
+    /**
+     * The language of the page
+     */
     private String language = "en";
+    /**
+     * The template for the document
+     */
     private final static String format =
             """
             <!DOCTYPE html>
@@ -77,6 +107,10 @@ public class HTMLDocument {
         return new HTMLDocumentBuilder();
     }
 
+    /**
+     * Generates the HTML markup of the document
+     * @return The HTML string
+     */
     public String generateDocumentString(){
         String finalLanguage = processor.encodeForEntitiesOnly(language != null && !language.isEmpty() ? language : "en");
         String metaMarkup = processor.getMarkupForElementList(metaTags, 2);
@@ -110,6 +144,12 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Query selector applied to a specific set of elements
+     * @param query The CSS selector to select elements with
+     * @param elements The elements to test
+     * @return All elements that match that query
+     */
     private static List<AbstractUIElement> querySelector(String query, List<AbstractUIElement> elements){
 
         String[] subQueries = query.split(",");
@@ -120,6 +160,12 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Processes a CSS query/subquery for the query selector method
+     * @param query The CSS query
+     * @param elements The elements to test
+     * @return All elements that match that query
+     */
     private static List<AbstractUIElement> processQuery(String query, List<AbstractUIElement> elements){
 
         if(elements.isEmpty()){
@@ -206,6 +252,12 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Processes extracted tokens (space separated) within a CSS query
+     * @param query The CSS query
+     * @param elements The elements to test
+     * @return All elements that match that query
+     */
     private static List<AbstractUIElement> processToken(String query, List<AbstractUIElement> elements){
 
         Pattern pattern = Pattern.compile("(\\[[^\\[\\]]+])+$");
@@ -248,6 +300,12 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Filters all elements of a tag name
+     * @param tagName The tag name
+     * @param elements The elements to filter
+     * @return The filtered elements
+     */
     private static List<AbstractUIElement> findAllOfTagName(String tagName, List<AbstractUIElement> elements){
 
         if(tagName.equals("*")){
@@ -269,18 +327,35 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Filters all elements with an ID
+     * @param id The ID of the element
+     * @param elements The elements to filter
+     * @return The filtered elements
+     */
     private static List<AbstractUIElement> findAllOfID(String id, List<AbstractUIElement> elements){
 
         return elements.stream().filter(element -> element.getId() != null && element.getId().equals(id)).collect(Collectors.toList());
 
     }
 
+    /**
+     * Filters a list of elements with a CSS class
+     * @param clazz The CSS class
+     * @param elements The elements to filter through
+     * @return The filtered elements
+     */
     private static List<AbstractUIElement> findAllOfClass(String clazz, List<AbstractUIElement> elements){
 
         return elements.stream().filter(element -> element.getCssClasses().contains(clazz)).collect(Collectors.toList());
 
     }
 
+    /**
+     * Gets all direct descendents of an HTML element
+     * @param ancestor The element to get the children of
+     * @return The direct descendents of the element
+     */
     public static List<AbstractUIElement> getAllDirectDescendents(AbstractUIElement ancestor){
 
         Class<?> clazz = ancestor.getClass();
@@ -303,6 +378,11 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Recursively finds all the descendents of an element
+     * @param ancestor The element to find the descendents of
+     * @return The descendents
+     */
     public static List<AbstractUIElement> getAllDescendents(AbstractUIElement ancestor){
 
         List<AbstractUIElement> directDescendents = getAllDirectDescendents(ancestor);
@@ -313,6 +393,12 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Processes a <a href="https://www.w3schools.com/css/css_attribute_selectors.asp">CSS attribute selector</a>
+     * @param query The CSS query
+     * @param elements The elements to filter through
+     * @return The filtered elements
+     */
     public static List<AbstractUIElement> processAttributeSelector(String query, List<AbstractUIElement> elements){
 
         // TODO make this pattern not match any spaces in the square brackets and not in quotes
@@ -377,6 +463,11 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Whether a token is a CSS operator (i.e. >, +, ~)
+     * @param token The token to test
+     * @return The boolean result
+     */
     private static boolean isCssSelectorOperator(String token){
 
         Pattern pattern = Pattern.compile("^[>+~]$");
@@ -385,6 +476,13 @@ public class HTMLDocument {
 
     }
 
+    /**
+     * Filters elements that have some attribute and whose attribute value satisfies some predicate
+     * @param attributeName The name of the attribute
+     * @param predicate The predicate to test on the attribute value
+     * @param elements The elements to filter through
+     * @return The filtered elements
+     */
     private static List<AbstractUIElement> filterForAttributes(String attributeName, Predicate<String> predicate,
                                                                List<AbstractUIElement> elements){
 

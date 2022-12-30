@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a footer element
+ */
 @HTMLElement(tagName = "footer")
 public class Footer extends AbstractElementContainer<AbstractUIElement>{
 

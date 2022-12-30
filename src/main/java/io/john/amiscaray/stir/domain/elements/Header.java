@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a header element
+ */
 @HTMLElement(tagName = "header")
 public class Header extends AbstractElementContainer<AbstractUIElement>{
 

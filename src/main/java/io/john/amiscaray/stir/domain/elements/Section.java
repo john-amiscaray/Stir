@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a section element
+ */
 @HTMLElement(tagName = "section")
 public class Section extends AbstractElementContainer<AbstractUIElement>{
 

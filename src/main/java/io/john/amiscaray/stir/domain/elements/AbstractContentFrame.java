@@ -1,22 +1,30 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
 import java.util.List;
 
-@NoArgsConstructor
+/**
+ * A parent class for any elements displaying external content
+ */
 public abstract class AbstractContentFrame extends AbstractUIElement {
 
+    /**
+     * The height attribute of the element
+     */
     @Attribute(name = "height")
-    @Getter
     protected Integer height;
+
+    /**
+     * The src attribute of the element
+     */
     @Attribute(name = "src")
-    @Getter
     protected String src;
+
+    /**
+     * The width attribute of the element
+     */
     @Attribute(name = "width")
-    @Getter
     protected Integer width;
 
     public AbstractContentFrame(String id, List<String> cssClasses, String style, Integer height, String src, Integer width) {
@@ -24,6 +32,9 @@ public abstract class AbstractContentFrame extends AbstractUIElement {
         this.height = height;
         this.src = src;
         this.width = width;
+    }
+
+    public AbstractContentFrame() {
     }
 
     public void setHeight(Integer height) {
@@ -41,4 +52,15 @@ public abstract class AbstractContentFrame extends AbstractUIElement {
         this.width = width;
     }
 
+    public Integer getHeight() {
+        return this.height;
+    }
+
+    public String getSrc() {
+        return this.src;
+    }
+
+    public Integer getWidth() {
+        return this.width;
+    }
 }

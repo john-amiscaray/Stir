@@ -3,18 +3,33 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 
+/**
+ * A pojo representing a meta tag
+ */
 @HTMLElement(tagName = "meta", hasClosing = false)
 public class Meta extends AbstractUIElement{
 
+    /**
+     * The http-equiv attribute of the meta element
+     */
     @Attribute(name="http-equiv")
     private String httpEquiv;
 
+    /**
+     * The name attribute of the meta element
+     */
     @Attribute(name="name")
     private final String name;
 
+    /**
+     * The content attribute of the meta element
+     */
     @Attribute(name="content")
     private final String content;
 
+    /**
+     * The charset attribute of the meta element
+     */
     @Attribute(name="charset")
     private String charset;
 

@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a paragraph element
+ */
 @HTMLElement(tagName = "p")
 public class Paragraph extends AbstractTextElement {
 

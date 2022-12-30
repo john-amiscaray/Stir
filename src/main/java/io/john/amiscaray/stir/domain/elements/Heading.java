@@ -1,15 +1,20 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
-import lombok.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+/**
+ * A pojo representing a heading element (i.e. h1, h2, h3, etc.)
+ */
 @HTMLElement(tagName = "h")
 public class Heading extends AbstractTextElement{
 
+    /**
+     * The heading level (i.e. h1, h2, h3, etc.)
+     */
     private Integer level;
 
     public Heading(String id, List<String> cssClasses, String style, String content, Integer level) {
