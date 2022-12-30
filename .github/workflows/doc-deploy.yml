@@ -17,4 +17,4 @@ jobs:
           java-version: 15
           target-folder: docs
           project: maven
-          custom-command: javadoc -private -d javadoc -sourcepath src/main/java -subpackages .
+          custom-command: mvn javadoc:javadoc -Dshow=private
