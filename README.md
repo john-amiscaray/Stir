@@ -137,9 +137,7 @@ As of the latest version, Stir has built-in support for the following elements:
 - Table
 - Unordered list
 
-See the Javadocs in this repository for more info on the classes for each of these elements
-
-> NOTE: At the time of writing this the javadocs have not yet been added to this repository, but you can expect to see them soon.
+See the [Javadocs](https://john-amiscaray.github.io/Stir/io/john/amiscaray/stir/domain/elements/package-summary.html) in this repository for more info on the classes for each of these elements
 
 ## Creating Custom Elements or Components
 
