@@ -1,8 +1,5 @@
 package io.john.amiscaray.stir.domain.elements;
 
-import lombok.Getter;
-import lombok.Setter;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 
@@ -10,19 +7,37 @@ public abstract class CacheableElement {
 
     protected final PropertyChangeSupport propertyChangeSupport;
 
-    @Getter
     protected CacheStatus cacheStatus = CacheStatus.EMPTY;
 
-    @Getter
     private String cacheContents;
 
-    @Getter
-    @Setter
     private boolean hasChildren = false;
 
-    @Getter
-    @Setter
     protected boolean cacheDisabled;
+
+    public CacheStatus getCacheStatus() {
+        return this.cacheStatus;
+    }
+
+    public String getCacheContents() {
+        return this.cacheContents;
+    }
+
+    public boolean isHasChildren() {
+        return this.hasChildren;
+    }
+
+    public boolean isCacheDisabled() {
+        return this.cacheDisabled;
+    }
+
+    public void setHasChildren(boolean hasChildren) {
+        this.hasChildren = hasChildren;
+    }
+
+    public void setCacheDisabled(boolean cacheDisabled) {
+        this.cacheDisabled = cacheDisabled;
+    }
 
     public enum CacheStatus {
         EMPTY,

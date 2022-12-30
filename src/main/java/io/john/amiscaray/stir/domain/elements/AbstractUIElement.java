@@ -3,14 +3,9 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.ClassList;
 import io.john.amiscaray.stir.annotation.Id;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-
 import java.util.ArrayList;
 import java.util.List;
 
-@NoArgsConstructor
-@AllArgsConstructor
 public abstract class AbstractUIElement extends CacheableElement {
 
     @Id
@@ -21,6 +16,15 @@ public abstract class AbstractUIElement extends CacheableElement {
 
     @Attribute(name = "style")
     protected String style;
+
+    public AbstractUIElement(String id, List<String> cssClasses, String style) {
+        this.id = id;
+        this.cssClasses = cssClasses;
+        this.style = style;
+    }
+
+    public AbstractUIElement() {
+    }
 
     public String getStyle() {
         return style;

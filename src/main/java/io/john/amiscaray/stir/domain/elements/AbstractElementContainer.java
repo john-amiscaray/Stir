@@ -1,7 +1,6 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.ChildList;
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +9,6 @@ import java.util.stream.Collectors;
 public abstract class AbstractElementContainer <T extends AbstractUIElement> extends AbstractUIElement{
 
     @ChildList
-    @Getter
     protected List<T> children;
 
     public AbstractElementContainer(String id, List<String> cssClasses, String style, List<T> children) {
@@ -38,4 +36,7 @@ public abstract class AbstractElementContainer <T extends AbstractUIElement> ext
 
     }
 
+    public List<T> getChildren() {
+        return this.children;
+    }
 }
