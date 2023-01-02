@@ -299,6 +299,7 @@ public class ElementProcessor {
      * @param type The type of the entries of the collection
      * @return The markup of the table entries
      */
+    @Deprecated
     public String getMarkup(Collection<?> collection, Class<?> type){
 
         return """
@@ -313,14 +314,24 @@ public class ElementProcessor {
 
     /**
      * Generates markup for a Table element
-     * @param adapter The table element
+     * @param table The table element
      * @return The markup of the table element
      */
-    public String getMarkup(Table adapter){
+    public String getMarkup(Table table){
 
-        Collection<?> collection = adapter.getEntries();
-        Class<?> clazz = adapter.getClazz();
-        return getMarkup(collection, clazz);
+        Collection<?> collection = table.getEntries();
+        Class<?> clazz = table.getClazz();
+        StringBuilder builder = new StringBuilder();
+        HTMLElement meta = Table.class.getAnnotation(HTMLElement.class);
+        try {
+            buildElementOpeningTag(builder, table, meta, meta.tagName());
+            builder.append(getInnerTableMarkup(collection, clazz).indent(ElementProcessor.indentationSize));
+            buildElementClosingTag(builder, meta.tagName());
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+
+        return builder.toString();
 
     }
 
@@ -481,6 +492,7 @@ public class ElementProcessor {
      * @param <T> The type of the elements of the collection
      * @return A new table instance
      */
+    @Deprecated
     public <T> Table collectionToTableElement(Collection<T> collection, Class<T> clazz){
 
         return new Table(collection, clazz);
