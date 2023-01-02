@@ -1,4 +1,4 @@
-name: Clojure Version Bump
+name: Maven Version Update
 
 on: [push]
 
