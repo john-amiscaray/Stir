@@ -10,6 +10,7 @@ A Java Framework for generating HTML content and UI development for server-side 
 - [Creating Custom Elements or Components](#creating-custom-elements-or-components)
 - [Caching Support](#caching-support)
 - [Document Querying](#document-querying)
+- [Examples](#examples)
 
 ## Installation
 
@@ -171,3 +172,6 @@ To disable caching for an element, update the `cacheDisabled` field using the ap
 
 The `HTMLDocument` class provides support for querying its elements using the familiar `querySelector` method which takes a CSS query and returns a list of all the elements added to the document which match that query. At the time of writing this, the `querySelector` method supports every CSS query feature except for pseudo-classes and pseudo-elements.
 
+## Examples
+
+Example uses of this framework can be found [here](https://github.com/john-amiscaray/StirExamples/blob/master/spring-app-example/src/main/java/io/john/amiscaray/springappexample/controller/EmployeeController.java).
