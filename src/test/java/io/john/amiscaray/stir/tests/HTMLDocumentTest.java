@@ -404,5 +404,51 @@ public class HTMLDocumentTest {
 
     }
 
+    @Test
+    public void testDocWithCSSWaterDefault() throws IOException{
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .withWaterCSS(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithCSSWaterDefault.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithCSSWaterDark() throws IOException{
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .withWaterCSS(true)
+                .waterCSSTheme(HTMLDocument.ColorTheme.DARK)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithCSSWaterDark.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithCSSWaterLight() throws IOException{
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .withWaterCSS(true)
+                .waterCSSTheme(HTMLDocument.ColorTheme.LIGHT)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithCSSWaterLight.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithCSSWaterAuto() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .withWaterCSS(true)
+                .waterCSSTheme(HTMLDocument.ColorTheme.AUTO)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithCSSWaterDefault.html"), doc.generateDocumentString());
+
+    }
 
 }

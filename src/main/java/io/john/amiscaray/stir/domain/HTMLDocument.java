@@ -72,7 +72,8 @@ public class HTMLDocument {
 
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
                         List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
-                        boolean withBootStrap, boolean withBootStrapPopper, String title, String language) {
+                        boolean withBootStrap, boolean withBootStrapPopper, boolean withWaterCSS, ColorTheme waterCSSTheme,
+                        String title, String language) {
         this.elements = elements;
         this.linkedStyles = new ArrayList<>(linkedStyles);
         this.style = style;
@@ -100,6 +101,23 @@ public class HTMLDocument {
                     .integrity("sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3")
                     .crossOrigin("anonymous")
                     .build());
+        }
+
+        if(withWaterCSS){
+            if(waterCSSTheme == null){
+                waterCSSTheme = ColorTheme.AUTO;
+            }
+            switch (waterCSSTheme){
+                case LIGHT -> this.linkedStyles.add(LinkedStyle.builder()
+                                .href("https://cdn.jsdelivr.net/npm/water.css@2/out/light.css")
+                                .build());
+                case DARK -> this.linkedStyles.add(LinkedStyle.builder()
+                        .href("https://cdn.jsdelivr.net/npm/water.css@2/out/dark.css")
+                        .build());
+                default -> this.linkedStyles.add(LinkedStyle.builder()
+                        .href("https://cdn.jsdelivr.net/npm/water.css@2/out/water.css")
+                        .build());
+            }
         }
     }
 
@@ -520,6 +538,14 @@ public class HTMLDocument {
         return this.elements;
     }
 
+    public enum ColorTheme {
+
+        LIGHT,
+        DARK,
+        AUTO
+
+    }
+
     public static class HTMLDocumentBuilder {
         private ArrayList<AbstractUIElement> elements;
         private ArrayList<LinkedStyle> linkedStyles;
@@ -529,6 +555,8 @@ public class HTMLDocument {
         private ArrayList<Meta> metaTags;
         private boolean withBootStrap;
         private boolean withBootStrapPopper;
+        private boolean withWaterCSS;
+        private ColorTheme waterCSSTheme;
         private String title;
         private String language;
 
@@ -640,6 +668,16 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocumentBuilder withWaterCSS(boolean withWaterCSS) {
+            this.withWaterCSS = withWaterCSS;
+            return this;
+        }
+
+        public HTMLDocumentBuilder waterCSSTheme(ColorTheme waterCSSTheme) {
+            this.waterCSSTheme = waterCSSTheme;
+            return this;
+        }
+
         public HTMLDocumentBuilder title(String title) {
             this.title = title;
             return this;
@@ -707,11 +745,11 @@ public class HTMLDocument {
                     metaTags = Collections.unmodifiableList(new ArrayList<Meta>(this.metaTags));
             }
 
-            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, title, language);
+            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language);
         }
 
         public String toString() {
-            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", title=" + this.title + ", language=" + this.language + ")";
+            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ")";
         }
     }
 }
