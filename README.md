@@ -7,6 +7,7 @@ A Java Framework for generating HTML content and UI development for server-side 
 - [Installation](#installation)
 - [Building a Simple Page](#building-a-simple-page)
 - [Supported Elements](#supported-elements)
+- [Document Templating](#document-templating)
 - [Creating Custom Elements or Components](#creating-custom-elements-or-components)
 - [Caching Support](#caching-support)
 - [Document Querying](#document-querying)
