@@ -14,15 +14,7 @@ A Java Framework for generating HTML content and UI development for server-side 
 
 ## Installation
 
-This project can be added to a project using the following Maven dependency:
-
-```xml
-<dependency>
-    <groupId>io.john-amiscaray.stir</groupId>
-    <artifactId>stir</artifactId>
-    <version>0.1.2-beta</version>
-</dependency>
-```
+This project can be added to a project as a Maven dependency. See the package on the right-hand side of the repository home page for installation instructions.
 
 ## Building a Simple Page
 
