@@ -81,7 +81,7 @@ public class FormatProcessor {
 
         List<String> tokens = Arrays.asList(expression.split("\s|\n|\t"));
 
-        String result = tokens.stream()
+        return tokens.stream()
                 .map(token -> switch (token){
                     case "str_title" -> processor.encodeForEntitiesOnly(doc.getTitle());
                     case "str_content" -> processor.getMarkupForElementList(doc.getElements(), indentationSize);
@@ -99,8 +99,6 @@ public class FormatProcessor {
                         }
                     }
                 }).reduce("", (t1, t2) -> t1 + t2).trim();
-
-        return result;
 
     }
 
