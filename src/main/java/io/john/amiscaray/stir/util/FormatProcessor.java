@@ -70,6 +70,13 @@ public class FormatProcessor {
 
     }
 
+    /**
+     * Parses the inner content of a template block, converting it to the appropriate HTML content
+     * @param expression The expression to parse
+     * @param doc The HTML document being formatted
+     * @param indentationSize The indentation size for the content
+     * @return The resulting content
+     */
     private String processInnerTemplateBlock(String expression, HTMLDocument doc, Integer indentationSize){
 
         List<String> tokens = Arrays.asList(expression.split("\s|\n|\t"));
