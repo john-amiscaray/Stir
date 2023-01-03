@@ -28,7 +28,7 @@ public class FormatProcessor {
     }
 
     /**
-     * Processes a document's elements and template to produce its HTML markup output. See the <a href="https://github.com/john-amiscaray/Stir#creating-custom-elements-or-components">README</a> for more info
+     * Processes a document's elements and template to produce its HTML markup output. See the <a href="https://github.com/john-amiscaray/Stir#document-templating">README</a> for more info
      * @param document The document to process
      * @return The document converted to HTML markup
      */
