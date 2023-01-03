@@ -132,6 +132,121 @@ As of the latest version, Stir has built-in support for the following elements:
 
 See the [Javadocs](https://john-amiscaray.github.io/Stir/io/john/amiscaray/stir/domain/elements/package-summary.html) in this repository for more info on the classes for each of these elements
 
+## Document Templating
+
+As of version 0.3.0, Stir comes with a simple templating language for your HTML documents, so you can interpolate Stir generated markup into an HTML template. To do this, you can place keywords into a *templating block* (delimited by an opening `<&` tag and a closing `&>` tag). Different keywords can specify different content you set using the `HTMLDocument`'s builder. As an example, see the following code:
+
+```java
+import io.john.amiscaray.stir.domain.HTMLDocument;
+import io.john.amiscaray.stir.domain.elements.*;
+
+public class Main {
+    
+    private final Div sampleContent = Div.builder()
+            .child(new Heading(1, "Hello World"))
+            .child(new Paragraph("This is the content"))
+            .build();
+    
+    public static void main(String[] args){
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="<& str_lang &>">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <& str_meta &>
+                                <& str_hscripts &>
+                                <& str_lstyles &>
+                                <& str_styles &>
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <hgroup>
+                                    <h1><& str_title &></h1>
+                                    <h2>Wowo Much Cool!</h2>
+                                </hgroup>
+                                <div class="content-wrapper">
+                                    <& str_content &>
+                                </div>
+                                <& str_fscripts &>
+                            </body>
+                        </html>""")
+                .element(sampleContent)
+                .title("Hello World")
+                .language("fr")
+                .footerScript(new Script("./main.js"))
+                .headerScript(new Script("./script.js"))
+                .linkedStyle(new LinkedStyle("./styles.css"))
+                .style(new Style("""
+                        div {
+                            color: red;
+                        }
+                        """))
+                .metaTag(Meta.builder()
+                        .content("thing")
+                        .name("sample")
+                        .build())
+                .build();
+        
+        System.out.println(doc.generateDocumentString());
+        
+    }
+    
+}
+```
+
+This prints the following HTML markup
+
+```html
+<!DOCTYPE html>
+<html lang="fr">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="sample" content="thing">
+        <script src="./script.js"></script>
+        <link href="./styles.css" rel="stylesheet">
+        <style>
+            div {
+                color: red;
+            }
+        </style>
+        <title>Hello World</title>
+    </head>
+    <body>
+        <hgroup>
+            <h1>Hello World</h1>
+            <h2>Wowo Much Cool!</h2>
+        </hgroup>
+        <div class="content-wrapper">
+            <div>
+                <h1>
+                    Hello World
+                </h1>
+                <p>
+                    This is the content
+                </p>
+            </div>
+        </div>
+        <script src="./main.js"></script>
+    </body>
+</html>
+```
+
+Below is a list of all the formatting keywords and their meanings:
+
+- `str_content`: All the elements added to the document
+- `str_title`: The title of the page
+- `str_meta`: The meta tags for the page
+- `str_hscripts`: The header scripts for the page
+- `str_fscripts`: The footer scripts for the page
+- `str_lang`: The language of the page
+- `str_styles`: A style tag added to the page (set using the HTMLDocument builder style method
+- `str_lstyles`: Linked style sheets for the page
+
+
 ## Creating Custom Elements or Components
 
 This framework provides custom annotations for creating your own elements or components if the need arises. Every class representing HTML elements must be annotated with the `@HTMLElement` annotation so the `ElementProcessor` class knows what to do with it. This annotation has options such as the tag name and whether the element type requires a closing tag. Additionally, every element must extend the `AbstractUIElement` class which contains a list of CSS classes, an element ID, and comes with caching support from the `CacheableElement` class.
