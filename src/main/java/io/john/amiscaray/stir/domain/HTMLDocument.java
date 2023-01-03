@@ -57,7 +57,7 @@ public class HTMLDocument {
     /**
      * The template for the document
      */
-    private final static String format =
+    private String format =
             """
             <!DOCTYPE html>
             <html lang="%s">
@@ -73,7 +73,7 @@ public class HTMLDocument {
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
                         List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
                         boolean withBootStrap, boolean withBootStrapPopper, boolean withWaterCSS, ColorTheme waterCSSTheme,
-                        String title, String language) {
+                        String title, String language, String format) {
         this.elements = elements;
         this.linkedStyles = new ArrayList<>(linkedStyles);
         this.style = style;
@@ -118,6 +118,10 @@ public class HTMLDocument {
                         .href("https://cdn.jsdelivr.net/npm/water.css@2/out/water.css")
                         .build());
             }
+        }
+
+        if(format != null){
+            this.format = format;
         }
     }
 
@@ -559,6 +563,7 @@ public class HTMLDocument {
         private ColorTheme waterCSSTheme;
         private String title;
         private String language;
+        private String format;
 
         HTMLDocumentBuilder() {
         }
@@ -688,6 +693,11 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocumentBuilder format(String format) {
+            this.format = format;
+            return this;
+        }
+
         public HTMLDocument build() {
             List<AbstractUIElement> elements;
             switch (this.elements == null ? 0 : this.elements.size()) {
@@ -745,11 +755,11 @@ public class HTMLDocument {
                     metaTags = Collections.unmodifiableList(new ArrayList<Meta>(this.metaTags));
             }
 
-            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language);
+            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language, format);
         }
 
         public String toString() {
-            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ")";
+            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ", format=" + this.format + ")";
         }
     }
 }
