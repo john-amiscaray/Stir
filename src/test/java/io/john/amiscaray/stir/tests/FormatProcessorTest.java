@@ -240,4 +240,52 @@ public class FormatProcessorTest {
 
     }
 
+    @Test
+    public void testReadMeExample() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="<& str_lang &>">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <& str_meta &>
+                                <& str_hscripts &>
+                                <& str_lstyles &>
+                                <& str_styles &>
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <hgroup>
+                                    <h1><& str_title &></h1>
+                                    <h2>Wowo Much Cool!</h2>
+                                </hgroup>
+                                <div class="content-wrapper">
+                                    <& str_content &>
+                                </div>
+                                <& str_fscripts &>
+                            </body>
+                        </html>""")
+                .element(sampleContent)
+                .title("Hello World")
+                .language("fr")
+                .footerScript(new Script("./main.js"))
+                .headerScript(new Script("./script.js"))
+                .linkedStyle(new LinkedStyle("./styles.css"))
+                .style(new Style("""
+                        div {
+                            color: red;
+                        }
+                        """))
+                .metaTag(Meta.builder()
+                        .content("thing")
+                        .name("sample")
+                        .build())
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/readmeExample.html"), formatProcessor.processDocument(doc));
+
+    }
+
 }
