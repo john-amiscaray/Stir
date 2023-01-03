@@ -66,7 +66,8 @@ public class FormatProcessor {
         }
         splitFormat = newSplitFormat;
         // TODO consider optimizing this with a StringBuilder
-        return splitFormat.stream().reduce("", (s1, s2) -> s1 + s2);
+        // The last call to replaceAll removes any empty lines
+        return splitFormat.stream().reduce("", (s1, s2) -> s1 + s2).replaceAll("(?m)^[ \t]*\r?\n", "");
 
     }
 
@@ -74,15 +75,15 @@ public class FormatProcessor {
 
         List<String> tokens = Arrays.asList(expression.split(" "));
 
-        return tokens.stream()
+        String result = tokens.stream()
                 .map(token -> switch (token){
-                    case "str_title" -> doc.getTitle();
+                    case "str_title" -> processor.encodeForEntitiesOnly(doc.getTitle());
                     case "str_content" -> processor.getMarkupForElementList(doc.getElements(), indentationSize);
                     case "str_meta" -> processor.getMarkupForElementList(doc.getMetaTags(), indentationSize);
                     case "str_hscripts" -> processor.getMarkupForElementList(doc.getHeaderScripts(), indentationSize);
                     case "str_fscripts" -> processor.getMarkupForElementList(doc.getFooterScripts(), indentationSize);
-                    case "str_lang" -> doc.getLanguage();
-                    case "str_styles" -> doc.getStyle() != null ? processor.getMarkup(doc.getStyle()) : "";
+                    case "str_lang" -> processor.encodeForEntitiesOnly(doc.getLanguage());
+                    case "str_styles" -> doc.getStyle() != null ? processor.getMarkup(doc.getStyle()).indent(indentationSize * ElementProcessor.getIndentationSize()) : "";
                     case "str_lstyles" -> processor.getMarkupForElementList(doc.getLinkedStyles(), indentationSize);
                     default -> {
                         if(token.isBlank()){
@@ -92,6 +93,8 @@ public class FormatProcessor {
                         }
                     }
                 }).reduce("", (t1, t2) -> t1 + t2).trim();
+
+        return result;
 
     }
 

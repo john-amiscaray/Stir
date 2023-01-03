@@ -148,24 +148,6 @@ public class HTMLDocument {
      * @return The HTML string
      */
     public String generateDocumentString(){
-//        String finalLanguage = processor.encodeForEntitiesOnly(language != null && !language.isEmpty() ? language : "en");
-//        String metaMarkup = processor.getMarkupForElementList(metaTags, 2);
-//        String finalTitle = processor.encodeForEntitiesOnly(title != null ? title : "Title");
-//        String headerScriptsMarkup = processor.getMarkupForElementList(headerScripts, 2);
-//        String linkedStylesMarkup = processor.getMarkupForElementList(linkedStyles, 2);
-//        String styleMarkup = style != null ? "\n" + processor.getMarkup(style).indent(ElementProcessor.getIndentationSize() * 2).stripTrailing() : "";
-//        String elementsMarkup = processor.getMarkupForElementList(elements, 2);
-//        String footerScriptsMarkup = processor.getMarkupForElementList(footerScripts, 2);
-//        return String.format(format,
-//                finalLanguage,
-//                !metaMarkup.isEmpty() ? "\n" + metaMarkup : "",
-//                finalTitle,
-//                !headerScriptsMarkup.isEmpty() ? "\n" + headerScriptsMarkup : "",
-//                !linkedStylesMarkup.isEmpty() ? "\n" + linkedStylesMarkup : "",
-//                styleMarkup,
-//                !elementsMarkup.isEmpty() ? "\n" + elementsMarkup : "",
-//                !footerScriptsMarkup.isEmpty() ? "\n" + footerScriptsMarkup : ""
-//        );
 
         return formatProcessor.processDocument(this);
 
