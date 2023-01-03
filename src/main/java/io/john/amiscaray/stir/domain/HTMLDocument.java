@@ -7,6 +7,7 @@ import io.john.amiscaray.stir.annotation.Nested;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
+import io.john.amiscaray.stir.util.FormatProcessor;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -49,7 +50,8 @@ public class HTMLDocument {
      * The title of the page
      */
     private String title;
-    private final ElementProcessor processor = ElementProcessor.getInstance();
+
+    private final FormatProcessor formatProcessor = FormatProcessor.getInstance();
     /**
      * The language of the page
      */
@@ -57,23 +59,29 @@ public class HTMLDocument {
     /**
      * The template for the document
      */
-    private final static String format =
+    private String format =
             """
             <!DOCTYPE html>
-            <html lang="%s">
+            <html lang="<& str_lang &>">
                 <head>
                     <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">%s
-                    <title>%s</title>%s%s%s
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <& str_meta &>
+                    <title><& str_title &></title>
+                    <& str_hscripts &>
+                    <& str_lstyles &>
+                    <& str_styles &>
                 </head>
-                <body>%s%s
+                <body>
+                    <& str_content &>
+                    <& str_fscripts &>
                 </body>
             </html>""";
 
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
                         List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
                         boolean withBootStrap, boolean withBootStrapPopper, boolean withWaterCSS, ColorTheme waterCSSTheme,
-                        String title, String language) {
+                        String title, String language, String format) {
         this.elements = elements;
         this.linkedStyles = new ArrayList<>(linkedStyles);
         this.style = style;
@@ -119,6 +127,16 @@ public class HTMLDocument {
                         .build());
             }
         }
+
+        if(format != null){
+            this.format = format;
+        }
+        if(language == null){
+            this.language = "en";
+        }
+        if(title == null){
+            this.title = "Title";
+        }
     }
 
     public static HTMLDocumentBuilder builder() {
@@ -130,24 +148,9 @@ public class HTMLDocument {
      * @return The HTML string
      */
     public String generateDocumentString(){
-        String finalLanguage = processor.encodeForEntitiesOnly(language != null && !language.isEmpty() ? language : "en");
-        String metaMarkup = processor.getMarkupForElementList(metaTags, 2);
-        String finalTitle = processor.encodeForEntitiesOnly(title != null ? title : "Title");
-        String headerScriptsMarkup = processor.getMarkupForElementList(headerScripts, 2);
-        String linkedStylesMarkup = processor.getMarkupForElementList(linkedStyles, 2);
-        String styleMarkup = style != null ? "\n" + processor.getMarkup(style).indent(ElementProcessor.getIndentationSize() * 2).stripTrailing() : "";
-        String elementsMarkup = processor.getMarkupForElementList(elements, 2);
-        String footerScriptsMarkup = processor.getMarkupForElementList(footerScripts, 2);
-        return String.format(format,
-                finalLanguage,
-                !metaMarkup.isEmpty() ? "\n" + metaMarkup : "",
-                finalTitle,
-                !headerScriptsMarkup.isEmpty() ? "\n" + headerScriptsMarkup : "",
-                !linkedStylesMarkup.isEmpty() ? "\n" + linkedStylesMarkup : "",
-                styleMarkup,
-                !elementsMarkup.isEmpty() ? "\n" + elementsMarkup : "",
-                !footerScriptsMarkup.isEmpty() ? "\n" + footerScriptsMarkup : ""
-        );
+
+        return formatProcessor.processDocument(this);
+
     }
 
     /**
@@ -538,6 +541,38 @@ public class HTMLDocument {
         return this.elements;
     }
 
+    public List<LinkedStyle> getLinkedStyles() {
+        return linkedStyles;
+    }
+
+    public Style getStyle() {
+        return style;
+    }
+
+    public List<Script> getHeaderScripts() {
+        return headerScripts;
+    }
+
+    public List<Script> getFooterScripts() {
+        return footerScripts;
+    }
+
+    public List<Meta> getMetaTags() {
+        return metaTags;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public String getFormat() {
+        return format;
+    }
+
     public enum ColorTheme {
 
         LIGHT,
@@ -559,6 +594,7 @@ public class HTMLDocument {
         private ColorTheme waterCSSTheme;
         private String title;
         private String language;
+        private String format;
 
         HTMLDocumentBuilder() {
         }
@@ -688,6 +724,11 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocumentBuilder format(String format) {
+            this.format = format;
+            return this;
+        }
+
         public HTMLDocument build() {
             List<AbstractUIElement> elements;
             switch (this.elements == null ? 0 : this.elements.size()) {
@@ -745,11 +786,11 @@ public class HTMLDocument {
                     metaTags = Collections.unmodifiableList(new ArrayList<Meta>(this.metaTags));
             }
 
-            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language);
+            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language, format);
         }
 
         public String toString() {
-            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ")";
+            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ", format=" + this.format + ")";
         }
     }
 }
