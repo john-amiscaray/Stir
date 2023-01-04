@@ -426,4 +426,84 @@ public class FormatProcessorTest {
 
     }
 
+    @Test
+    public void testBlockWithContentAndTitleAndLang() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <& str_title str_lang str_content &>
+                            </body>
+                        </html>
+                        """)
+                .title("Hello World")
+                .element(sampleContent)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docFormatTitleAndContentAndLang.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testBlockWithContentAndStyle() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <& str_styles str_content &>
+                            </body>
+                        </html>
+                        """)
+                .title("Hello World")
+                .style(new Style("""
+                        div {
+                            color: red;
+                        }
+                        """))
+                .element(sampleContent)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithContentAndStyle.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testDocWithTitleAfterContent() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <& str_content str_title &>
+                            </body>
+                        </html>
+                        """)
+                .title("Hello World")
+                .element(sampleContent)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithTitleAfterContent.html"), formatProcessor.processDocument(doc));
+
+    }
+
 }

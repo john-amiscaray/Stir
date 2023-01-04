@@ -85,12 +85,12 @@ public class FormatProcessor {
 
         return tokens.stream()
                 .map(token -> switch (token){
-                    case "str_title" -> processor.encodeForEntitiesOnly(doc.getTitle());
-                    case "str_content" -> processor.getMarkupForElementList(doc.getElements(), indentationSize);
+                    case "str_title" -> processor.encodeForEntitiesOnly(doc.getTitle().indent(indentationSize * ElementProcessor.getIndentationSize())) + "\n";
+                    case "str_content" -> processor.getMarkupForElementList(doc.getElements(), indentationSize) + "\n";
                     case "str_meta" -> processor.getMarkupForElementList(doc.getMetaTags(), indentationSize);
                     case "str_hscripts" -> processor.getMarkupForElementList(doc.getHeaderScripts(), indentationSize);
                     case "str_fscripts" -> processor.getMarkupForElementList(doc.getFooterScripts(), indentationSize);
-                    case "str_lang" -> processor.encodeForEntitiesOnly(doc.getLanguage());
+                    case "str_lang" -> processor.encodeForEntitiesOnly(doc.getLanguage().indent(indentationSize * ElementProcessor.getIndentationSize())) + "\n";
                     case "str_styles" -> doc.getStyle() != null ? processor.getMarkup(doc.getStyle()).indent(indentationSize * ElementProcessor.getIndentationSize()) : "";
                     case "str_lstyles" -> processor.getMarkupForElementList(doc.getLinkedStyles(), indentationSize);
                     default -> {
