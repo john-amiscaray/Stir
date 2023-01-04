@@ -58,17 +58,35 @@ public class ElementDescriptorProcessor {
                 .orElseThrow();
         emptyConstructor.setAccessible(true);
 
-        List<String> cssClasses = new ArrayList<>();
-        String id = null;
         AbstractUIElement element = (AbstractUIElement) emptyConstructor.newInstance();
-        Pattern cssClassPattern = Pattern.compile("(?<=\\.)[^ .#]+");
-        Pattern idPattern = Pattern.compile("(?<=#)[^ .#]+");
+        List<String> cssClasses = getCSSClasses(tagNameIdAndClasses);
+        String id = getID(tagNameIdAndClasses);
 
-        Matcher idPatternMatcher = idPattern.matcher(tagNameIdAndClasses);
-        Matcher cssClassMatcher = cssClassPattern.matcher(tagNameIdAndClasses);
+        element.setCssClasses(cssClasses);
+        element.setId(id);
+        return element;
+    }
+
+    private static List<String> getCSSClasses(String tagIdAndClassesDescriptor){
+
+        List<String> cssClasses = new ArrayList<>();
+        Pattern cssClassPattern = Pattern.compile("(?<=\\.)[^ .#]+");
+        Matcher cssClassMatcher = cssClassPattern.matcher(tagIdAndClassesDescriptor);
         while(cssClassMatcher.find()){
             cssClasses.add(cssClassMatcher.group());
         }
+
+        return cssClasses;
+
+    }
+
+    private static String getID(String tagIdAndClassesDescriptor){
+
+        String id = null;
+        Pattern idPattern = Pattern.compile("(?<=#)[^ .#]+");
+
+        Matcher idPatternMatcher = idPattern.matcher(tagIdAndClassesDescriptor);
+
         int i = 0;
         while(idPatternMatcher.find()){
             if(i > 0){
@@ -77,9 +95,9 @@ public class ElementDescriptorProcessor {
             id = idPatternMatcher.group();
             i++;
         }
-        element.setCssClasses(cssClasses);
-        element.setId(id);
-        return element;
+
+        return id;
+
     }
 
 }
