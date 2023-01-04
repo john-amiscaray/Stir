@@ -236,7 +236,7 @@ This prints the following HTML markup
 </html>
 ```
 
-Below is a list of all the formatting keywords and their meanings:
+Below is a list of all the built-in formatting keywords and their meanings:
 
 - `str_content`: All the elements added to the document
 - `str_title`: The title of the page
@@ -247,6 +247,161 @@ Below is a list of all the formatting keywords and their meanings:
 - `str_styles`: A style tag added to the page (set using the HTMLDocument builder style method
 - `str_lstyles`: Linked style sheets for the page
 
+### Formatting Arguments
+
+From version 0.4.1 onwards, you can now add formatting arguments to your template, allowing you to interpolate custom content into your document format using formatting blocks. To do so, all you need to do is call the `formatArgs` method of the `HTMLDocument`'s builder class with a key and value. The key is what you can use in any formatting block to specify to the `FormatProcessor` that you want the corresponding value to be placed in the given area of the template. For example take the following Java code:
+
+```java
+import io.john.amiscaray.stir.domain.HTMLDocument;
+import io.john.amiscaray.stir.domain.elements.*;
+import java.util.LinkedHashMap;
+import java.util.List;
+
+import io.john.amiscaray.stir.stub.StudentWithTableAnnotation;
+
+public class Main {
+    
+    private final Div sampleContent = Div.builder()
+            .child(new Heading(1, "Hello World"))
+            .child(new Paragraph("This is the content"))
+            .build();
+    
+    public static void main(String[] args){
+
+        LinkedHashMap<String, String> navMap = new LinkedHashMap<>();
+        navMap.put("Home", "/home");
+        navMap.put("Products", "/products");
+        navMap.put("About", "/about");
+
+        List<StudentWithTableAnnotation> students = List.of(
+                new StudentWithTableAnnotation(1, "Susan", 4.0f),
+                new StudentWithTableAnnotation(2, "Karen", 0.1f),
+                new StudentWithTableAnnotation(3, "George", 3.2f)
+        );
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <& nav &>
+                                <h1><& str_title &></h1>
+                                <& str_content &>
+                            </body>
+                        </html>""")
+                .title("My Document")
+                .formatArg("nav", Nav.fromLabelHrefMap(navMap))
+                .element(Div.builder()
+                        .id("main-content")
+                        .child(new Table(students, StudentWithTableAnnotation.class))
+                        .build())
+                .build();
+        
+        System.out.println(doc.generateDocumentString());
+        
+    }
+    
+}
+```
+
+Where the `StudentWithTableAnnotation` class is defined as so:
+
+```java
+package io.john.amiscaray.stir.stub;
+
+import io.john.amiscaray.stir.annotation.TableData;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+public class StudentWithTableAnnotation implements Comparable{
+
+    @TableData(columnName = "Student ID")
+    private Integer studentId;
+    @TableData(columnName = "Name")
+    private String name;
+    @TableData(columnName = "GPA")
+    private Float gpa;
+
+    @Override
+    public int compareTo(Object o) {
+        return ((StudentWithTableAnnotation) o).studentId.compareTo(this.studentId);
+    }
+}
+```
+
+The above code outputs the following markup:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>My Document</title>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li>
+                    <a href="/home">
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/products">
+                        Products
+                    </a>
+                </li>
+                <li>
+                    <a href="/about">
+                        About
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <h1>My Document</h1>
+        <div id="main-content">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>GPA</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Susan</td>
+                        <td>4.0</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Karen</td>
+                        <td>0.1</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>George</td>
+                        <td>3.2</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>
+```
 
 ## Creating Custom Elements or Components
 
