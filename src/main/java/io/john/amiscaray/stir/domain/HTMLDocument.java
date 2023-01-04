@@ -79,6 +79,9 @@ public class HTMLDocument {
                 </body>
             </html>""";
 
+    /**
+     * The custom templating keywords/arguments for interpolation into the document format. See the <a href="https://github.com/john-amiscaray/Stir#formatting-arguments">README</a> for more info
+     */
     private Map<String, Object> formatArgs = new HashMap<>();
 
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
