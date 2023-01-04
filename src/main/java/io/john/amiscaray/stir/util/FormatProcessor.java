@@ -103,7 +103,7 @@ public class FormatProcessor {
                             }
                             Object value = formatArgs.get(token);
                             if(value instanceof AbstractUIElement){
-                                yield processor.getMarkup((AbstractUIElement) value);
+                                yield processor.getMarkup((AbstractUIElement) value).indent(indentationSize * ElementProcessor.getIndentationSize());
                             }
                             yield formatArgs.get(token).toString();
                         }

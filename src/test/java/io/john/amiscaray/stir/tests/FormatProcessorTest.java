@@ -3,11 +3,14 @@ package io.john.amiscaray.stir.tests;
 import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
+import io.john.amiscaray.stir.stub.StudentWithTableAnnotation;
 import io.john.amiscaray.stir.util.FormatProcessor;
 import io.john.amiscaray.stir.util.exceptions.TemplatingException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -379,6 +382,47 @@ public class FormatProcessorTest {
                     .formatArg("str_my_text", "Hello World")
                     .build();
         });
+
+    }
+
+    @Test
+    public void testFormatArgsNav() throws IOException {
+
+        LinkedHashMap<String, String> navMap = new LinkedHashMap<>();
+        navMap.put("Home", "/home");
+        navMap.put("Products", "/products");
+        navMap.put("About", "/about");
+
+        List<StudentWithTableAnnotation> students = List.of(
+                new StudentWithTableAnnotation(1, "Susan", 4.0f),
+                new StudentWithTableAnnotation(2, "Karen", 0.1f),
+                new StudentWithTableAnnotation(3, "George", 3.2f)
+        );
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <& nav &>
+                                <h1><& str_title &></h1>
+                                <& str_content &>
+                            </body>
+                        </html>""")
+                .title("My Document")
+                .formatArg("nav", Nav.fromLabelHrefMap(navMap))
+                .element(Div.builder()
+                        .id("main-content")
+                        .child(new Table(students, StudentWithTableAnnotation.class))
+                        .build())
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/formatArgsNavTest.html"), formatProcessor.processDocument(doc));
 
     }
 
