@@ -3,12 +3,15 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.ClassList;
 import io.john.amiscaray.stir.annotation.Id;
+import lombok.EqualsAndHashCode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * The base class for all classes that represent HTML elements
  */
+@EqualsAndHashCode(callSuper = false)
 public abstract class AbstractUIElement extends CacheableElement {
 
     /**
