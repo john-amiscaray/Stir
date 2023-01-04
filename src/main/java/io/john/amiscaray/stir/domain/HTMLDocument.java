@@ -8,6 +8,7 @@ import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
 import io.john.amiscaray.stir.util.FormatProcessor;
+import io.john.amiscaray.stir.util.exceptions.TemplatingException;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -78,10 +79,12 @@ public class HTMLDocument {
                 </body>
             </html>""";
 
+    private Map<String, Object> formatArgs = new HashMap<>();
+
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
                         List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
                         boolean withBootStrap, boolean withBootStrapPopper, boolean withWaterCSS, ColorTheme waterCSSTheme,
-                        String title, String language, String format) {
+                        String title, String language, String format, Map<String, Object> formatArgs) {
         this.elements = elements;
         this.linkedStyles = new ArrayList<>(linkedStyles);
         this.style = style;
@@ -130,6 +133,15 @@ public class HTMLDocument {
 
         if(format != null){
             this.format = format;
+        }
+        if(formatArgs != null){
+            long numInvalidKeys = formatArgs.keySet()
+                    .stream()
+                    .filter(entry -> entry.matches(".*\\s.*") || entry.startsWith("str_")).count();
+            if(numInvalidKeys > 0){
+                throw new TemplatingException("Invalid format arg given. Format keys must not have whitespace or start with str_");
+            }
+            this.formatArgs = formatArgs;
         }
         if(language == null){
             this.language = "en";
@@ -573,6 +585,10 @@ public class HTMLDocument {
         return format;
     }
 
+    public Map<String, Object> getFormatArgs() {
+        return formatArgs;
+    }
+
     public enum ColorTheme {
 
         LIGHT,
@@ -595,6 +611,8 @@ public class HTMLDocument {
         private String title;
         private String language;
         private String format;
+        private ArrayList<String> formatArgs$key;
+        private ArrayList<Object> formatArgs$value;
 
         HTMLDocumentBuilder() {
         }
@@ -729,6 +747,36 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocumentBuilder formatArg(String formatArgKey, Object formatArgValue) {
+            if (this.formatArgs$key == null) {
+                this.formatArgs$key = new ArrayList<String>();
+                this.formatArgs$value = new ArrayList<Object>();
+            }
+            this.formatArgs$key.add(formatArgKey);
+            this.formatArgs$value.add(formatArgValue);
+            return this;
+        }
+
+        public HTMLDocumentBuilder formatArgs(Map<? extends String, ?> formatArgs) {
+            if (this.formatArgs$key == null) {
+                this.formatArgs$key = new ArrayList<String>();
+                this.formatArgs$value = new ArrayList<Object>();
+            }
+            for (final Map.Entry<? extends String, ?> $lombokEntry : formatArgs.entrySet()) {
+                this.formatArgs$key.add($lombokEntry.getKey());
+                this.formatArgs$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public HTMLDocumentBuilder clearFormatArgs() {
+            if (this.formatArgs$key != null) {
+                this.formatArgs$key.clear();
+                this.formatArgs$value.clear();
+            }
+            return this;
+        }
+
         public HTMLDocument build() {
             List<AbstractUIElement> elements;
             switch (this.elements == null ? 0 : this.elements.size()) {
@@ -785,12 +833,27 @@ public class HTMLDocument {
                 default:
                     metaTags = Collections.unmodifiableList(new ArrayList<Meta>(this.metaTags));
             }
+            Map<String, Object> formatArgs;
+            switch (this.formatArgs$key == null ? 0 : this.formatArgs$key.size()) {
+                case 0:
+                    formatArgs = Collections.emptyMap();
+                    break;
+                case 1:
+                    formatArgs = Collections.singletonMap(this.formatArgs$key.get(0), this.formatArgs$value.get(0));
+                    break;
+                default:
+                    formatArgs = new LinkedHashMap<String, Object>(this.formatArgs$key.size() < 1073741824 ? 1 + this.formatArgs$key.size() + (this.formatArgs$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.formatArgs$key.size(); $i++)
+                        formatArgs.put(this.formatArgs$key.get($i), (Object) this.formatArgs$value.get($i));
+                    formatArgs = Collections.unmodifiableMap(formatArgs);
+            }
 
-            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language, format);
+            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language, format, formatArgs);
         }
 
         public String toString() {
-            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ", format=" + this.format + ")";
+            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ", format=" + this.format + ", formatArgs$key=" + this.formatArgs$key + ", formatArgs$value=" + this.formatArgs$value + ")";
         }
     }
+
 }
