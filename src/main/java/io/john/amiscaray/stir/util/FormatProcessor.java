@@ -1,11 +1,13 @@
 package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.domain.HTMLDocument;
+import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.util.exceptions.TemplatingException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -94,8 +96,16 @@ public class FormatProcessor {
                     default -> {
                         if(token.isBlank()){
                             yield token;
-                        }else {
-                            throw new TemplatingException("Unexpected token in template: " + token);
+                        } else {
+                            Map<String, Object> formatArgs = doc.getFormatArgs();
+                            if(!formatArgs.containsKey(token)){
+                                throw new TemplatingException("Unexpected token in template: " + token);
+                            }
+                            Object value = formatArgs.get(token);
+                            if(value instanceof AbstractUIElement){
+                                yield processor.getMarkup((AbstractUIElement) value);
+                            }
+                            yield formatArgs.get(token).toString();
                         }
                     }
                 }).reduce("", (t1, t2) -> t1 + t2).trim();

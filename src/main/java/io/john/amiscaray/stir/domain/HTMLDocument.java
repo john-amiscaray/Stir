@@ -8,8 +8,7 @@ import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
 import io.john.amiscaray.stir.util.FormatProcessor;
-import lombok.Builder;
-import lombok.Singular;
+import io.john.amiscaray.stir.util.exceptions.TemplatingException;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -80,7 +79,7 @@ public class HTMLDocument {
                 </body>
             </html>""";
 
-    private Map<String, Object> formatArgs;
+    private Map<String, Object> formatArgs = new HashMap<>();
 
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
                         List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
@@ -136,6 +135,12 @@ public class HTMLDocument {
             this.format = format;
         }
         if(formatArgs != null){
+            long numInvalidKeys = formatArgs.keySet()
+                    .stream()
+                    .filter(entry -> entry.matches(".*\\s.*") || entry.startsWith("str_")).count();
+            if(numInvalidKeys > 0){
+                throw new TemplatingException("Invalid format arg given. Format keys must not have whitespace or start with str_");
+            }
             this.formatArgs = formatArgs;
         }
         if(language == null){

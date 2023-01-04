@@ -288,4 +288,98 @@ public class FormatProcessorTest {
 
     }
 
+    @Test
+    public void testFormatWithCustomKey() throws IOException{
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& my_text &></title>
+                            </head>
+                            <body>
+                                <h1><& my_text &></h1>
+                            </body>
+                        </html>""")
+                .formatArg("my_text", "Hello World")
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docWithTitle.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testFormatWithSpaceArg() {
+
+        assertThrows(TemplatingException.class, () -> {
+            HTMLDocument.builder()
+                    .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& my text &></title>
+                            </head>
+                            <body>
+                                <h1><& my text &></h1>
+                            </body>
+                        </html>""")
+                    .formatArg("my text", "Hello World")
+                    .build();
+        });
+
+    }
+
+    @Test
+    public void testFormatWithNewLineArg() {
+
+        assertThrows(TemplatingException.class, () -> {
+            HTMLDocument.builder()
+                    .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& my
+                                text &></title>
+                            </head>
+                            <body>
+                                <h1><& my
+                                text &></h1>
+                            </body>
+                        </html>""")
+                    .formatArg("my\ntext", "Hello World")
+                    .build();
+        });
+
+    }
+
+    @Test
+    public void testFormatArgStartsWithStr_(){
+
+        assertThrows(TemplatingException.class, () -> {
+            HTMLDocument.builder()
+                    .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& str_my_text &></title>
+                            </head>
+                            <body>
+                                <h1><& str_my_text &></h1>
+                            </body>
+                        </html>""")
+                    .formatArg("str_my_text", "Hello World")
+                    .build();
+        });
+
+    }
+
 }
