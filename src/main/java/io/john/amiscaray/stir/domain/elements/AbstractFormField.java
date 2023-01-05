@@ -1,12 +1,14 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
  * A parent class for common form field attributes
  */
+@NoArgsConstructor
 public abstract class AbstractFormField extends AbstractUIElement{
 
     /**

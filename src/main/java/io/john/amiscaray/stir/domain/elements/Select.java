@@ -4,6 +4,7 @@ import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Label;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import java.util.List;
  * A pojo representing a select element
  */
 @HTMLElement(tagName = "select")
+@NoArgsConstructor
 public class Select extends AbstractFormField {
 
     /**

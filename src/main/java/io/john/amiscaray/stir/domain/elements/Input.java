@@ -3,18 +3,20 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Label;
+import lombok.NoArgsConstructor;
 
 /**
  * A pojo representing an input element
  */
 @HTMLElement(tagName = "input", hasClosing = false)
+@NoArgsConstructor
 public class Input extends AbstractUIElement {
 
     /**
      * The type attribute of the input
      */
     @Attribute(name="type", defaultValue="text")
-    private final String type;
+    private String type;
 
     /**
      * The value attribute of the input
@@ -26,7 +28,7 @@ public class Input extends AbstractUIElement {
      * The label for the input
      */
     @Label(defaultText="")
-    private final String label;
+    private String label;
 
     /**
      * The accept attribute of the input

@@ -2,18 +2,20 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 /**
  * A pojo representing a script element
  */
 @HTMLElement(tagName = "script", newLineAfterOpening = false)
+@NoArgsConstructor
 public class Script extends AbstractUIElement {
 
     /**
      * The src attribute of the script
      */
     @Attribute(name="src")
-    private final String src;
+    private String src;
 
     /**
      * The type attribute of the script

@@ -2,11 +2,13 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 /**
  * A pojo representing a meta tag
  */
 @HTMLElement(tagName = "meta", hasClosing = false)
+@NoArgsConstructor
 public class Meta extends AbstractUIElement{
 
     /**
@@ -19,13 +21,13 @@ public class Meta extends AbstractUIElement{
      * The name attribute of the meta element
      */
     @Attribute(name="name")
-    private final String name;
+    private String name;
 
     /**
      * The content attribute of the meta element
      */
     @Attribute(name="content")
-    private final String content;
+    private String content;
 
     /**
      * The charset attribute of the meta element

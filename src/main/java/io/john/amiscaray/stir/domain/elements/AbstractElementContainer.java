@@ -20,6 +20,10 @@ public abstract class AbstractElementContainer <T extends AbstractUIElement> ext
         this.children = children;
     }
 
+    public AbstractElementContainer() {
+        this.children = new ArrayList<>();
+    }
+
     /**
      * Adds a child to the element
      * @param child The child to add as a child of the element

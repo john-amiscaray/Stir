@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Nested;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
  * A pojo representing a nav element
  */
 @HTMLElement(tagName = "nav")
+@NoArgsConstructor
 public class Nav extends AbstractUIElement{
 
     /**
@@ -24,9 +26,6 @@ public class Nav extends AbstractUIElement{
     public Nav(String id, List<String> cssClasses, String style, NavLinkList list) {
         super(id, cssClasses, style);
         this.list = list;
-    }
-
-    public Nav() {
     }
 
     /**

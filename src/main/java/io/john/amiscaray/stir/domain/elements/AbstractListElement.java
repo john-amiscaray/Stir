@@ -22,6 +22,10 @@ public abstract class AbstractListElement extends AbstractUIElement{
         this.listItems = listItems;
     }
 
+    public AbstractListElement() {
+        this.listItems = new ArrayList<>();
+    }
+
     public void removeListItem(ListItem li){
 
         List<ListItem> old = new ArrayList<>(listItems);

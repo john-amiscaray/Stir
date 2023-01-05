@@ -11,6 +11,7 @@ import java.util.List;
  * A pojo representing an article element
  */
 @HTMLElement(tagName = "article")
+@NoArgsConstructor
 public class Article extends AbstractElementContainer<AbstractUIElement>{
 
     public Article(String id, List<String> cssClasses, String style, List<AbstractUIElement> children) {

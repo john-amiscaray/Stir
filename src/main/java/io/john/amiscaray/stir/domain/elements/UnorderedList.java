@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.List;
  * A pojo representing an unordered list
  */
 @HTMLElement(tagName = "ul")
+@NoArgsConstructor
 public class UnorderedList extends AbstractListElement{
 
     public UnorderedList(String id, List<String> cssClasses, String style, List<ListItem> listItems) {

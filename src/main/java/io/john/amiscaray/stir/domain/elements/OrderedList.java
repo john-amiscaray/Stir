@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.List;
  * A pojo representing an ordered list element
  */
 @HTMLElement(tagName = "ol")
+@NoArgsConstructor
 public class OrderedList extends AbstractListElement {
 
     public OrderedList(String id, List<String> cssClasses, String style, List<ListItem> listItems) {

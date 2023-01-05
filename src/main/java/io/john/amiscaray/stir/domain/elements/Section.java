@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,6 +11,7 @@ import java.util.List;
  * A pojo representing a section element
  */
 @HTMLElement(tagName = "section")
+@NoArgsConstructor
 public class Section extends AbstractElementContainer<AbstractUIElement>{
 
     public Section(String id, List<String> cssClasses, String style, List<AbstractUIElement> children) {
