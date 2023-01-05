@@ -3,11 +3,11 @@ package io.john.amiscaray.stir.util;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
+import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
 import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
+import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
-import org.reflections.util.ClasspathHelper;
-import org.reflections.util.ConfigurationBuilder;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class ElementDescriptorProcessor {
 
@@ -45,18 +44,11 @@ public class ElementDescriptorProcessor {
                     }
                     return clazz.getAnnotation(HTMLElement.class).tagName().equals(tagName);
                 }).findFirst().orElseThrow(() -> new DescriptorFormatException("Unknown tag name of " + tagName + " in descriptor"));
-        Reflections clazzReflections = new Reflections(new ConfigurationBuilder()
-                .addUrls(ClasspathHelper.forPackage(javaPackage))
-                .addScanners(Scanners.ConstructorsSignature));
-        List<Constructor> constructors = clazzReflections.getConstructorsWithSignature()
-                .stream()
-                .filter(constructor -> constructor.getDeclaringClass().equals(elementType))
-                .collect(Collectors.toList());
-        Constructor<?> emptyConstructor = constructors
+
+        Constructor<?> emptyConstructor = ReflectionUtils.getConstructors(elementType, constructor -> constructor.getParameterTypes().length == 0)
                 .stream()
                 .findFirst()
-                .orElseThrow();
-        emptyConstructor.setAccessible(true);
+                .orElseThrow(() -> { throw new ElementInitializationException("Missing an empty constructor to initialize the element"); });
 
         AbstractUIElement element = (AbstractUIElement) emptyConstructor.newInstance();
         List<String> cssClasses = getCSSClasses(tagNameIdAndClasses);
