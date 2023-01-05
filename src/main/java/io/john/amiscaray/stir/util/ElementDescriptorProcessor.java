@@ -90,7 +90,7 @@ public class ElementDescriptorProcessor {
         Pattern attributeDescriptor = Pattern.compile("\\[.*\\]");
         Matcher attributeMatcher = attributeDescriptor.matcher(fieldsDescriptor);
 
-        while(attributeMatcher.find()){
+        if(attributeMatcher.find()){
 
             String attributeDescriptorStr = attributeMatcher.group();
             attributeDescriptorStr = attributeDescriptorStr.substring(1, attributeDescriptorStr.length() - 1);
