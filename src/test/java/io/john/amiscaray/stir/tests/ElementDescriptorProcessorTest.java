@@ -1,4 +1,5 @@
 package io.john.amiscaray.stir.tests;
+
 import io.john.amiscaray.stir.domain.elements.Anchor;
 import io.john.amiscaray.stir.domain.elements.Button;
 import io.john.amiscaray.stir.domain.elements.Input;
@@ -154,6 +155,13 @@ public class ElementDescriptorProcessorTest {
                 .build();
         ElementWithLongAndFloat actual = (ElementWithLongAndFloat) element("p[my-float='12.3',my-long='999999999']", "io.john.amiscaray.stir.stub");
         assertEquals(expected, actual);
+
+    }
+
+    @Test
+    public void testElementWithAttributeSelectorKeyWithWhitespace() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("a[fake key='some value']"));
 
     }
 
