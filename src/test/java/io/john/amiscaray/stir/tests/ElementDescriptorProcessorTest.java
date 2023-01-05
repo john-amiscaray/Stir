@@ -1,12 +1,12 @@
 package io.john.amiscaray.stir.tests;
 
-import io.john.amiscaray.stir.domain.elements.Anchor;
-import io.john.amiscaray.stir.domain.elements.Button;
-import io.john.amiscaray.stir.domain.elements.Input;
+import io.john.amiscaray.stir.domain.elements.*;
+import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
 import io.john.amiscaray.stir.stub.ElementWithLongAndFloat;
 import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.*;
@@ -198,6 +198,76 @@ public class ElementDescriptorProcessorTest {
     public void testElementWithAttributeDescriptorAndInnerContentDescriptorWithNestedBrackets() {
 
         assertEquals(Anchor.builder().label("{[(").href("https://google.com").build(), element("a[href='https://google.com']('{[(')"));
+
+    }
+
+    @Test
+    public void testElementWithParagraphChild() {
+
+        assertEquals(Div.builder()
+                .child(new Paragraph("Hello World"))
+                .build(), element("div{p('Hello World')}"));
+
+    }
+
+    @Test
+    public void testDivWithMultipleParagraphChildren() {
+
+        assertEquals(Div.builder()
+                .child(new Paragraph("Hello World"))
+                .child(new Paragraph("This is content"))
+                .build(), element("div{p('Hello World'),p('This is content')}"));
+
+    }
+
+    @Test
+    public void testFormWithInputChild() {
+
+        assertEquals(Form.builder()
+                .field(Input.builder()
+                        .type("text")
+                        .build())
+                .build(), element("form{input[type='text']}"));
+
+    }
+
+    @Test
+    public void testFormWithChildrenOfWrongType() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("form{p('Hello World')}"));
+
+    }
+
+    @Test
+    public void testDivWithIDClassesAttributesAndChildren() {
+
+        assertEquals(Form.builder()
+                .cssClasses(new ArrayList<>(List.of("red", "blue", "green")))
+                .action("/login")
+                .method("post")
+                .id("my-form")
+                .field(Input.builder()
+                        .type("text")
+                        .build())
+                .field(Input.builder()
+                        .type("password")
+                        .build())
+                .build(), element("form#my-form.red.blue.green[action='/login',method='post']{input[type='text'],input[type='password']}"));
+
+    }
+
+    @Test
+    public void testInnerContentDescriptorWithDescriptorAsInnerContent() {
+
+        assertEquals(new Paragraph("form#my-form.red.blue.green[action='/login',method='post']{input[type='text'],input[type='password']}"),
+                element("p('form#my-form.red.blue.green[action='/login',method='post']{input[type='text'],input[type='password']}')"));
+
+    }
+
+    @Test
+    public void testClassWithWhitespace() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("p.hello world"));
 
     }
 

@@ -38,7 +38,7 @@ public class Select extends AbstractFormField {
     /**
      * The inner options of the select element
      */
-    @ChildList
+    @ChildList(childrenType = Option.class)
     private List<Option> options;
 
     /**

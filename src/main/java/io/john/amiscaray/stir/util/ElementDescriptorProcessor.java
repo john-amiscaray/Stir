@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.annotation.Attribute;
+import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
@@ -11,10 +12,7 @@ import org.reflections.ReflectionUtils;
 import org.reflections.Reflections;
 import org.reflections.scanners.Scanners;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Modifier;
+import java.lang.reflect.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -37,6 +35,7 @@ public class ElementDescriptorProcessor {
         String[] partitions = descriptor.split("((?=[\\[({]))", 2);
         String tagNameIdAndClasses = partitions[0];
         String fieldsDescriptor = partitions.length > 1 ? partitions[1] : "";
+        validateTagNameClassesAndID(tagNameIdAndClasses);
         validateFieldsDescriptor(fieldsDescriptor);
         String tagName = tagNameIdAndClasses.split("[.#]", 2)[0];
         Class<?> elementType = classes.stream()
@@ -55,7 +54,7 @@ public class ElementDescriptorProcessor {
                 .findFirst()
                 .orElseThrow(() -> { throw new ElementInitializationException("Missing an empty constructor to initialize the element"); });
 
-        AbstractUIElement element = null;
+        AbstractUIElement element;
         try {
             element = (AbstractUIElement) emptyConstructor.newInstance();
             List<String> cssClasses = getCSSClasses(tagNameIdAndClasses);
@@ -65,9 +64,10 @@ public class ElementDescriptorProcessor {
             element.setId(id);
             String attributeDescriptor = "";
             String innerContentDescriptor = "";
+            String childDescriptor = "";
 
             String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
-            Pattern pattern = Pattern.compile("(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{" + innerBracketRegex +"\\})?$");
+            Pattern pattern = Pattern.compile("^(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{.*\\})?$");
             Matcher matcher = pattern.matcher(fieldsDescriptor);
 
             assert matcher.find();
@@ -77,14 +77,25 @@ public class ElementDescriptorProcessor {
             if(matcher.group(4) != null){
                 innerContentDescriptor = matcher.group(4);
             }
-
+            if(matcher.group(5) != null){
+                childDescriptor = matcher.group(5);
+            }
             setElementAttributes(attributeDescriptor, element, elementType);
             setElementInnerContent(innerContentDescriptor, element, elementType);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            setElementChildren(childDescriptor, element, elementType, javaPackage);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
             throw new ElementInitializationException("Unable to initialize element. Nested Exception is: " + e.getClass().getName() + ":\n" + e.getLocalizedMessage());
         }
 
         return element;
+    }
+
+    private static void validateTagNameClassesAndID(String descriptor){
+
+        if(!descriptor.matches("[^\\s\n]+")){
+            throw new DescriptorFormatException("Whitespace is not allowed in tag names, css classes, or ids");
+        }
+
     }
 
     private static void validateFieldsDescriptor(String fieldsDescriptor){
@@ -92,10 +103,10 @@ public class ElementDescriptorProcessor {
         if (fieldsDescriptor.isBlank()) {
             return;
         }
-
+        // TODO Make a method that generates this regex
         String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
 
-        if(!fieldsDescriptor.matches("(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{" + innerBracketRegex +"\\})?$")){
+        if(!fieldsDescriptor.matches("^(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{.*\\})?$")){
             throw new DescriptorFormatException("Malformed element descriptor. After the tag name, css classes, and id, there must be an attribute, inner content, and child descriptor in that order (each optional). Each of these blocks must not have nested brackets that are not enclosed in quotes.");
         }
 
@@ -144,6 +155,38 @@ public class ElementDescriptorProcessor {
                 key.set(element, value);
             }
         }
+
+    }
+
+    private static void setElementChildren(String childDescriptor, AbstractUIElement element, Class<?> elementInnerClass, String javaPackage) throws IllegalAccessException, ClassNotFoundException {
+
+        if(childDescriptor.isBlank()){
+            return;
+        }
+        childDescriptor = childDescriptor.substring(1, childDescriptor.length() - 1);
+        if(childDescriptor.isBlank()){
+            return;
+        }
+        String[] childrenDescriptors = childDescriptor.split(",");
+        Field childList = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(ChildList.class))
+                .stream().findFirst().orElseThrow(() -> new ElementInitializationException("No element ChildList found. The element must have a List<? extends AbstractUIElement> field annotated with @ChildList"));
+        childList.setAccessible(true);
+        Class<? extends AbstractUIElement> childType = childList.getAnnotation(ChildList.class).childrenType();
+        List children = new ArrayList<>();
+        if(childList.getType() != List.class){
+            throw new IllegalElementException("A field annotated with @ChildList must be of type List");
+        }
+
+        for (String descriptor : childrenDescriptors) {
+            AbstractUIElement child = element(descriptor, javaPackage);
+            try{
+                children.add(childType.cast(child));
+            }catch (ClassCastException ex){
+                throw new DescriptorFormatException("Tried to add an element of type: " + child.getClass().getName() + " as a child when the parent only accepts " + childType.getName());
+            }
+        }
+
+        childList.set(element, childList.getType().cast(children));
 
     }
 

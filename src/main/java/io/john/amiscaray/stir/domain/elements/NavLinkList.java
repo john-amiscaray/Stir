@@ -18,7 +18,7 @@ public class NavLinkList extends AbstractUIElement{
     /**
      * The inner {@link NavLink nav links }
      */
-    @ChildList
+    @ChildList(childrenType = NavLink.class)
     private List<NavLink> navLinks = new ArrayList<>();
 
     public NavLinkList(String id, List<String> cssClasses, String style, List<NavLink> navLinks) {

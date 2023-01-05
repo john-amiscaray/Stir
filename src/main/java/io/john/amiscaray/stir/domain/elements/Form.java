@@ -19,7 +19,7 @@ public class Form extends AbstractUIElement {
     /**
      * The input fields within the form
      */
-    @ChildList
+    @ChildList(childrenType = Input.class)
     private List<Input> fields;
 
     /**
@@ -61,6 +61,9 @@ public class Form extends AbstractUIElement {
         this.action = action;
     }
 
+    public List<Input> getFields() {
+        return fields;
+    }
 
     public boolean equals(final Object o) {
         if (o == this) return true;
