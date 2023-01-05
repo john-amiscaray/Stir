@@ -5,9 +5,7 @@ import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.stub.*;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -114,6 +112,7 @@ public class QueryTest {
                         .flatMap(Collection::stream)
                         .collect(Collectors.toList())
         );
+        expected = new ArrayList<>(new HashSet<>(expected));
         List<AbstractUIElement> actual = testDoc.querySelector("*");
         assertListEquality(expected, actual);
 
@@ -178,6 +177,7 @@ public class QueryTest {
     @Test
     public void testTildeOperator() {
 
+        System.out.println(ancestorDiv.equals(emptyDiv));
         assertEquals(List.of(ancestorDiv, emptyDiv), testDoc.querySelector("#myForm ~ div"));
 
     }

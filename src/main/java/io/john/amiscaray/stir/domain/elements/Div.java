@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 /**
  * A pojo representing a div element
  */
+@EqualsAndHashCode(callSuper = true)
 @HTMLElement(tagName = "div")
 @NoArgsConstructor
 public class Div extends AbstractElementContainer<AbstractUIElement>{
@@ -20,6 +22,10 @@ public class Div extends AbstractElementContainer<AbstractUIElement>{
 
     public static DivBuilder builder() {
         return new DivBuilder();
+    }
+
+    protected boolean canEqual(final Object other) {
+        return other instanceof Div;
     }
 
     public static class DivBuilder {
