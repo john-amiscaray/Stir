@@ -63,9 +63,23 @@ public class ElementDescriptorProcessor {
 
             element.setCssClasses(cssClasses);
             element.setId(id);
+            String attributeDescriptor = "";
+            String innerContentDescriptor = "";
 
-            setElementAttributes(fieldsDescriptor, element, elementType);
-            setElementInnerContent(fieldsDescriptor, element, elementType);
+            String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
+            Pattern pattern = Pattern.compile("(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{" + innerBracketRegex +"\\})?$");
+            Matcher matcher = pattern.matcher(fieldsDescriptor);
+
+            assert matcher.find();
+            if(matcher.group(1) != null){
+                attributeDescriptor = matcher.group(1);
+            }
+            if(matcher.group(4) != null){
+                innerContentDescriptor = matcher.group(4);
+            }
+
+            setElementAttributes(attributeDescriptor, element, elementType);
+            setElementInnerContent(innerContentDescriptor, element, elementType);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new ElementInitializationException("Unable to initialize element. Nested Exception is: " + e.getClass().getName() + ":\n" + e.getLocalizedMessage());
         }
@@ -87,83 +101,73 @@ public class ElementDescriptorProcessor {
 
     }
 
-    private static void setElementAttributes(String fieldsDescriptor, AbstractUIElement element, Class<?> elementInnerClass) throws IllegalAccessException {
+    private static void setElementAttributes(String fieldAttributeDescriptor, AbstractUIElement element, Class<?> elementInnerClass) throws IllegalAccessException {
 
-        Pattern attributeDescriptor = Pattern.compile("\\[.*\\]");
-        Matcher attributeMatcher = attributeDescriptor.matcher(fieldsDescriptor);
-
-        if(attributeMatcher.find()){
-
-            String attributeDescriptorStr = attributeMatcher.group();
-            attributeDescriptorStr = attributeDescriptorStr.substring(1, attributeDescriptorStr.length() - 1);
-            if(attributeDescriptorStr.isBlank()){
-                return;
+        if(fieldAttributeDescriptor.isBlank()){
+            return;
+        }
+        fieldAttributeDescriptor = fieldAttributeDescriptor.substring(1, fieldAttributeDescriptor.length() - 1);
+        if(fieldAttributeDescriptor.isBlank()){
+            return;
+        }
+        String[] settings = fieldAttributeDescriptor.split(",");
+        for (String setting : settings) {
+            if (!setting.matches("[^\\s=]+='.+'")) {
+                throw new DescriptorFormatException("Malformed element descriptor attributes must follow the following regex: [^\\s=]+='.+'");
             }
-            String[] settings = attributeDescriptorStr.split(",");
-            for (String setting : settings) {
-                if (!setting.matches("[^\\s=]+='.+'")) {
-                    throw new DescriptorFormatException("Malformed element descriptor attributes must follow the following regex: [^\\s=]+='.+'");
+            String[] keyValue = setting.split("=", 2);
+            assert keyValue.length == 2;
+            String value = keyValue[1];
+            Field key = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(Attribute.class) &&
+                            (field.getName().equals(keyValue[0]) || field.getAnnotation(Attribute.class).name().equals(keyValue[0]))).stream().findFirst()
+                    .orElseThrow(() -> new DescriptorFormatException("Unknown Attribute: " + keyValue[0]));
+            key.setAccessible(true);
+            value = value.substring(1, value.length() - 1);
+            if(key.getType().equals(Boolean.class)){
+                if(!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")){
+                    throw new DescriptorFormatException("Boolean attributes must have a value of either true or false");
                 }
-                String[] keyValue = setting.split("=", 2);
-                assert keyValue.length == 2;
-                String value = keyValue[1];
-                Field key = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(Attribute.class) &&
-                                (field.getName().equals(keyValue[0]) || field.getAnnotation(Attribute.class).name().equals(keyValue[0]))).stream().findFirst()
-                        .orElseThrow(() -> new DescriptorFormatException("Unknown Attribute: " + keyValue[0]));
-                key.setAccessible(true);
-                value = value.substring(1, value.length() - 1);
-                if(key.getType().equals(Boolean.class)){
-                    if(!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")){
-                        throw new DescriptorFormatException("Boolean attributes must have a value of either true or false");
-                    }
-                    key.set(element, Boolean.parseBoolean(value));
-                }else if(key.getType().equals(Integer.class)){
-                    key.set(element, Integer.parseInt(value));
-                }else if(key.getType().equals(Double.class)){
-                    key.set(element, Double.parseDouble(value));
-                }else if(key.getType().equals(Long.class)){
-                    key.set(element, Long.parseLong(value));
-                }else if(key.getType().equals(Float.class)){
-                    key.set(element, Float.parseFloat(value));
-                }else{
-                    // Assume the thing is a String
-                    if(!key.getType().equals(String.class)){
-                        throw new ElementInitializationException("Unsupported attribute type of: " + key.getType() + " for initialization with descriptors. The following types are supported: Boolean, Integer, Float, Double, Long, String.");
-                    }
-                    key.set(element, value);
+                key.set(element, Boolean.parseBoolean(value));
+            }else if(key.getType().equals(Integer.class)){
+                key.set(element, Integer.parseInt(value));
+            }else if(key.getType().equals(Double.class)){
+                key.set(element, Double.parseDouble(value));
+            }else if(key.getType().equals(Long.class)){
+                key.set(element, Long.parseLong(value));
+            }else if(key.getType().equals(Float.class)){
+                key.set(element, Float.parseFloat(value));
+            }else{
+                // Assume the thing is a String
+                if(!key.getType().equals(String.class)){
+                    throw new ElementInitializationException("Unsupported attribute type of: " + key.getType() + " for initialization with descriptors. The following types are supported: Boolean, Integer, Float, Double, Long, String.");
                 }
+                key.set(element, value);
             }
-
         }
 
     }
 
-    private static void setElementInnerContent(String fieldsDescriptor, AbstractUIElement element, Class<?> elementInnerClass) throws IllegalAccessException {
+    private static void setElementInnerContent(String innerContentDescriptor, AbstractUIElement element, Class<?> elementInnerClass) throws IllegalAccessException {
 
-        Pattern innerContentDescriptor = Pattern.compile("\\('.*'\\)");
-        Matcher matcher = innerContentDescriptor.matcher(fieldsDescriptor);
+        if(innerContentDescriptor.isBlank()){
+            return;
+        }
+        innerContentDescriptor = innerContentDescriptor.substring(2, innerContentDescriptor.length() - 2);
+        if(innerContentDescriptor.isBlank()){
+            return;
+        }
 
-        if(matcher.find()){
+        Field innerContentField = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(InnerContent.class))
+                .stream().findFirst().orElseThrow(() -> new DescriptorFormatException("The element does not accept inner content. The element must have a field annotated with @InnerContent to do so."));
 
-            String innerContentDescriptorStr = matcher.group();
-            innerContentDescriptorStr = innerContentDescriptorStr.substring(2, innerContentDescriptorStr.length() - 2);
-            if(innerContentDescriptorStr.isBlank()){
-                return;
-            }
+        innerContentField.setAccessible(true);
 
-            Field innerContentField = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(InnerContent.class))
-                    .stream().findFirst().orElseThrow(() -> new DescriptorFormatException("The element does not accept inner content. The element must have a field annotated with @InnerContent to do so."));
-
-            innerContentField.setAccessible(true);
-
-            if(innerContentField.getType().equals(StringBuilder.class)){
-                innerContentField.set(element, new StringBuilder(innerContentDescriptorStr));
-            }else if(innerContentField.getType().equals(String.class)){
-                innerContentField.set(element, innerContentDescriptorStr);
-            }else{
-                throw new IllegalElementException("An field annotated with @InnerContent must be a String or a StringBuilder");
-            }
-
+        if(innerContentField.getType().equals(StringBuilder.class)){
+            innerContentField.set(element, new StringBuilder(innerContentDescriptor));
+        }else if(innerContentField.getType().equals(String.class)){
+            innerContentField.set(element, innerContentDescriptor);
+        }else {
+            throw new IllegalElementException("An field annotated with @InnerContent must be a String or a StringBuilder");
         }
 
     }
