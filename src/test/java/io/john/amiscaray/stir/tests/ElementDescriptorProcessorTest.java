@@ -165,4 +165,12 @@ public class ElementDescriptorProcessorTest {
 
     }
 
+    @Test
+    public void testMisplacedFieldDescriptors() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("a()[]{}"));
+        assertThrows(DescriptorFormatException.class, () -> element("a(){}[]"));
+
+    }
+
 }
