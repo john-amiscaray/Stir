@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import io.john.amiscaray.stir.annotation.InnerContent;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
 import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
@@ -64,6 +65,7 @@ public class ElementDescriptorProcessor {
             element.setId(id);
 
             setElementAttributes(fieldsDescriptor, element, elementType);
+            setElementInnerContent(fieldsDescriptor, element, elementType);
         } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new ElementInitializationException("Unable to initialize element. Nested Exception is: " + e.getClass().getName() + ":\n" + e.getLocalizedMessage());
         }
@@ -79,7 +81,7 @@ public class ElementDescriptorProcessor {
 
         String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
 
-        if(!fieldsDescriptor.matches("(\\[" + innerBracketRegex + "\\])?(\\(" + innerBracketRegex + "\\))?(\\{" + innerBracketRegex +"\\})?$")){
+        if(!fieldsDescriptor.matches("(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{" + innerBracketRegex +"\\})?$")){
             throw new DescriptorFormatException("Malformed element descriptor. After the tag name, css classes, and id, there must be an attribute, inner content, and child descriptor in that order (each optional). Each of these blocks must not have nested brackets that are not enclosed in quotes.");
         }
 
@@ -130,6 +132,36 @@ public class ElementDescriptorProcessor {
                     }
                     key.set(element, value);
                 }
+            }
+
+        }
+
+    }
+
+    private static void setElementInnerContent(String fieldsDescriptor, AbstractUIElement element, Class<?> elementInnerClass) throws IllegalAccessException {
+
+        Pattern innerContentDescriptor = Pattern.compile("\\('.*'\\)");
+        Matcher matcher = innerContentDescriptor.matcher(fieldsDescriptor);
+
+        if(matcher.find()){
+
+            String innerContentDescriptorStr = matcher.group();
+            innerContentDescriptorStr = innerContentDescriptorStr.substring(2, innerContentDescriptorStr.length() - 2);
+            if(innerContentDescriptorStr.isBlank()){
+                return;
+            }
+
+            Field innerContentField = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(InnerContent.class))
+                    .stream().findFirst().orElseThrow(() -> new DescriptorFormatException("The element does not accept inner content. The element must have a field annotated with @InnerContent to do so."));
+
+            innerContentField.setAccessible(true);
+
+            if(innerContentField.getType().equals(StringBuilder.class)){
+                innerContentField.set(element, new StringBuilder(innerContentDescriptorStr));
+            }else if(innerContentField.getType().equals(String.class)){
+                innerContentField.set(element, innerContentDescriptorStr);
+            }else{
+                throw new IllegalElementException("An field annotated with @InnerContent must be a String or a StringBuilder");
             }
 
         }

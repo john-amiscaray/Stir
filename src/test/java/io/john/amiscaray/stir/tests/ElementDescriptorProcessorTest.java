@@ -173,4 +173,32 @@ public class ElementDescriptorProcessorTest {
 
     }
 
+    @Test
+    public void testElementWithInnerContent() {
+
+        assertEquals(Anchor.builder().label("Hello World").build(), element("a('Hello World')"));
+
+    }
+
+    @Test
+    public void testElementWithInnerContentAndAttribute() {
+
+        assertEquals(Anchor.builder().href("https://google.com").label("Google").build(), element("a[href='https://google.com']('Google')"));
+
+    }
+
+    @Test
+    public void testElementWithInnerContentDescriptorWithNestedBrackets() {
+
+        assertEquals(Anchor.builder().label("{[(").build(), element("a('{[(')"));
+
+    }
+
+    @Test
+    public void testElementWithAttributeDescriptorAndInnerContentDescriptorWithNestedBrackets() {
+
+        assertEquals(Anchor.builder().label("{[(").href("https://google.com").build(), element("a[href='https://google.com']('{[(')"));
+
+    }
+
 }
