@@ -22,13 +22,13 @@ import java.util.regex.Pattern;
 
 public class ElementDescriptorProcessor {
 
-    public static AbstractUIElement element(String descriptor) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static AbstractUIElement element(String descriptor) {
 
         return element(descriptor, "io.john.amiscaray.stir.domain.elements");
 
     }
 
-    public static AbstractUIElement element(String descriptor, String javaPackage) throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public static AbstractUIElement element(String descriptor, String javaPackage) {
 
         Reflections reflections = new Reflections(javaPackage, Scanners.SubTypes);
         Set<Class<? extends AbstractUIElement>> classes = reflections.getSubTypesOf(AbstractUIElement.class);
@@ -54,14 +54,20 @@ public class ElementDescriptorProcessor {
                 .findFirst()
                 .orElseThrow(() -> { throw new ElementInitializationException("Missing an empty constructor to initialize the element"); });
 
-        AbstractUIElement element = (AbstractUIElement) emptyConstructor.newInstance();
-        List<String> cssClasses = getCSSClasses(tagNameIdAndClasses);
-        String id = getID(tagNameIdAndClasses);
+        AbstractUIElement element = null;
+        try {
+            element = (AbstractUIElement) emptyConstructor.newInstance();
+            List<String> cssClasses = getCSSClasses(tagNameIdAndClasses);
+            String id = getID(tagNameIdAndClasses);
 
-        element.setCssClasses(cssClasses);
-        element.setId(id);
+            element.setCssClasses(cssClasses);
+            element.setId(id);
 
-        setElementAttributes(fieldsDescriptor, element, elementType);
+            setElementAttributes(fieldsDescriptor, element, elementType);
+        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            throw new ElementInitializationException("Unable to initialize element. Nested Exception is: " + e.getClass().getName() + ":\n" + e.getLocalizedMessage());
+        }
+
         return element;
     }
 

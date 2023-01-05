@@ -3,7 +3,6 @@ import io.john.amiscaray.stir.domain.elements.Anchor;
 import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
 import org.junit.jupiter.api.Test;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.*;
@@ -12,14 +11,14 @@ import static org.junit.jupiter.api.Assertions.*;
 public class ElementDescriptorProcessorTest {
 
     @Test
-    public void testSimpleAnchorDescriptor() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void testSimpleAnchorDescriptor() {
 
         assertEquals(new Anchor(), element("a"));
 
     }
 
     @Test
-    public void testAnchorWithClasses() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void testAnchorWithClasses() {
 
         assertEquals(Anchor.builder()
                 .cssClass("red")
@@ -30,7 +29,7 @@ public class ElementDescriptorProcessorTest {
     }
 
     @Test
-    public void testAnchorWithClassesAndId() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void testAnchorWithClassesAndId() {
 
         assertEquals(Anchor.builder()
                 .id("my-link")
@@ -40,7 +39,7 @@ public class ElementDescriptorProcessorTest {
     }
 
     @Test
-    public void testElementDescriptorWithAttributes() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void testElementDescriptorWithAttributes() {
 
         assertEquals(Anchor.builder()
                 .id("my-link")
@@ -50,7 +49,7 @@ public class ElementDescriptorProcessorTest {
     }
 
     @Test
-    public void testElementWithEmptyAttributeDescriptor() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void testElementWithEmptyAttributeDescriptor() {
 
         assertEquals(Anchor.builder()
                 .id("my-link")
@@ -59,7 +58,7 @@ public class ElementDescriptorProcessorTest {
     }
 
     @Test
-    public void testElementWithAttributeDescriptorMultiValues() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void testElementWithAttributeDescriptorMultiValues() {
 
         assertEquals(Anchor.builder()
                 .id("my-link")
@@ -107,7 +106,7 @@ public class ElementDescriptorProcessorTest {
     }
 
     @Test
-    public void testElementWithAttributeSelectorValueHasBrackets() throws InvocationTargetException, InstantiationException, IllegalAccessException {
+    public void testElementWithAttributeSelectorValueHasBrackets() {
 
         assertEquals(Anchor.builder()
                 .href("(){}[]")
