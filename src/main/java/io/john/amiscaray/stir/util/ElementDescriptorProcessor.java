@@ -104,10 +104,11 @@ public class ElementDescriptorProcessor {
                 }
                 String[] keyValue = setting.split("=", 2);
                 assert keyValue.length == 2;
-                Field key = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(Attribute.class) && field.getName().equals(keyValue[0])).stream().findFirst()
+                String value = keyValue[1];
+                Field key = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(Attribute.class) &&
+                                (field.getName().equals(keyValue[0]) || field.getAnnotation(Attribute.class).name().equals(keyValue[0]))).stream().findFirst()
                         .orElseThrow(() -> new DescriptorFormatException("Unknown Attribute: " + keyValue[0]));
                 key.setAccessible(true);
-                String value = keyValue[1];
                 value = value.substring(1, value.length() - 1);
                 if(key.getType().equals(Boolean.class)){
                     if(!value.equalsIgnoreCase("true") && !value.equalsIgnoreCase("false")){

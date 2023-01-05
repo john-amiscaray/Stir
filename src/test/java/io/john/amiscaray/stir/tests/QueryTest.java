@@ -177,7 +177,6 @@ public class QueryTest {
     @Test
     public void testTildeOperator() {
 
-        System.out.println(ancestorDiv.equals(emptyDiv));
         assertEquals(List.of(ancestorDiv, emptyDiv), testDoc.querySelector("#myForm ~ div"));
 
     }

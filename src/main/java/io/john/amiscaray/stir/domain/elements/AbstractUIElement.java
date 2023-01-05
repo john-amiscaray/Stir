@@ -34,7 +34,9 @@ public abstract class AbstractUIElement extends CacheableElement {
 
     public AbstractUIElement(String id, List<String> cssClasses, String style) {
         this.id = id;
-        this.cssClasses = cssClasses;
+        if(cssClasses != null){
+            this.cssClasses = cssClasses;
+        }
         this.style = style;
     }
 
