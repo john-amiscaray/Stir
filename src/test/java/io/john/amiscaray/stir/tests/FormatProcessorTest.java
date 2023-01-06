@@ -577,7 +577,6 @@ public class FormatProcessorTest {
 
     }
 
-    // TODO add test for multiple element descriptors in a block
     @Test
     public void testFormatWithMultipleDescriptorsInFormatBlock() throws IOException {
 
@@ -601,6 +600,15 @@ public class FormatProcessorTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/formatWithMultipleDescriptors.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testFormatArgMatchingDescriptorIsBad() {
+
+        assertThrows(TemplatingException.class, () -> HTMLDocument.builder()
+                .formatArg("element(p('Hello World'))", "No")
+                .build());
 
     }
 
