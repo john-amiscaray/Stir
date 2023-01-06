@@ -48,7 +48,8 @@ public class FormatProcessor {
                 .mapToInt(str -> {
                     Pattern pattern = Pattern.compile("\s*$");
                     Matcher matcher = pattern.matcher(str);
-                    assert matcher.find();
+                    boolean foundMatch = matcher.find();
+                    assert foundMatch;
                     String trailing = matcher.group();
                     return trailing.length() / ElementProcessor.getIndentationSize();
                 }).boxed().collect(Collectors.toList());
