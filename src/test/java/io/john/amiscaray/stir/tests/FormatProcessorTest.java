@@ -5,6 +5,7 @@ import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.StudentWithTableAnnotation;
 import io.john.amiscaray.stir.util.FormatProcessor;
+import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
 import io.john.amiscaray.stir.util.exceptions.TemplatingException;
 import org.junit.jupiter.api.Test;
 
@@ -503,6 +504,103 @@ public class FormatProcessorTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithTitleAfterContent.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testFormatWithFormatBlockWithElementDescriptor() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Hello World</title>
+                            </head>
+                            <body>
+                                <& element(p#hello-world.red.blue.green('This is the content!')) &>
+                            </body>
+                        </html>
+                        """)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/formatWithElementDescriptor.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testFormatBlockWithDescriptorAndKeyWord() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title><& str_title &></title>
+                            </head>
+                            <body>
+                                <& str_title element(p#hello-world.red.blue.green('This is the content!')) &>
+                            </body>
+                        </html>
+                        """)
+                .title("Hello World")
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/formatWithElementDescriptorAndKeyword.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testWithBadElementDescriptor() {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Hello World</title>
+                            </head>
+                            <body>
+                                <& element(#hello-world.red.blue.green('This is the content!')) &>
+                            </body>
+                        </html>
+                        """)
+                .build();
+
+        assertThrows(DescriptorFormatException.class, () -> formatProcessor.processDocument(doc));
+
+    }
+
+    // TODO add test for multiple element descriptors in a block
+    @Test
+    public void testFormatWithMultipleDescriptorsInFormatBlock() throws IOException {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Hello World</title>
+                            </head>
+                            <body>
+                                <&
+                                element(ul#my-list.red.blue.green{li('red'),li('blue'),li('green')})
+                                element(p#hello-world.red.blue.green('This is the content!'))
+                                &>
+                            </body>
+                        </html>
+                        """)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/formatWithMultipleDescriptors.html"), formatProcessor.processDocument(doc));
 
     }
 

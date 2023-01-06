@@ -34,7 +34,7 @@ public class ElementDescriptorProcessor {
 
     }
 
-    private static String getFieldDescriptorRegex(){
+    public static String getFieldDescriptorRegex(){
 
         String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
         return "^(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{.*\\})?$";
@@ -52,6 +52,7 @@ public class ElementDescriptorProcessor {
         validateTagNameClassesAndID(tagNameIdAndClasses);
         validateFieldsDescriptor(fieldsDescriptor);
         String tagName = tagNameIdAndClasses.split("[.#]", 2)[0];
+
         Class<?> elementType = classes.stream()
                 .filter(clazz -> {
                     if(Modifier.isAbstract(clazz.getModifiers())){
@@ -105,7 +106,7 @@ public class ElementDescriptorProcessor {
 
     private static void validateTagNameClassesAndID(String descriptor){
 
-        if(!descriptor.matches("[^\\s\n]+")){
+        if(!descriptor.matches("[^\\s+\n]+")){
             throw new DescriptorFormatException("Whitespace is not allowed in tag names, css classes, or ids");
         }
 
@@ -118,7 +119,7 @@ public class ElementDescriptorProcessor {
         }
 
         if(!fieldsDescriptor.matches(getFieldDescriptorRegex())){
-            throw new DescriptorFormatException("Malformed element descriptor. After the tag name, css classes, and id, there must be an attribute, inner content, and child descriptor in that order (each optional). Each of these blocks must not have nested brackets that are not enclosed in quotes.");
+            throw new DescriptorFormatException("Malformed element descriptor. After the tag name, css classes, and id, there must be an attribute, inner content, and child descriptor in that order (each optional) where the attribute descriptor is enclosed in [], inner content (''), and child descriptor {}. Each of these blocks must not have nested brackets that are not enclosed in quotes.");
         }
 
     }

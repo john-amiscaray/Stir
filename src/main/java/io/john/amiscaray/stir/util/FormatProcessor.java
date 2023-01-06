@@ -2,15 +2,16 @@ package io.john.amiscaray.stir.util;
 
 import io.john.amiscaray.stir.domain.HTMLDocument;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
+import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
+import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
 import io.john.amiscaray.stir.util.exceptions.TemplatingException;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+
+import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.*;
 
 /**
  * Processes HTMLDocument formats, converting them to the corresponding markup
@@ -81,10 +82,10 @@ public class FormatProcessor {
      */
     private String processInnerTemplateBlock(String expression, HTMLDocument doc, Integer indentationSize){
 
-        List<String> tokens = Arrays.asList(expression.split("\s|\n|\t"));
+        List<String> tokens = Arrays.asList(expression.split("(?<!element\\()( +|\\n)(?![^(]*\\))"));
 
         return tokens.stream()
-                .map(token -> switch (token){
+                .map(token -> switch (token.trim()){
                     case "str_title" -> processor.encodeForEntitiesOnly(doc.getTitle().indent(indentationSize * ElementProcessor.getIndentationSize())) + "\n";
                     case "str_content" -> processor.getMarkupForElementList(doc.getElements(), indentationSize) + "\n";
                     case "str_meta" -> processor.getMarkupForElementList(doc.getMetaTags(), indentationSize);
@@ -98,14 +99,22 @@ public class FormatProcessor {
                             yield token;
                         } else {
                             Map<String, Object> formatArgs = doc.getFormatArgs();
-                            if(!formatArgs.containsKey(token)){
-                                throw new TemplatingException("Unexpected token in template: " + token);
+                            if(formatArgs.containsKey(token)){
+                                Object value = formatArgs.get(token);
+                                if(value instanceof AbstractUIElement){
+                                    yield processor.getMarkup((AbstractUIElement) value).indent(indentationSize * ElementProcessor.getIndentationSize());
+                                }
+                                yield formatArgs.get(token).toString();
+                            }else{
+
+                                if(!token.matches("element(.*)")){
+                                    throw new TemplatingException("Unexpected token: " + token + " in the format. If this was meant to be an element descriptor, remember that it must be enclosed in 'element()'.");
+                                }
+                                assert token.length() > 8;
+                                token = token.substring(8, token.length() - 1);
+                                yield processor.getMarkup(element(token)).indent(indentationSize * ElementProcessor.getIndentationSize());
+
                             }
-                            Object value = formatArgs.get(token);
-                            if(value instanceof AbstractUIElement){
-                                yield processor.getMarkup((AbstractUIElement) value).indent(indentationSize * ElementProcessor.getIndentationSize());
-                            }
-                            yield formatArgs.get(token).toString();
                         }
                     }
                 }).reduce("", (t1, t2) -> t1 + t2).trim();
