@@ -2,5 +2,6 @@ io.john.amiscaray.stir.annotation
 io.john.amiscaray.stir.annotation.exceptions
 io.john.amiscaray.stir.domain
 io.john.amiscaray.stir.domain.elements
+io.john.amiscaray.stir.domain.elements.exceptions
 io.john.amiscaray.stir.util
 io.john.amiscaray.stir.util.exceptions
