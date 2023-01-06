@@ -21,9 +21,23 @@ import java.util.regex.Pattern;
 
 public class ElementDescriptorProcessor {
 
+    public static final String DEFAULT_BASE_PACKAGE = "io.john.amiscaray.stir.domain.elements";
+    private static String basePackage = DEFAULT_BASE_PACKAGE;
+
+    public static void setBasePackage(String basePackage) {
+        ElementDescriptorProcessor.basePackage = basePackage;
+    }
+
     public static AbstractUIElement element(String descriptor) {
 
-        return element(descriptor, "io.john.amiscaray.stir.domain.elements");
+        return element(descriptor, basePackage);
+
+    }
+
+    private static String getFieldDescriptorRegex(){
+
+        String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
+        return "^(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{.*\\})?$";
 
     }
 
@@ -66,8 +80,7 @@ public class ElementDescriptorProcessor {
             String innerContentDescriptor = "";
             String childDescriptor = "";
 
-            String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
-            Pattern pattern = Pattern.compile("^(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{.*\\})?$");
+            Pattern pattern = Pattern.compile(getFieldDescriptorRegex());
             Matcher matcher = pattern.matcher(fieldsDescriptor);
 
             assert matcher.find();
@@ -103,10 +116,8 @@ public class ElementDescriptorProcessor {
         if (fieldsDescriptor.isBlank()) {
             return;
         }
-        // TODO Make a method that generates this regex
-        String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
 
-        if(!fieldsDescriptor.matches("^(\\[" + innerBracketRegex + "\\])?(\\('.*'\\))?(\\{.*\\})?$")){
+        if(!fieldsDescriptor.matches(getFieldDescriptorRegex())){
             throw new DescriptorFormatException("Malformed element descriptor. After the tag name, css classes, and id, there must be an attribute, inner content, and child descriptor in that order (each optional). Each of these blocks must not have nested brackets that are not enclosed in quotes.");
         }
 

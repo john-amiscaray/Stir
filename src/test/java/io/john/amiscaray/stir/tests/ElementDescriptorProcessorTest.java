@@ -3,7 +3,10 @@ package io.john.amiscaray.stir.tests;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
 import io.john.amiscaray.stir.stub.ElementWithLongAndFloat;
+import io.john.amiscaray.stir.stub.ListStub;
+import io.john.amiscaray.stir.util.ElementDescriptorProcessor;
 import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -13,6 +16,13 @@ import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class ElementDescriptorProcessorTest {
+
+    @AfterEach
+    public void cleanUpAfterEach() {
+
+        ElementDescriptorProcessor.setBasePackage(DEFAULT_BASE_PACKAGE);
+
+    }
 
     @Test
     public void testSimpleAnchorDescriptor() {
@@ -268,6 +278,50 @@ public class ElementDescriptorProcessorTest {
     public void testClassWithWhitespace() {
 
         assertThrows(DescriptorFormatException.class, () -> element("p.hello world"));
+
+    }
+
+    @Test
+    public void testTwoDescriptorsInARow() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("form#my-form.red.blue.green[action='/login',method='post']{input[type='text'],input[type='password']}form#my-form.red.blue.green[action='/login',method='post']{input[type='text'],input[type='password']}"));
+
+    }
+
+    @Test
+    public void testAttributeWithWhitespace() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("form[action thing='']"));
+
+    }
+
+    @Test
+    public void testSetBasePackage() {
+
+        ElementDescriptorProcessor.setBasePackage("io.john.amiscaray.stir.stub");
+        assertTrue(element("ul") instanceof ListStub);
+
+    }
+
+    @Test
+    public void testMultipleIDs() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("div#container#my-div"));
+
+    }
+
+    @Test
+    public void testElementWithBadAttribute() {
+
+        ElementDescriptorProcessor.setBasePackage("io.john.amiscaray.stir.stub");
+        assertThrows(ElementInitializationException.class, () -> element("div[thing='aaaaaa']"));
+
+    }
+
+    @Test
+    public void testAttributeDescriptorWithInvalidBooleanValid() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("button[formnovalidate='aaaaaaa']"));
 
     }
 
