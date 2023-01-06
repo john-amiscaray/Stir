@@ -18,6 +18,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ElementDescriptorProcessor {
 
@@ -53,7 +54,7 @@ public class ElementDescriptorProcessor {
         validateFieldsDescriptor(fieldsDescriptor);
         String tagName = tagNameIdAndClasses.split("[.#]", 2)[0];
 
-        Class<?> elementType = classes.stream()
+        List<Class<?>> possibleTypes = classes.stream()
                 .filter(clazz -> {
                     if(Modifier.isAbstract(clazz.getModifiers())){
                         return false;
@@ -62,46 +63,58 @@ public class ElementDescriptorProcessor {
                         throw new IllegalElementException("The class: " + clazz.getName() + " must be annotated with @HTMLElement");
                     }
                     return clazz.getAnnotation(HTMLElement.class).tagName().equals(tagName);
-                }).findFirst().orElseThrow(() -> new DescriptorFormatException("Unknown tag name of " + tagName + " in descriptor"));
-
-        Constructor<?> emptyConstructor = ReflectionUtils.getConstructors(elementType, constructor -> constructor.getParameterTypes().length == 0)
-                .stream()
-                .findFirst()
-                .orElseThrow(() -> { throw new ElementInitializationException("Missing an empty constructor to initialize the element"); });
-
-        AbstractUIElement element;
-        try {
-            element = (AbstractUIElement) emptyConstructor.newInstance();
-            List<String> cssClasses = getCSSClasses(tagNameIdAndClasses);
-            String id = getID(tagNameIdAndClasses);
-
-            element.setCssClasses(cssClasses);
-            element.setId(id);
-            String attributeDescriptor = "";
-            String innerContentDescriptor = "";
-            String childDescriptor = "";
-
-            Pattern pattern = Pattern.compile(getFieldDescriptorRegex());
-            Matcher matcher = pattern.matcher(fieldsDescriptor);
-
-            assert matcher.find();
-            if(matcher.group(1) != null){
-                attributeDescriptor = matcher.group(1);
-            }
-            if(matcher.group(4) != null){
-                innerContentDescriptor = matcher.group(4);
-            }
-            if(matcher.group(5) != null){
-                childDescriptor = matcher.group(5);
-            }
-            setElementAttributes(attributeDescriptor, element, elementType);
-            setElementInnerContent(innerContentDescriptor, element, elementType);
-            setElementChildren(childDescriptor, element, elementType, javaPackage);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
-            throw new ElementInitializationException("Unable to initialize element. Nested Exception is: " + e.getClass().getName() + ":\n" + e.getLocalizedMessage());
+                }).collect(Collectors.toList());
+        if(possibleTypes.isEmpty()){
+            throw new DescriptorFormatException("No such element found");
         }
+        RuntimeException lastError = null;
+        for (Class<?> elementType : possibleTypes) {
+            try{
+                Constructor<?> emptyConstructor = ReflectionUtils.getConstructors(elementType, constructor -> constructor.getParameterTypes().length == 0)
+                        .stream()
+                        .findFirst()
+                        .orElseThrow(() -> { throw new ElementInitializationException("Missing an empty constructor to initialize the element"); });
 
-        return element;
+                AbstractUIElement element = null;
+                try {
+                    element = (AbstractUIElement) emptyConstructor.newInstance();
+                    List<String> cssClasses = getCSSClasses(tagNameIdAndClasses);
+                    String id = getID(tagNameIdAndClasses);
+
+                    element.setCssClasses(cssClasses);
+                    element.setId(id);
+                    String attributeDescriptor = "";
+                    String innerContentDescriptor = "";
+                    String childDescriptor = "";
+
+                    Pattern pattern = Pattern.compile(getFieldDescriptorRegex());
+                    Matcher matcher = pattern.matcher(fieldsDescriptor);
+
+                    assert matcher.find();
+                    if(matcher.group(1) != null){
+                        attributeDescriptor = matcher.group(1);
+                    }
+                    if(matcher.group(4) != null){
+                        innerContentDescriptor = matcher.group(4);
+                    }
+                    if(matcher.group(5) != null){
+                        childDescriptor = matcher.group(5);
+                    }
+                    setElementAttributes(attributeDescriptor, element, elementType);
+                    setElementInnerContent(innerContentDescriptor, element, elementType);
+                    setElementChildren(childDescriptor, element, elementType, javaPackage);
+                } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
+                    throw new ElementInitializationException("Unable to initialize element. Nested Exception is: " + e.getClass().getName() + ":\n" + e.getLocalizedMessage());
+                }
+
+                return element;
+            }catch(ElementInitializationException|DescriptorFormatException ex){
+                lastError = ex;
+            }
+        }
+        assert lastError != null;
+        throw lastError;
+
     }
 
     private static void validateTagNameClassesAndID(String descriptor){
