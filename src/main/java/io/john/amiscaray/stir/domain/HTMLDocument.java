@@ -140,9 +140,9 @@ public class HTMLDocument {
         if(formatArgs != null){
             long numInvalidKeys = formatArgs.keySet()
                     .stream()
-                    .filter(entry -> entry.matches(".*\\s.*") || entry.startsWith("str_")).count();
+                    .filter(entry -> entry.matches("(.*\\s.*)+") || entry.startsWith("str_") || entry.matches("element(.*)")).count();
             if(numInvalidKeys > 0){
-                throw new TemplatingException("Invalid format arg given. Format keys must not have whitespace or start with str_");
+                throw new TemplatingException("Invalid format arg given. Format keys must not have whitespace, start with str_, or match this regex: element(.*)");
             }
             this.formatArgs = formatArgs;
         }

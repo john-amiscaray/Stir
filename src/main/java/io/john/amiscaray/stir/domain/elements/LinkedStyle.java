@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,13 +12,14 @@ import java.util.List;
  * A pojo representing a linked stylesheet
  */
 @HTMLElement(tagName="link", hasClosing = false)
+@NoArgsConstructor
 public class LinkedStyle extends AbstractUIElement {
 
     /**
      * The href of the stylesheet
      */
     @Attribute(name="href", defaultValue="./styles.css")
-    private final String href;
+    private String href;
     /**
      * The rel attribute of the link element (always stylesheet)
      */

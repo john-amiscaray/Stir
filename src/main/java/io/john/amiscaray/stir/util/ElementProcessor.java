@@ -410,6 +410,9 @@ public class ElementProcessor {
                     }
                 }else if(field.isAnnotationPresent(InnerContent.class)){
                     InnerContent content = field.getAnnotation(InnerContent.class);
+                    if(!field.getType().equals(String.class) && !field.getType().equals(StringBuilder.class)){
+                        throw new IllegalElementException("A field annotated with @InnerContent must be a String or StringBuilder");
+                    }
                     String finalContent = value != null ? value.toString().indent(ElementProcessor.indentationSize) : content.defaultValue();
                     finalContent = content.encode() ? encode(finalContent) : finalContent;
                     builder.append(finalContent);

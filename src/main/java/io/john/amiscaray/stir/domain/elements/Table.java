@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.TableEntries;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import java.util.List;
  * A pojo representing a table element
  */
 @HTMLElement(tagName = "table")
+@NoArgsConstructor
 public class Table extends AbstractUIElement {
 
     /**
@@ -22,7 +24,7 @@ public class Table extends AbstractUIElement {
     /**
      * The class of the elements of the {@link Table#entries entries collection}
      */
-    private final Class<?> clazz;
+    private Class<?> clazz;
 
     public Table(String id, List<String> cssClasses, String style, Collection<?> entries, Class<?> clazz) {
         super(id, cssClasses, style);
@@ -49,6 +51,11 @@ public class Table extends AbstractUIElement {
 
     public void setEntries(Collection<?> entries) {
         this.entries = entries;
+    }
+
+    public void setClazz(Class<?> clazz) {
+        propertyChangeSupport.firePropertyChange("clazz", this.clazz, clazz);
+        this.clazz = clazz;
     }
 
     public String toString() {

@@ -1,12 +1,14 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.InnerContent;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 /**
  * A parent class for elements meant to display text
  */
+@NoArgsConstructor
 public abstract class AbstractTextElement extends AbstractUIElement {
 
     /**

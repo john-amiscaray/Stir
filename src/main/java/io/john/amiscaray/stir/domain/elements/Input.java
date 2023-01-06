@@ -3,18 +3,22 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Label;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * A pojo representing an input element
  */
 @HTMLElement(tagName = "input", hasClosing = false)
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public class Input extends AbstractUIElement {
 
     /**
      * The type attribute of the input
      */
     @Attribute(name="type", defaultValue="text")
-    private final String type;
+    private String type;
 
     /**
      * The value attribute of the input
@@ -26,7 +30,7 @@ public class Input extends AbstractUIElement {
      * The label for the input
      */
     @Label(defaultText="")
-    private final String label;
+    private String label;
 
     /**
      * The accept attribute of the input
@@ -392,186 +396,9 @@ public class Input extends AbstractUIElement {
         propertyChangeSupport.firePropertyChange("width", this.width, width);
         this.width = width;
     }
-    
-    public boolean equals(final Object o) {
-        if (o == this) return true;
-        if (!(o instanceof Input)) return false;
-        final Input other = (Input) o;
-        if (!other.canEqual((Object) this)) return false;
-        if (!super.equals(o)) return false;
-        final Object this$type = this.type;
-        final Object other$type = other.type;
-        if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
-        final Object this$value = this.value;
-        final Object other$value = other.value;
-        if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
-        final Object this$label = this.label;
-        final Object other$label = other.label;
-        if (this$label == null ? other$label != null : !this$label.equals(other$label)) return false;
-        final Object this$accept = this.accept;
-        final Object other$accept = other.accept;
-        if (this$accept == null ? other$accept != null : !this$accept.equals(other$accept)) return false;
-        final Object this$alt = this.alt;
-        final Object other$alt = other.alt;
-        if (this$alt == null ? other$alt != null : !this$alt.equals(other$alt)) return false;
-        final Object this$autoComplete = this.autoComplete;
-        final Object other$autoComplete = other.autoComplete;
-        if (this$autoComplete == null ? other$autoComplete != null : !this$autoComplete.equals(other$autoComplete))
-            return false;
-        final Object this$autoFocus = this.autoFocus;
-        final Object other$autoFocus = other.autoFocus;
-        if (this$autoFocus == null ? other$autoFocus != null : !this$autoFocus.equals(other$autoFocus)) return false;
-        final Object this$checked = this.checked;
-        final Object other$checked = other.checked;
-        if (this$checked == null ? other$checked != null : !this$checked.equals(other$checked)) return false;
-        final Object this$dirName = this.dirName;
-        final Object other$dirName = other.dirName;
-        if (this$dirName == null ? other$dirName != null : !this$dirName.equals(other$dirName)) return false;
-        final Object this$disabled = this.disabled;
-        final Object other$disabled = other.disabled;
-        if (this$disabled == null ? other$disabled != null : !this$disabled.equals(other$disabled)) return false;
-        final Object this$form = this.form;
-        final Object other$form = other.form;
-        if (this$form == null ? other$form != null : !this$form.equals(other$form)) return false;
-        final Object this$formAction = this.formAction;
-        final Object other$formAction = other.formAction;
-        if (this$formAction == null ? other$formAction != null : !this$formAction.equals(other$formAction))
-            return false;
-        final Object this$formEnctype = this.formEnctype;
-        final Object other$formEnctype = other.formEnctype;
-        if (this$formEnctype == null ? other$formEnctype != null : !this$formEnctype.equals(other$formEnctype))
-            return false;
-        final Object this$formMethod = this.formMethod;
-        final Object other$formMethod = other.formMethod;
-        if (this$formMethod == null ? other$formMethod != null : !this$formMethod.equals(other$formMethod))
-            return false;
-        final Object this$formNoValidate = this.formNoValidate;
-        final Object other$formNoValidate = other.formNoValidate;
-        if (this$formNoValidate == null ? other$formNoValidate != null : !this$formNoValidate.equals(other$formNoValidate))
-            return false;
-        final Object this$formTarget = this.formTarget;
-        final Object other$formTarget = other.formTarget;
-        if (this$formTarget == null ? other$formTarget != null : !this$formTarget.equals(other$formTarget))
-            return false;
-        final Object this$height = this.height;
-        final Object other$height = other.height;
-        if (this$height == null ? other$height != null : !this$height.equals(other$height)) return false;
-        final Object this$list = this.list;
-        final Object other$list = other.list;
-        if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
-        final Object this$max = this.max;
-        final Object other$max = other.max;
-        if (this$max == null ? other$max != null : !this$max.equals(other$max)) return false;
-        final Object this$maxLength = this.maxLength;
-        final Object other$maxLength = other.maxLength;
-        if (this$maxLength == null ? other$maxLength != null : !this$maxLength.equals(other$maxLength)) return false;
-        final Object this$min = this.min;
-        final Object other$min = other.min;
-        if (this$min == null ? other$min != null : !this$min.equals(other$min)) return false;
-        final Object this$minLength = this.minLength;
-        final Object other$minLength = other.minLength;
-        if (this$minLength == null ? other$minLength != null : !this$minLength.equals(other$minLength)) return false;
-        final Object this$multiple = this.multiple;
-        final Object other$multiple = other.multiple;
-        if (this$multiple == null ? other$multiple != null : !this$multiple.equals(other$multiple)) return false;
-        final Object this$pattern = this.pattern;
-        final Object other$pattern = other.pattern;
-        if (this$pattern == null ? other$pattern != null : !this$pattern.equals(other$pattern)) return false;
-        final Object this$placeHolder = this.placeHolder;
-        final Object other$placeHolder = other.placeHolder;
-        if (this$placeHolder == null ? other$placeHolder != null : !this$placeHolder.equals(other$placeHolder))
-            return false;
-        final Object this$readOnly = this.readOnly;
-        final Object other$readOnly = other.readOnly;
-        if (this$readOnly == null ? other$readOnly != null : !this$readOnly.equals(other$readOnly)) return false;
-        final Object this$required = this.required;
-        final Object other$required = other.required;
-        if (this$required == null ? other$required != null : !this$required.equals(other$required)) return false;
-        final Object this$size = this.size;
-        final Object other$size = other.size;
-        if (this$size == null ? other$size != null : !this$size.equals(other$size)) return false;
-        final Object this$src = this.src;
-        final Object other$src = other.src;
-        if (this$src == null ? other$src != null : !this$src.equals(other$src)) return false;
-        final Object this$step = this.step;
-        final Object other$step = other.step;
-        if (this$step == null ? other$step != null : !this$step.equals(other$step)) return false;
-        final Object this$width = this.width;
-        final Object other$width = other.width;
-        if (this$width == null ? other$width != null : !this$width.equals(other$width)) return false;
-        return true;
-    }
 
     protected boolean canEqual(final Object other) {
         return other instanceof Input;
-    }
-
-    public int hashCode() {
-        final int PRIME = 59;
-        int result = super.hashCode();
-        final Object $type = this.type;
-        result = result * PRIME + ($type == null ? 43 : $type.hashCode());
-        final Object $value = this.value;
-        result = result * PRIME + ($value == null ? 43 : $value.hashCode());
-        final Object $label = this.label;
-        result = result * PRIME + ($label == null ? 43 : $label.hashCode());
-        final Object $accept = this.accept;
-        result = result * PRIME + ($accept == null ? 43 : $accept.hashCode());
-        final Object $alt = this.alt;
-        result = result * PRIME + ($alt == null ? 43 : $alt.hashCode());
-        final Object $autoComplete = this.autoComplete;
-        result = result * PRIME + ($autoComplete == null ? 43 : $autoComplete.hashCode());
-        final Object $autoFocus = this.autoFocus;
-        result = result * PRIME + ($autoFocus == null ? 43 : $autoFocus.hashCode());
-        final Object $checked = this.checked;
-        result = result * PRIME + ($checked == null ? 43 : $checked.hashCode());
-        final Object $dirName = this.dirName;
-        result = result * PRIME + ($dirName == null ? 43 : $dirName.hashCode());
-        final Object $disabled = this.disabled;
-        result = result * PRIME + ($disabled == null ? 43 : $disabled.hashCode());
-        final Object $form = this.form;
-        result = result * PRIME + ($form == null ? 43 : $form.hashCode());
-        final Object $formAction = this.formAction;
-        result = result * PRIME + ($formAction == null ? 43 : $formAction.hashCode());
-        final Object $formEnctype = this.formEnctype;
-        result = result * PRIME + ($formEnctype == null ? 43 : $formEnctype.hashCode());
-        final Object $formMethod = this.formMethod;
-        result = result * PRIME + ($formMethod == null ? 43 : $formMethod.hashCode());
-        final Object $formNoValidate = this.formNoValidate;
-        result = result * PRIME + ($formNoValidate == null ? 43 : $formNoValidate.hashCode());
-        final Object $formTarget = this.formTarget;
-        result = result * PRIME + ($formTarget == null ? 43 : $formTarget.hashCode());
-        final Object $height = this.height;
-        result = result * PRIME + ($height == null ? 43 : $height.hashCode());
-        final Object $list = this.list;
-        result = result * PRIME + ($list == null ? 43 : $list.hashCode());
-        final Object $max = this.max;
-        result = result * PRIME + ($max == null ? 43 : $max.hashCode());
-        final Object $maxLength = this.maxLength;
-        result = result * PRIME + ($maxLength == null ? 43 : $maxLength.hashCode());
-        final Object $min = this.min;
-        result = result * PRIME + ($min == null ? 43 : $min.hashCode());
-        final Object $minLength = this.minLength;
-        result = result * PRIME + ($minLength == null ? 43 : $minLength.hashCode());
-        final Object $multiple = this.multiple;
-        result = result * PRIME + ($multiple == null ? 43 : $multiple.hashCode());
-        final Object $pattern = this.pattern;
-        result = result * PRIME + ($pattern == null ? 43 : $pattern.hashCode());
-        final Object $placeHolder = this.placeHolder;
-        result = result * PRIME + ($placeHolder == null ? 43 : $placeHolder.hashCode());
-        final Object $readOnly = this.readOnly;
-        result = result * PRIME + ($readOnly == null ? 43 : $readOnly.hashCode());
-        final Object $required = this.required;
-        result = result * PRIME + ($required == null ? 43 : $required.hashCode());
-        final Object $size = this.size;
-        result = result * PRIME + ($size == null ? 43 : $size.hashCode());
-        final Object $src = this.src;
-        result = result * PRIME + ($src == null ? 43 : $src.hashCode());
-        final Object $step = this.step;
-        result = result * PRIME + ($step == null ? 43 : $step.hashCode());
-        final Object $width = this.width;
-        result = result * PRIME + ($width == null ? 43 : $width.hashCode());
-        return result;
     }
 
     public String getType() {

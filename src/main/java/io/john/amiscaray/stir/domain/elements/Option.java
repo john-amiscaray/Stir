@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,6 +14,7 @@ import java.util.Locale;
  * A pojo representing an option element for a {@link Select select} element
  */
 @HTMLElement(tagName = "option")
+@NoArgsConstructor
 public class Option extends AbstractUIElement{
 
     /**

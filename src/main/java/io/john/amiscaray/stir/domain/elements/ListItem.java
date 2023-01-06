@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,13 +12,14 @@ import java.util.List;
  * A pojo representing a list item
  */
 @HTMLElement(tagName = "li")
+@NoArgsConstructor
 public class ListItem extends AbstractUIElement{
 
     /**
      * The inner content of the list item
      */
     @InnerContent
-    private final String content;
+    private String content;
 
     public ListItem(String id, List<String> cssClasses, String style, String content) {
         super(id, cssClasses, style);

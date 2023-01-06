@@ -13,7 +13,7 @@ import java.util.List;
 @HTMLElement(tagName = "form")
 public class FormWithChildList extends AbstractUIElement {
 
-    @ChildList
+    @ChildList(childrenType = Input.class)
     private List<Input> fields;
 
     @Builder

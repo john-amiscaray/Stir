@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,12 +13,13 @@ import java.util.List;
  * A pojo representing a form element
  */
 @HTMLElement(tagName = "form")
+@NoArgsConstructor
 public class Form extends AbstractUIElement {
 
     /**
      * The input fields within the form
      */
-    @ChildList
+    @ChildList(childrenType = Input.class)
     private List<Input> fields;
 
     /**
@@ -59,6 +61,9 @@ public class Form extends AbstractUIElement {
         this.action = action;
     }
 
+    public List<Input> getFields() {
+        return fields;
+    }
 
     public boolean equals(final Object o) {
         if (o == this) return true;

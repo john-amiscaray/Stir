@@ -3,6 +3,7 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -12,18 +13,19 @@ import java.util.List;
  * A pojo representing an HTML anchor tag
  */
 @HTMLElement(tagName = "a")
+@NoArgsConstructor
 public class Anchor extends AbstractUIElement{
 
     /**
      * The inner content of the anchor tag
      */
     @InnerContent
-    private final String label;
+    private String label;
     /**
      * The href the anchor tag points to
      */
     @Attribute(name = "href")
-    private final String href;
+    private String href;
     /**
      * The download attribute of the anchor tag
      */

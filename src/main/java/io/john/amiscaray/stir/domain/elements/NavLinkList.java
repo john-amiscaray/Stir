@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.ChildList;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,12 +12,13 @@ import java.util.List;
  * A pojo representing a list of nav links
  */
 @HTMLElement(tagName = "ul")
+@NoArgsConstructor
 public class NavLinkList extends AbstractUIElement{
 
     /**
      * The inner {@link NavLink nav links }
      */
-    @ChildList
+    @ChildList(childrenType = NavLink.class)
     private List<NavLink> navLinks = new ArrayList<>();
 
     public NavLinkList(String id, List<String> cssClasses, String style, List<NavLink> navLinks) {
@@ -26,9 +28,6 @@ public class NavLinkList extends AbstractUIElement{
 
     public NavLinkList(List<NavLink> navLinks) {
         this.navLinks = navLinks;
-    }
-
-    public NavLinkList() {
     }
 
     public static NavLinkListBuilder builder() {

@@ -2,6 +2,7 @@ package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
+import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -11,6 +12,7 @@ import java.util.List;
  * A pojo representing an iframe element
  */
 @HTMLElement(tagName = "iframe")
+@NoArgsConstructor
 public class IFrame extends AbstractContentFrame{
 
     /**
