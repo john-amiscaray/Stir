@@ -23,18 +23,19 @@ import java.util.stream.Collectors;
 public class ElementDescriptorProcessor {
 
     public static final String DEFAULT_BASE_PACKAGE = "io.john.amiscaray.stir.domain.elements";
+    /**
+     * The base package to scan for elements to instantiate via element descriptor
+     */
     private static String basePackage = DEFAULT_BASE_PACKAGE;
 
     public static void setBasePackage(String basePackage) {
         ElementDescriptorProcessor.basePackage = basePackage;
     }
 
-    public static AbstractUIElement element(String descriptor) {
-
-        return element(descriptor, basePackage);
-
-    }
-
+    /**
+     * Get the regex the describes the portion of the descriptor for the element's fields (other than id and css classes)
+     * @return The regex
+     */
     public static String getFieldDescriptorRegex(){
 
         String innerBracketRegex = "([^\\(\\)\\{\\}\\[\\]\\\"\\']*(\\\'.*\\\')?)*";
@@ -42,6 +43,23 @@ public class ElementDescriptorProcessor {
 
     }
 
+    /**
+     * Processes an element descriptor using the set base package
+     * @param descriptor The element descriptor
+     * @return The resulting element
+     */
+    public static AbstractUIElement element(String descriptor) {
+
+        return element(descriptor, basePackage);
+
+    }
+
+    /**
+     * Processes an element descriptor
+     * @param descriptor The element descriptor
+     * @param javaPackage The package to scan for the appropriate class
+     * @return The resulting element
+     */
     public static AbstractUIElement element(String descriptor, String javaPackage) {
 
         Reflections reflections = new Reflections(javaPackage, Scanners.SubTypes);
