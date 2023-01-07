@@ -192,7 +192,7 @@ Paragraph.builder()
 
 For additional info on element descriptors, see the [v0.5.0 release notes](https://github.com/john-amiscaray/Stir/releases/tag/v0.5.0).
 
-> Note that v0.5.0 is an unstable pre-release and should not be used. In that version, there is a bug which causes the element descriptors to fail in production. This is fixed in v0.5.1. The release notes however give a detailed explanation on element descriptors with content not mentioned here.
+> Note that v0.5.0 is an unstable pre-release and should not be used. In that version, there is a bug which causes the element descriptors to fail in production. This is fixed in v0.5.1. The release notes, however, give a detailed explanation on element descriptors with content not mentioned here.
 
 ## Document Templating
 
