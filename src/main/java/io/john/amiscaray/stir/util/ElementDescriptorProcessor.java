@@ -108,7 +108,8 @@ public class ElementDescriptorProcessor {
                     Pattern pattern = Pattern.compile(getFieldDescriptorRegex());
                     Matcher matcher = pattern.matcher(fieldsDescriptor);
 
-                    assert matcher.find();
+                    boolean foundMatch = matcher.find();
+                    assert foundMatch;
                     if(matcher.group(1) != null){
                         attributeDescriptor = matcher.group(1);
                     }

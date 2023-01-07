@@ -14,9 +14,9 @@ import lombok.EqualsAndHashCode;
 public class FormWithInputs extends AbstractUIElement {
 
     @Nested
-    private Input username = new Input(null, "username", "John", null);
+    private Input username = new Input(null, "username", "John", null, "username");
 
     @Nested
-    private Input message = new Input(null, "message", "Some Message", null);
+    private Input message = new Input(null, "message", "Some Message", null, "message");
 
 }
