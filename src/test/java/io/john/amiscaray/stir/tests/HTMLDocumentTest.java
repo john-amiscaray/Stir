@@ -15,8 +15,8 @@ public class HTMLDocumentTest {
 
     public static final String ALL_FORMATS = "%a%b%c%d%e%f%g%h%n%o%s%t%x";
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
-    private final Input username = new Input("text", "text", "John", null);
-    private final Input message = new Input("text1", "text", "Some Message", null);
+    private final Input username = new Input("text", "text", "John", null, "username");
+    private final Input message = new Input("text1", "text", "Some Message", null, "message");
 
     private final Form sampleLibForm = Form.builder()
             .field(username)
@@ -177,7 +177,7 @@ public class HTMLDocumentTest {
     public void testDocWithInputStringFormat() throws IOException {
 
         HTMLDocument doc = HTMLDocument.builder()
-                .element(new Input("myText", "text", "%s%s%s", "myText"))
+                .element(new Input("myText", "text", "%s%s%s", "myText", "text"))
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithInputStringFormat.html"), doc.generateDocumentString());
 

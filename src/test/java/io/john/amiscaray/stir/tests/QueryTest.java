@@ -25,7 +25,7 @@ public class QueryTest {
             .cssClass("spooky")
             .content("Other spooky content")
             .build();
-    private final Input in = new Input("someIn", "text", "Hello World", "AAAAAAAA");
+    private final Input in = new Input("someIn", "text", "Hello World", "AAAAAAAA", "some-in");
     private final Form libForm = Form.builder()
             .id("myForm")
             .cssClass("form")
