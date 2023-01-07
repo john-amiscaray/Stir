@@ -24,8 +24,8 @@ public class ElementProcessorTest {
     public static final String ALL_FORMATS = "%a%b%c%d%e%f%g%h%n%o%s%t%x";
     private final ElementProcessor processor = spy(ElementProcessor.getInstance());
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
-    private final Input username = new Input("text", "text", "John", null);
-    private final Input message = new Input("text1", "text", "Some Message", null);
+    private final Input username = new Input("text", "text", "John", null, "username");
+    private final Input message = new Input("text1", "text", "Some Message", null, "message");
     private final Form sampleLibForm = Form.builder()
             .field(username)
             .field(message)
@@ -93,7 +93,7 @@ public class ElementProcessorTest {
     @Test
     public void testFormWithLabel() throws IOException {
 
-        Input username = new Input("text", "text", "John", "Username");
+        Input username = new Input("text", "text", "John", "Username", "username");
         Form form = Form.builder()
                 .field(username)
                 .build();
@@ -202,7 +202,7 @@ public class ElementProcessorTest {
     @Test
     public void testInputWithQuotes() throws IOException {
 
-        Input in = new Input("myIn", "text", "\"<!--", "myIn");
+        Input in = new Input("myIn", "text", "\"<!--", "myIn", "my-in");
         assertEquals(htmlLoader.getHTMLContentOf("html/inputWithHTMLEntities.html"), processor.getMarkup(in));
 
     }

@@ -3,16 +3,21 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Label;
+import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import lombok.Singular;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * A pojo representing an input element
  */
 @HTMLElement(tagName = "input", hasClosing = false)
 @NoArgsConstructor
-@EqualsAndHashCode(callSuper = true)
-public class Input extends AbstractUIElement {
+public class Input extends AbstractFormField {
 
     /**
      * The type attribute of the input
@@ -51,12 +56,6 @@ public class Input extends AbstractUIElement {
     private String autoComplete;
 
     /**
-     * The autofocus attribute of the input
-     */
-    @Attribute(name="autofocus")
-    private Boolean autoFocus;
-
-    /**
      * The checked attribute of the input
      */
     @Attribute(name="checked")
@@ -67,18 +66,6 @@ public class Input extends AbstractUIElement {
      */
     @Attribute(name="dirname")
     private String dirName;
-
-    /**
-     * The disabled attribute of the input
-     */
-    @Attribute(name="disabled")
-    private Boolean disabled;
-
-    /**
-     * The form attribute of the input
-     */
-    @Attribute(name="form")
-    private String form;
 
     /**
      * The formaction attribute of the input
@@ -200,32 +187,38 @@ public class Input extends AbstractUIElement {
     @Attribute(name="width")
     private Integer width;
 
-    public Input(String id, String type, String value, String label){
+    public Input(String id, String type, String value, String label, String name){
 
         this.id = id;
         this.type = type;
         this.value = value;
         this.label = label;
+        this.name = name;
 
     }
 
-    public Input(String type, String label) {
+    public Input(String type, String label, String name) {
         this.type = type;
         this.label = label;
+        this.name = name;
     }
 
-    public Input(String type, String value, String label, String accept, String alt, String autoComplete, Boolean autoFocus, Boolean checked, String dirName, Boolean disabled, String form, String formAction, String formEnctype, String formMethod, Boolean formNoValidate, String formTarget, Integer height, String list, Double max, Integer maxLength, Double min, Integer minLength, Boolean multiple, String pattern, String placeHolder, Boolean readOnly, Boolean required, Integer size, String src, Double step, Integer width) {
+    public Input(String type, String value, String label, String accept, String alt, String autoComplete, Boolean autoFocus,
+                 Boolean checked, String dirName, Boolean disabled, String form, String formAction, String formEnctype,
+                 String formMethod, Boolean formNoValidate, String formTarget, Integer height, String list, Double max,
+                 Integer maxLength, Double min, Integer minLength, Boolean multiple, String pattern, String placeHolder,
+                 Boolean readOnly, Boolean required, Integer size, String src, Double step, Integer width, List<String> cssClasses,
+                 String id, String style, String name) {
+        super(id, cssClasses, style, autoFocus, disabled, form, name);
         this.type = type;
         this.value = value;
         this.label = label;
         this.accept = accept;
         this.alt = alt;
         this.autoComplete = autoComplete;
-        this.autoFocus = autoFocus;
         this.checked = checked;
         this.dirName = dirName;
         this.disabled = disabled;
-        this.form = form;
         this.formAction = formAction;
         this.formEnctype = formEnctype;
         this.formMethod = formMethod;
@@ -525,6 +518,173 @@ public class Input extends AbstractUIElement {
         return this.width;
     }
 
+    public boolean equals(final Object o) {
+        if (o == this) return true;
+        if (!(o instanceof Input)) return false;
+        final Input other = (Input) o;
+        if (!other.canEqual((Object) this)) return false;
+        if (!super.equals(o)) return false;
+        final Object this$type = this.getType();
+        final Object other$type = other.getType();
+        if (this$type == null ? other$type != null : !this$type.equals(other$type)) return false;
+        final Object this$value = this.getValue();
+        final Object other$value = other.getValue();
+        if (this$value == null ? other$value != null : !this$value.equals(other$value)) return false;
+        final Object this$label = this.getLabel();
+        final Object other$label = other.getLabel();
+        if (this$label == null ? other$label != null : !this$label.equals(other$label)) return false;
+        final Object this$accept = this.getAccept();
+        final Object other$accept = other.getAccept();
+        if (this$accept == null ? other$accept != null : !this$accept.equals(other$accept)) return false;
+        final Object this$alt = this.getAlt();
+        final Object other$alt = other.getAlt();
+        if (this$alt == null ? other$alt != null : !this$alt.equals(other$alt)) return false;
+        final Object this$autoComplete = this.getAutoComplete();
+        final Object other$autoComplete = other.getAutoComplete();
+        if (this$autoComplete == null ? other$autoComplete != null : !this$autoComplete.equals(other$autoComplete))
+            return false;
+        final Object this$checked = this.getChecked();
+        final Object other$checked = other.getChecked();
+        if (this$checked == null ? other$checked != null : !this$checked.equals(other$checked)) return false;
+        final Object this$dirName = this.getDirName();
+        final Object other$dirName = other.getDirName();
+        if (this$dirName == null ? other$dirName != null : !this$dirName.equals(other$dirName)) return false;
+        final Object this$form = this.getForm();
+        final Object other$form = other.getForm();
+        if (this$form == null ? other$form != null : !this$form.equals(other$form)) return false;
+        final Object this$formAction = this.getFormAction();
+        final Object other$formAction = other.getFormAction();
+        if (this$formAction == null ? other$formAction != null : !this$formAction.equals(other$formAction))
+            return false;
+        final Object this$formEnctype = this.getFormEnctype();
+        final Object other$formEnctype = other.getFormEnctype();
+        if (this$formEnctype == null ? other$formEnctype != null : !this$formEnctype.equals(other$formEnctype))
+            return false;
+        final Object this$formMethod = this.getFormMethod();
+        final Object other$formMethod = other.getFormMethod();
+        if (this$formMethod == null ? other$formMethod != null : !this$formMethod.equals(other$formMethod))
+            return false;
+        final Object this$formNoValidate = this.getFormNoValidate();
+        final Object other$formNoValidate = other.getFormNoValidate();
+        if (this$formNoValidate == null ? other$formNoValidate != null : !this$formNoValidate.equals(other$formNoValidate))
+            return false;
+        final Object this$formTarget = this.getFormTarget();
+        final Object other$formTarget = other.getFormTarget();
+        if (this$formTarget == null ? other$formTarget != null : !this$formTarget.equals(other$formTarget))
+            return false;
+        final Object this$height = this.getHeight();
+        final Object other$height = other.getHeight();
+        if (this$height == null ? other$height != null : !this$height.equals(other$height)) return false;
+        final Object this$list = this.getList();
+        final Object other$list = other.getList();
+        if (this$list == null ? other$list != null : !this$list.equals(other$list)) return false;
+        final Object this$max = this.getMax();
+        final Object other$max = other.getMax();
+        if (this$max == null ? other$max != null : !this$max.equals(other$max)) return false;
+        final Object this$maxLength = this.getMaxLength();
+        final Object other$maxLength = other.getMaxLength();
+        if (this$maxLength == null ? other$maxLength != null : !this$maxLength.equals(other$maxLength)) return false;
+        final Object this$min = this.getMin();
+        final Object other$min = other.getMin();
+        if (this$min == null ? other$min != null : !this$min.equals(other$min)) return false;
+        final Object this$minLength = this.getMinLength();
+        final Object other$minLength = other.getMinLength();
+        if (this$minLength == null ? other$minLength != null : !this$minLength.equals(other$minLength)) return false;
+        final Object this$multiple = this.getMultiple();
+        final Object other$multiple = other.getMultiple();
+        if (this$multiple == null ? other$multiple != null : !this$multiple.equals(other$multiple)) return false;
+        final Object this$pattern = this.getPattern();
+        final Object other$pattern = other.getPattern();
+        if (this$pattern == null ? other$pattern != null : !this$pattern.equals(other$pattern)) return false;
+        final Object this$placeHolder = this.getPlaceHolder();
+        final Object other$placeHolder = other.getPlaceHolder();
+        if (this$placeHolder == null ? other$placeHolder != null : !this$placeHolder.equals(other$placeHolder))
+            return false;
+        final Object this$readOnly = this.getReadOnly();
+        final Object other$readOnly = other.getReadOnly();
+        if (this$readOnly == null ? other$readOnly != null : !this$readOnly.equals(other$readOnly)) return false;
+        final Object this$required = this.getRequired();
+        final Object other$required = other.getRequired();
+        if (this$required == null ? other$required != null : !this$required.equals(other$required)) return false;
+        final Object this$size = this.getSize();
+        final Object other$size = other.getSize();
+        if (this$size == null ? other$size != null : !this$size.equals(other$size)) return false;
+        final Object this$src = this.getSrc();
+        final Object other$src = other.getSrc();
+        if (this$src == null ? other$src != null : !this$src.equals(other$src)) return false;
+        final Object this$step = this.getStep();
+        final Object other$step = other.getStep();
+        if (this$step == null ? other$step != null : !this$step.equals(other$step)) return false;
+        final Object this$width = this.getWidth();
+        final Object other$width = other.getWidth();
+        if (this$width == null ? other$width != null : !this$width.equals(other$width)) return false;
+        return true;
+    }
+
+    public int hashCode() {
+        final int PRIME = 59;
+        int result = super.hashCode();
+        final Object $type = this.getType();
+        result = result * PRIME + ($type == null ? 43 : $type.hashCode());
+        final Object $value = this.getValue();
+        result = result * PRIME + ($value == null ? 43 : $value.hashCode());
+        final Object $label = this.getLabel();
+        result = result * PRIME + ($label == null ? 43 : $label.hashCode());
+        final Object $accept = this.getAccept();
+        result = result * PRIME + ($accept == null ? 43 : $accept.hashCode());
+        final Object $alt = this.getAlt();
+        result = result * PRIME + ($alt == null ? 43 : $alt.hashCode());
+        final Object $autoComplete = this.getAutoComplete();
+        result = result * PRIME + ($autoComplete == null ? 43 : $autoComplete.hashCode());
+        final Object $checked = this.getChecked();
+        result = result * PRIME + ($checked == null ? 43 : $checked.hashCode());
+        final Object $dirName = this.getDirName();
+        result = result * PRIME + ($dirName == null ? 43 : $dirName.hashCode());
+        final Object $form = this.getForm();
+        result = result * PRIME + ($form == null ? 43 : $form.hashCode());
+        final Object $formAction = this.getFormAction();
+        result = result * PRIME + ($formAction == null ? 43 : $formAction.hashCode());
+        final Object $formEnctype = this.getFormEnctype();
+        result = result * PRIME + ($formEnctype == null ? 43 : $formEnctype.hashCode());
+        final Object $formMethod = this.getFormMethod();
+        result = result * PRIME + ($formMethod == null ? 43 : $formMethod.hashCode());
+        final Object $formNoValidate = this.getFormNoValidate();
+        result = result * PRIME + ($formNoValidate == null ? 43 : $formNoValidate.hashCode());
+        final Object $formTarget = this.getFormTarget();
+        result = result * PRIME + ($formTarget == null ? 43 : $formTarget.hashCode());
+        final Object $height = this.getHeight();
+        result = result * PRIME + ($height == null ? 43 : $height.hashCode());
+        final Object $list = this.getList();
+        result = result * PRIME + ($list == null ? 43 : $list.hashCode());
+        final Object $max = this.getMax();
+        result = result * PRIME + ($max == null ? 43 : $max.hashCode());
+        final Object $maxLength = this.getMaxLength();
+        result = result * PRIME + ($maxLength == null ? 43 : $maxLength.hashCode());
+        final Object $min = this.getMin();
+        result = result * PRIME + ($min == null ? 43 : $min.hashCode());
+        final Object $minLength = this.getMinLength();
+        result = result * PRIME + ($minLength == null ? 43 : $minLength.hashCode());
+        final Object $multiple = this.getMultiple();
+        result = result * PRIME + ($multiple == null ? 43 : $multiple.hashCode());
+        final Object $pattern = this.getPattern();
+        result = result * PRIME + ($pattern == null ? 43 : $pattern.hashCode());
+        final Object $placeHolder = this.getPlaceHolder();
+        result = result * PRIME + ($placeHolder == null ? 43 : $placeHolder.hashCode());
+        final Object $readOnly = this.getReadOnly();
+        result = result * PRIME + ($readOnly == null ? 43 : $readOnly.hashCode());
+        final Object $required = this.getRequired();
+        result = result * PRIME + ($required == null ? 43 : $required.hashCode());
+        final Object $size = this.getSize();
+        result = result * PRIME + ($size == null ? 43 : $size.hashCode());
+        final Object $src = this.getSrc();
+        result = result * PRIME + ($src == null ? 43 : $src.hashCode());
+        final Object $step = this.getStep();
+        result = result * PRIME + ($step == null ? 43 : $step.hashCode());
+        final Object $width = this.getWidth();
+        result = result * PRIME + ($width == null ? 43 : $width.hashCode());
+        return result;
+    }
+
     public static class InputBuilder {
         private String type;
         private String value;
@@ -557,6 +717,10 @@ public class Input extends AbstractUIElement {
         private String src;
         private Double step;
         private Integer width;
+        private ArrayList<String> cssClasses;
+        private String id;
+        private String style;
+        private String name;
 
         InputBuilder() {
         }
@@ -716,12 +880,57 @@ public class Input extends AbstractUIElement {
             return this;
         }
 
+        public InputBuilder cssClass(String cssClass) {
+            if (this.cssClasses == null) this.cssClasses = new ArrayList<String>();
+            this.cssClasses.add(cssClass);
+            return this;
+        }
+
+        public InputBuilder cssClasses(Collection<? extends String> cssClasses) {
+            if (this.cssClasses == null) this.cssClasses = new ArrayList<String>();
+            this.cssClasses.addAll(cssClasses);
+            return this;
+        }
+
+        public InputBuilder clearCssClasses() {
+            if (this.cssClasses != null)
+                this.cssClasses.clear();
+            return this;
+        }
+
+        public InputBuilder id(String id) {
+            this.id = id;
+            return this;
+        }
+
+        public InputBuilder style(String style) {
+            this.style = style;
+            return this;
+        }
+
+        public InputBuilder name(String name) {
+            this.name = name;
+            return this;
+        }
+
         public Input build() {
-            return new Input(type, value, label, accept, alt, autoComplete, autoFocus, checked, dirName, disabled, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, height, list, max, maxLength, min, minLength, multiple, pattern, placeHolder, readOnly, required, size, src, step, width);
+            List<String> cssClasses;
+            switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
+                case 0:
+                    cssClasses = java.util.Collections.emptyList();
+                    break;
+                case 1:
+                    cssClasses = java.util.Collections.singletonList(this.cssClasses.get(0));
+                    break;
+                default:
+                    cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+            }
+
+            return new Input(type, value, label, accept, alt, autoComplete, autoFocus, checked, dirName, disabled, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, height, list, max, maxLength, min, minLength, multiple, pattern, placeHolder, readOnly, required, size, src, step, width, cssClasses, id, style, name);
         }
 
         public String toString() {
-            return "Input.InputBuilder(type=" + this.type + ", value=" + this.value + ", label=" + this.label + ", accept=" + this.accept + ", alt=" + this.alt + ", autoComplete=" + this.autoComplete + ", autoFocus=" + this.autoFocus + ", checked=" + this.checked + ", dirName=" + this.dirName + ", disabled=" + this.disabled + ", form=" + this.form + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", formTarget=" + this.formTarget + ", height=" + this.height + ", list=" + this.list + ", max=" + this.max + ", maxLength=" + this.maxLength + ", min=" + this.min + ", minLength=" + this.minLength + ", multiple=" + this.multiple + ", pattern=" + this.pattern + ", placeHolder=" + this.placeHolder + ", readOnly=" + this.readOnly + ", required=" + this.required + ", size=" + this.size + ", src=" + this.src + ", step=" + this.step + ", width=" + this.width + ")";
+            return "Input.InputBuilder(type=" + this.type + ", value=" + this.value + ", label=" + this.label + ", accept=" + this.accept + ", alt=" + this.alt + ", autoComplete=" + this.autoComplete + ", autoFocus=" + this.autoFocus + ", checked=" + this.checked + ", dirName=" + this.dirName + ", disabled=" + this.disabled + ", form=" + this.form + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", formTarget=" + this.formTarget + ", height=" + this.height + ", list=" + this.list + ", max=" + this.max + ", maxLength=" + this.maxLength + ", min=" + this.min + ", minLength=" + this.minLength + ", multiple=" + this.multiple + ", pattern=" + this.pattern + ", placeHolder=" + this.placeHolder + ", readOnly=" + this.readOnly + ", required=" + this.required + ", size=" + this.size + ", src=" + this.src + ", step=" + this.step + ", width=" + this.width + ", cssClasses=" + this.cssClasses + ", id=" + this.id + ", style=" + this.style + ", name=" + this.name + ")";
         }
     }
 }
