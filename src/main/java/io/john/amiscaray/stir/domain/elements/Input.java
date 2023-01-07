@@ -201,6 +201,7 @@ public class Input extends AbstractFormField {
         this.type = type;
         this.label = label;
         this.name = name;
+        this.id = name;
     }
 
     public Input(String type, String value, String label, String accept, String alt, String autoComplete, Boolean autoFocus,

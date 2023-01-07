@@ -34,4 +34,20 @@ public class InputTest {
 
     }
 
+    @Test
+    public void testInputFrom5ArgConstructor() throws IOException {
+
+        Input in = new Input("my-in", "text", "Hello", "This is a thing", "myIn");
+        assertEquals(htmlLoader.getHTMLContentOf("html/inputTest2.html"), processor.getMarkup(in));
+
+    }
+
+    @Test
+    public void testInputFrom3ArgConstructor() throws IOException {
+
+        Input in = new Input("text", "text", "myIn");
+        assertEquals(htmlLoader.getHTMLContentOf("html/inputTest3.html"), processor.getMarkup(in));
+
+    }
+
 }
