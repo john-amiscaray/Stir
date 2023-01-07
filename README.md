@@ -7,6 +7,7 @@ A Java Framework for generating HTML content and UI development for server-side 
 - [Installation](#installation)
 - [Building a Simple Page](#building-a-simple-page)
 - [Supported Elements](#supported-elements)
+- [Element Descriptors](#element-descriptors)
 - [Document Templating](#document-templating)
 - [Creating Custom Elements or Components](#creating-custom-elements-or-components)
 - [Caching Support](#caching-support)
@@ -132,6 +133,66 @@ As of the latest version, Stir has built-in support for the following elements:
 - Unordered list
 
 See the [Javadocs](https://john-amiscaray.github.io/Stir/io/john/amiscaray/stir/domain/elements/package-summary.html) in this repository for more info on the classes for each of these elements
+
+## Element Descriptors
+
+Version 0.5.0 introduced a new syntax for initializing an `AbstractUIElement` known as **element descriptors**. These allow you to initialize an `AbstractUIElement` using a string following a syntax similar to a CSS query. To do this, simply call the static `ElementDescriptorProcessor.element` method with the element descriptor as a string. As an example, take the following code:
+
+```java
+import io.john.amiscaray.stir.domain.elements.Form;
+
+// Import all the static methods of the ElementDescriptorProcessor class so we can use the methods as simple function calls.
+import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.*;
+
+class Example {
+    
+    private Form myForm = (Form) element("form#my-form.red.blue.green[action='/login',method='post']{input[type='text'],input[type='password']}");
+    
+}
+```
+
+This is equivalent to:
+
+```java
+import io.john.amiscaray.stir.domain.elements.Form;
+
+
+class Example {
+    
+    private Form myForm = Form.builder()
+            .cssClasses(new ArrayList<>(List.of("red", "blue", "green")))
+            .action("/login")
+            .method("post")
+            .id("my-form")
+            .field(Input.builder()
+                    .type("text")
+                    .build())
+            .field(Input.builder()
+                    .type("password")
+                    .build());
+    
+}
+```
+Here, content enclosed in square brackets describe the HTML attributes for the form and the content enclosed in curly brackets describe the inner children of the form. Element descriptors may also describe the inner text content of an element like so:
+
+```java
+element("p.red.blue.green('This is the content!')");
+```
+
+which is equivalent to:
+
+```java
+Paragraph.builder()
+    .cssClass("red")
+    .cssClass("blue")
+    .cssClass("green")
+    .content("This is the content!")
+    .build();
+```
+
+For additional info on element descriptors, see the [v0.5.0 release notes](https://github.com/john-amiscaray/Stir/releases/tag/v0.5.0).
+
+> Note that v0.5.0 is an unstable pre-release and should not be used. In that version, there is a bug which causes the element descriptors to fail in production. This is fixed in v0.5.1. The release notes however give a detailed explanation on element descriptors with content not mentioned here.
 
 ## Document Templating
 
