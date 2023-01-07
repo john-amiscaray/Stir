@@ -464,6 +464,65 @@ The above code outputs the following markup:
 </html>
 ```
 
+### Element Descriptor Support
+
+[Element Descriptors](https://github.com/john-amiscaray/Stir#element-descriptors) can be added in templating blocks to render the HTML of the corresponding object directly in the template. Simply use the following syntax: `element(<element descriptor>)`. For example:
+
+```java
+FormatProcessor formatProcessor = FormatProcessor.getInstance();
+
+HTMLDocument doc = HTMLDocument.builder()
+       .format("""
+               <!DOCTYPE html>
+               <html lang="en">
+                   <head>
+                       <meta charset="UTF-8">
+                       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                       <title>Hello World</title>
+                   </head>
+                   <body>
+                       <&
+                       element(ul#my-list.red.blue.green{li('red'),li('blue'),li('green')})
+                       element(p#hello-world.red.blue.green('This is the content!'))
+                       &>
+                   </body>
+               </html>
+               """)
+       .build();
+
+System.out.println(formatProcessor.processDocument(doc));
+```
+
+outputs:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Hello World</title>
+    </head>
+    <body>
+        <ul id="my-list" class="red blue green">
+            <li>
+                red
+            </li>
+            <li>
+                blue
+            </li>
+            <li>
+                green
+            </li>
+        </ul>
+        <p id="hello-world" class="red blue green">
+            This is the content!
+        </p>
+    </body>
+</html>
+
+```
+
 ## Creating Custom Elements or Components
 
 This framework provides custom annotations for creating your own elements or components if the need arises. Every class representing HTML elements must be annotated with the `@HTMLElement` annotation so the `ElementProcessor` class knows what to do with it. This annotation has options such as the tag name and whether the element type requires a closing tag. Additionally, every element must extend the `AbstractUIElement` class which contains a list of CSS classes, an element ID, and comes with caching support from the `CacheableElement` class.
