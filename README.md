@@ -308,6 +308,27 @@ Below is a list of all the built-in formatting keywords and their meanings:
 - `str_styles`: A style tag added to the page (set using the HTMLDocument builder style method
 - `str_lstyles`: Linked style sheets for the page
 
+By default, if no format is set for the document, the following layout will be used:
+
+```html
+<!DOCTYPE html>
+<html lang="<& str_lang &>">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <& str_meta &>
+        <title><& str_title &></title>
+        <& str_hscripts &>
+        <& str_lstyles &>
+        <& str_styles &>
+    </head>
+    <body>
+        <& str_content &>
+        <& str_fscripts &>
+    </body>
+</html>
+```
+
 ### Formatting Arguments
 
 From version 0.4.1 onwards, you can now add formatting arguments to your template, allowing you to interpolate custom content into your document format using formatting blocks. To do so, all you need to do is call the `formatArgs` method of the `HTMLDocument`'s builder class with a key and value. The key is what you can use in any formatting block to specify to the `FormatProcessor` that you want the corresponding value to be placed in the given area of the template. For example take the following Java code:
@@ -463,6 +484,8 @@ The above code outputs the following markup:
     </body>
 </html>
 ```
+
+Format args with a value of an `AbstractUIElement` will have the corresponding markup of that element be added to the format. Likewise, args of a List of `AbstractUIElement` instances will have the markup of each instance be added sequentially. Otherwise, the format processor will call the `toString` method of whatever value the argument is.
 
 ### Element Descriptor Support
 
