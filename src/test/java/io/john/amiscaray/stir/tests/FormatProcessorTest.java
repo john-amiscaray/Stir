@@ -12,6 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -609,6 +610,62 @@ public class FormatProcessorTest {
         assertThrows(TemplatingException.class, () -> HTMLDocument.builder()
                 .formatArg("element(p('Hello World'))", "No")
                 .build());
+
+    }
+
+    @Test
+    public void testFormatArgAsList() throws IOException {
+
+        List<String> items = List.of("Bacon", "Tuna", "Bread");
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Hello World</title>
+                            </head>
+                            <body>
+                                <h1>Shopping List</h1>
+                                <ul>
+                                    <& my_items &>
+                                </ul>
+                            </body>
+                        </html>
+                        """)
+                .formatArg("my_items", items.stream().map(ListItem::new).collect(Collectors.toList()))
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/formatWithListItems.html"), formatProcessor.processDocument(doc));
+
+    }
+
+    @Test
+    public void testBadListAsFormatArg() throws IOException {
+
+        List<String> items = List.of("Bacon", "Tuna", "Bread");
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <!DOCTYPE html>
+                        <html lang="en">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <title>Hello World</title>
+                            </head>
+                            <body>
+                                <h1>Shopping List</h1>
+                                <ul>
+                                    <& my_items &>
+                                </ul>
+                            </body>
+                        </html>
+                        """)
+                .formatArg("my_items", items)
+                .build();
+
+        assertThrows(TemplatingException.class, () -> formatProcessor.processDocument(doc));
 
     }
 

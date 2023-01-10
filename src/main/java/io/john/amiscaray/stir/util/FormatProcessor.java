@@ -104,6 +104,12 @@ public class FormatProcessor {
                                 Object value = formatArgs.get(token);
                                 if(value instanceof AbstractUIElement){
                                     yield processor.getMarkup((AbstractUIElement) value).indent(indentationSize * ElementProcessor.getIndentationSize());
+                                }else if(value instanceof List){
+                                    try{
+                                        yield processor.getMarkupForElementList((List<? extends AbstractUIElement>) value, indentationSize);
+                                    }catch (ClassCastException ex){
+                                        throw new TemplatingException("List format args must be lists of AbstractUIElements");
+                                    }
                                 }
                                 yield formatArgs.get(token).toString();
                             }else{
