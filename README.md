@@ -11,6 +11,7 @@ A Java Framework for generating HTML content and UI development for server-side 
 - [Document Templating](#document-templating)
 - [Creating Custom Elements or Components](#creating-custom-elements-or-components)
 - [Caching Support](#caching-support)
+- [Bootstrap Integration](#bootstrap-integration)
 - [Document Querying](#document-querying)
 - [Examples](#examples)
 
@@ -573,6 +574,16 @@ As an optimization to the HTML generation, we added support for the caching of H
 ### Disabling Caching for an Element
 
 To disable caching for an element, update the `cacheDisabled` field using the appropriate setter.
+
+## Bootstrap Integration
+
+The `HTMLDocument` class contains a couple of fields which adds the [Bootstrap](https://getbootstrap.com/) script(s) and stylesheet to your HTML document. The `withBootStrap` field flags that the basic script and stylesheet for Bootstrap should be added to the document, whereas the `withBootStrapPopper` field is used to add the Popper library needed for specialized Bootstrap elements. Each of these fields may be set using the class' builder. 
+
+> Note that if you are using a custom template for your HTMLDocument, the `str_lstyles` and `str_fscripts` keywords must be added to the template for these elements to appear. Refer [here](#document-templating) for more about document templating.
+
+## Water CSS Integration
+
+Similar to the [Bootstrap integration](#bootstrap-integration), Stir comes with support for [Water CSS](https://watercss.kognise.dev/). This can be turned on using the `withWaterCSS` method of the `HTMLDocument` class' builder, along with a color theme using the `waterCSSTheme` method.
 
 ## Document Querying
 
