@@ -577,9 +577,13 @@ To disable caching for an element, update the `cacheDisabled` field using the ap
 
 ## Bootstrap Integration
 
-The `HTMLDocument` class contains a couple of fields which adds the Bootstrap script(s) and stylesheet to your HTML document. The `withBootStrap` field adds the basic script and style needed for Bootstrap, whereas the `withBootStrapPopper` field is used to add the Popper library needed for specialized Bootstrap elements. Each of these fields may be set using the class' builder. 
+The `HTMLDocument` class contains a couple of fields which adds the [Bootstrap](https://getbootstrap.com/) script(s) and stylesheet to your HTML document. The `withBootStrap` field flags that the basic script and stylesheet for Bootstrap should be added to the document, whereas the `withBootStrapPopper` field is used to add the Popper library needed for specialized Bootstrap elements. Each of these fields may be set using the class' builder. 
 
 > Note that if you are using a custom template for your HTMLDocument, the `str_lstyles` and `str_fscripts` keywords must be added to the template for these elements to appear. Refer [here](#document-templating) for more about document templating.
+
+## Water CSS Integration
+
+Similar to the [Bootstrap integration](#bootstrap-integration), Stir comes with support for [Water CSS](https://watercss.kognise.dev/). This can be turned on using the `withWaterCSS` method of the `HTMLDocument` class' builder, along with a color theme using the `waterCSSTheme` method.
 
 ## Document Querying
 
