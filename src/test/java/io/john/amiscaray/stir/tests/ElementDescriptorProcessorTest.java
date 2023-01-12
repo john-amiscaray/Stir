@@ -2,20 +2,27 @@ package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
+import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.ElementWithLongAndFloat;
 import io.john.amiscaray.stir.stub.ListStub;
 import io.john.amiscaray.stir.util.ElementDescriptorProcessor;
+import io.john.amiscaray.stir.util.ElementProcessor;
 import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.*;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ElementDescriptorProcessorTest {
+
+    private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
+    private final ElementProcessor elementProcessor = ElementProcessor.getInstance();
 
     @AfterEach
     public void cleanUpAfterEach() {
@@ -322,6 +329,44 @@ public class ElementDescriptorProcessorTest {
     public void testAttributeDescriptorWithInvalidBooleanValid() {
 
         assertThrows(DescriptorFormatException.class, () -> element("button[formnovalidate='aaaaaaa']"));
+
+    }
+
+    @Test
+    public void testHeadingElementDescriptor() {
+
+        assertEquals(Heading.builder()
+                .level(1)
+                .content("Hello World")
+                .build(), element("h1('Hello World')"));
+
+    }
+
+    @Test
+    public void testMarkupOfHeadingFromDescriptor() throws IOException {
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/simpleHeading.html"), elementProcessor.getMarkup(element("h1('Hello World')")));
+
+    }
+
+    @Test
+    public void testDescriptorWithTagNameH() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("h('Hello world')"));
+
+    }
+
+    @Test
+    public void testDescriptorWithTagNameH123() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("h123('Hello World')"));
+
+    }
+
+    @Test
+    public void testDescriptorWithTagNameH0(){
+
+        assertThrows(DescriptorFormatException.class, () -> element("h0('Hello World')"));
 
     }
 

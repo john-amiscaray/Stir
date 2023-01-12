@@ -6,6 +6,7 @@ import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.domain.elements.AbstractUIElement;
+import io.john.amiscaray.stir.domain.elements.Heading;
 import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
 import io.john.amiscaray.stir.util.exceptions.DescriptorFormatException;
 import org.reflections.ReflectionUtils;
@@ -70,9 +71,10 @@ public class ElementDescriptorProcessor {
         String fieldsDescriptor = partitions.length > 1 ? partitions[1] : "";
         validateTagNameClassesAndID(tagNameIdAndClasses);
         validateFieldsDescriptor(fieldsDescriptor);
-        String tagName = tagNameIdAndClasses.split("[.#]", 2)[0];
+        String originalTagName = tagNameIdAndClasses.split("[.#]", 2)[0];
+        String tagName = originalTagName.matches("h[1-9]") ? "h" : originalTagName;
 
-        List<Class<?>> possibleTypes = classes.stream()
+        List<Class<?>> possibleTypes = tagName.equals("h") ? List.of(Heading.class) : classes.stream()
                 .filter(clazz -> {
                     if(Modifier.isAbstract(clazz.getModifiers())){
                         return false;
@@ -82,7 +84,7 @@ public class ElementDescriptorProcessor {
                     }
                     return clazz.getAnnotation(HTMLElement.class).tagName().equals(tagName);
                 }).collect(Collectors.toList());
-        if(possibleTypes.isEmpty()){
+        if(possibleTypes.isEmpty() || originalTagName.equals("h")){
             throw new DescriptorFormatException("No such element found");
         }
         RuntimeException lastError = null;
@@ -122,6 +124,10 @@ public class ElementDescriptorProcessor {
                     setElementAttributes(attributeDescriptor, element, elementType);
                     setElementInnerContent(innerContentDescriptor, element, elementType);
                     setElementChildren(childDescriptor, element, elementType, javaPackage);
+                    if(elementType.equals(Heading.class)){
+                        assert element.getClass().equals(Heading.class) && tagName.equals("h") && originalTagName.length() == 2;
+                        ((Heading) element).setLevel(Integer.parseInt(originalTagName.substring(1)));
+                    }
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
                     throw new ElementInitializationException("Unable to initialize element. Nested Exception is: " + e.getClass().getName() + ":\n" + e.getLocalizedMessage());
                 }
