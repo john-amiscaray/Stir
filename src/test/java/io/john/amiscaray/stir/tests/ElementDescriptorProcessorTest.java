@@ -356,4 +356,18 @@ public class ElementDescriptorProcessorTest {
 
     }
 
+    @Test
+    public void testDescriptorWithTagNameH123() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("h123('Hello World')"));
+
+    }
+
+    @Test
+    public void testDescriptorWithTagNameH0(){
+
+        assertThrows(DescriptorFormatException.class, () -> element("h0('Hello World')"));
+
+    }
+
 }

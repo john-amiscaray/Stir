@@ -72,7 +72,7 @@ public class ElementDescriptorProcessor {
         validateTagNameClassesAndID(tagNameIdAndClasses);
         validateFieldsDescriptor(fieldsDescriptor);
         String originalTagName = tagNameIdAndClasses.split("[.#]", 2)[0];
-        String tagName = originalTagName.matches("h\\d") ? "h" : originalTagName;
+        String tagName = originalTagName.matches("h[1-9]") ? "h" : originalTagName;
 
         List<Class<?>> possibleTypes = tagName.equals("h") ? List.of(Heading.class) : classes.stream()
                 .filter(clazz -> {
@@ -125,7 +125,7 @@ public class ElementDescriptorProcessor {
                     setElementInnerContent(innerContentDescriptor, element, elementType);
                     setElementChildren(childDescriptor, element, elementType, javaPackage);
                     if(elementType.equals(Heading.class)){
-                        assert element.getClass().equals(Heading.class) && tagName.equals("h");
+                        assert element.getClass().equals(Heading.class) && tagName.equals("h") && originalTagName.length() == 2;
                         ((Heading) element).setLevel(Integer.parseInt(originalTagName.substring(1)));
                     }
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
