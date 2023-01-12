@@ -12,6 +12,7 @@ A Java Framework for generating HTML content and UI development for server-side 
 - [Creating Custom Elements or Components](#creating-custom-elements-or-components)
 - [Caching Support](#caching-support)
 - [Bootstrap Integration](#bootstrap-integration)
+- [Water CSS Integration](#water-css-integration)
 - [Document Querying](#document-querying)
 - [Examples](#examples)
 
