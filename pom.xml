@@ -19,6 +19,13 @@
             <email>john_ernest_amiscaray@outlook.com</email>
         </developer>
     </developers>
+         
+    <contributors>
+         <contributor>
+                  <name>Dennis Kim</name>
+                  <email>dennis.kim@torontomu.ca</email>
+         </contributor>
+    </contributors>
 
     <licenses>
         <license>
