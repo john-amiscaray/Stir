@@ -23,8 +23,8 @@ public class Nav extends AbstractUIElement{
     @Nested
     private NavLinkList list;
 
-    public Nav(String id, List<String> cssClasses, String style, NavLinkList list) {
-        super(id, cssClasses, style);
+    public Nav(String id, List<String> cssClasses, String style, NavLinkList list, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.list = list;
     }
 
@@ -65,6 +65,7 @@ public class Nav extends AbstractUIElement{
         private ArrayList<String> cssClasses;
         private String style;
         private NavLinkList list;
+        private boolean hidden;
 
         NavBuilder() {
         }
@@ -102,6 +103,11 @@ public class Nav extends AbstractUIElement{
             return this;
         }
 
+        public NavBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Nav build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -115,11 +121,11 @@ public class Nav extends AbstractUIElement{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Nav(id, cssClasses, style, list);
+            return new Nav(id, cssClasses, style, list, hidden);
         }
 
         public String toString() {
-            return "Nav.NavBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", list=" + this.list + ")";
+            return "Nav.NavBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", list=" + this.list + ", hidden=" + this.hidden + ")";
         }
     }
 }

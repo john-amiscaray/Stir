@@ -48,8 +48,8 @@ public class Select extends AbstractFormField {
     private String label;
 
     public Select(String id, List<String> cssClasses, String style, Boolean autoFocus, Boolean disabled, String form,
-                  Boolean multiple, String name, Boolean required, Integer size, List<Option> options, String label) {
-        super(id, cssClasses, style, autoFocus, disabled, form, name);
+                  Boolean multiple, String name, Boolean required, Integer size, List<Option> options, String label, boolean hidden) {
+        super(id, cssClasses, style, autoFocus, disabled, form, name, hidden);
         this.autoFocus = autoFocus;
         this.label = label;
         this.disabled = disabled;
@@ -191,6 +191,7 @@ public class Select extends AbstractFormField {
         private Integer size;
         private ArrayList<Option> options;
         private String label;
+        private boolean hidden;
 
         SelectBuilder() {
         }
@@ -281,6 +282,11 @@ public class Select extends AbstractFormField {
             return this;
         }
 
+        public SelectBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Select build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -305,11 +311,11 @@ public class Select extends AbstractFormField {
                     options = java.util.Collections.unmodifiableList(new ArrayList<Option>(this.options));
             }
 
-            return new Select(id, cssClasses, style, autoFocus, disabled, form, multiple, name, required, size, options, label);
+            return new Select(id, cssClasses, style, autoFocus, disabled, form, multiple, name, required, size, options, label, hidden);
         }
 
         public String toString() {
-            return "Select.SelectBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", autoFocus=" + this.autoFocus + ", disabled=" + this.disabled + ", form=" + this.form + ", multiple=" + this.multiple + ", name=" + this.name + ", required=" + this.required + ", size=" + this.size + ", options=" + this.options + ", label=" + this.label + ")";
+            return "Select.SelectBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", autoFocus=" + this.autoFocus + ", disabled=" + this.disabled + ", form=" + this.form + ", multiple=" + this.multiple + ", name=" + this.name + ", required=" + this.required + ", size=" + this.size + ", options=" + this.options + ", label=" + this.label + ", hidden=" + this.hidden + ")";
         }
     }
 }

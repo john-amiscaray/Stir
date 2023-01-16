@@ -14,19 +14,21 @@ import java.util.List;
 @NoArgsConstructor
 public class Header extends AbstractElementContainer<AbstractUIElement>{
 
-    public Header(String id, List<String> cssClasses, String style, List<AbstractUIElement> children) {
-        super(id, cssClasses, style, children);
+    public Header(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean hidden) {
+        super(id, cssClasses, style, children, hidden);
     }
 
     public static HeaderBuilder builder() {
         return new HeaderBuilder();
     }
 
+
     public static class HeaderBuilder {
         private String id;
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<AbstractUIElement> children;
+        private boolean hidden;
 
         HeaderBuilder() {
         }
@@ -77,6 +79,11 @@ public class Header extends AbstractElementContainer<AbstractUIElement>{
             return this;
         }
 
+        public HeaderBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Header build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -101,12 +108,11 @@ public class Header extends AbstractElementContainer<AbstractUIElement>{
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.children));
             }
 
-            return new Header(id, cssClasses, style, children);
+            return new Header(id, cssClasses, style, children, hidden);
         }
 
         public String toString() {
-            return "Header.HeaderBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ")";
+            return "Header.HeaderBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ")";
         }
     }
-
 }

@@ -70,8 +70,8 @@ public class Img extends AbstractContentFrame{
     private String useMap;
 
     public Img(String id, List<String> cssClasses, String style, String alt, String crossOrigin, Integer height,
-               Boolean isMap, String loading, String longDesc, String referrerPolicy, String sizes, String src, String srcSet, String useMap, Integer width) {
-        super(id, cssClasses, style, height, src, width);
+               Boolean isMap, String loading, String longDesc, String referrerPolicy, String sizes, String src, String srcSet, String useMap, Integer width, boolean hidden) {
+        super(id, cssClasses, style, height, src, width, hidden);
         this.alt = alt;
         this.crossOrigin = crossOrigin;
         this.isMap = isMap;
@@ -137,7 +137,6 @@ public class Img extends AbstractContentFrame{
         this.useMap = useMap;
     }
 
-
     public static class ImgBuilder {
         private String id;
         private ArrayList<String> cssClasses;
@@ -154,6 +153,7 @@ public class Img extends AbstractContentFrame{
         private String srcSet;
         private String useMap;
         private Integer width;
+        private boolean hidden;
 
         ImgBuilder() {
         }
@@ -246,6 +246,11 @@ public class Img extends AbstractContentFrame{
             return this;
         }
 
+        public ImgBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Img build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -259,11 +264,11 @@ public class Img extends AbstractContentFrame{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Img(id, cssClasses, style, alt, crossOrigin, height, isMap, loading, longDesc, referrerPolicy, sizes, src, srcSet, useMap, width);
+            return new Img(id, cssClasses, style, alt, crossOrigin, height, isMap, loading, longDesc, referrerPolicy, sizes, src, srcSet, useMap, width, hidden);
         }
 
         public String toString() {
-            return "Img.ImgBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", alt=" + this.alt + ", crossOrigin=" + this.crossOrigin + ", height=" + this.height + ", isMap=" + this.isMap + ", loading=" + this.loading + ", longDesc=" + this.longDesc + ", referrerPolicy=" + this.referrerPolicy + ", sizes=" + this.sizes + ", src=" + this.src + ", srcSet=" + this.srcSet + ", useMap=" + this.useMap + ", width=" + this.width + ")";
+            return "Img.ImgBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", alt=" + this.alt + ", crossOrigin=" + this.crossOrigin + ", height=" + this.height + ", isMap=" + this.isMap + ", loading=" + this.loading + ", longDesc=" + this.longDesc + ", referrerPolicy=" + this.referrerPolicy + ", sizes=" + this.sizes + ", src=" + this.src + ", srcSet=" + this.srcSet + ", useMap=" + this.useMap + ", width=" + this.width + ", hidden=" + this.hidden + ")";
         }
     }
 }

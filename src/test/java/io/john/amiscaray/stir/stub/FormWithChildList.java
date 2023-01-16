@@ -18,7 +18,7 @@ public class FormWithChildList extends AbstractUIElement {
 
     @Builder
     public FormWithChildList(String id, @Singular List<String> cssClasses, String style, @Singular List<Input> fields) {
-        super(id, cssClasses, style);
+        super(id, cssClasses, style, false);
         this.fields = fields;
     }
 

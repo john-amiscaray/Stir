@@ -59,8 +59,8 @@ public class IFrame extends AbstractContentFrame{
 
     public IFrame(String id, List<String> cssClasses, String style, String allow, Boolean allowFullScreen,
                   Integer height, String loading, String name, String referrerPolicy,
-                  String sandbox, String src, String srcDoc, Integer width) {
-        super(id, cssClasses, style, height, src, width);
+                  String sandbox, String src, String srcDoc, Integer width, boolean hidden) {
+        super(id, cssClasses, style, height, src, width, hidden);
         this.allow = allow;
         this.allowFullScreen = allowFullScreen;
         this.loading = loading;
@@ -156,6 +156,7 @@ public class IFrame extends AbstractContentFrame{
         private String src;
         private String srcDoc;
         private Integer width;
+        private boolean hidden;
 
         IFrameBuilder() {
         }
@@ -238,6 +239,11 @@ public class IFrame extends AbstractContentFrame{
             return this;
         }
 
+        public IFrameBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public IFrame build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -251,11 +257,11 @@ public class IFrame extends AbstractContentFrame{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new IFrame(id, cssClasses, style, allow, allowFullScreen, height, loading, name, referrerPolicy, sandbox, src, srcDoc, width);
+            return new IFrame(id, cssClasses, style, allow, allowFullScreen, height, loading, name, referrerPolicy, sandbox, src, srcDoc, width, hidden);
         }
 
         public String toString() {
-            return "IFrame.IFrameBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", allow=" + this.allow + ", allowFullScreen=" + this.allowFullScreen + ", height=" + this.height + ", loading=" + this.loading + ", name=" + this.name + ", referrerPolicy=" + this.referrerPolicy + ", sandbox=" + this.sandbox + ", src=" + this.src + ", srcDoc=" + this.srcDoc + ", width=" + this.width + ")";
+            return "IFrame.IFrameBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", allow=" + this.allow + ", allowFullScreen=" + this.allowFullScreen + ", height=" + this.height + ", loading=" + this.loading + ", name=" + this.name + ", referrerPolicy=" + this.referrerPolicy + ", sandbox=" + this.sandbox + ", src=" + this.src + ", srcDoc=" + this.srcDoc + ", width=" + this.width + ", hidden=" + this.hidden + ")";
         }
     }
 }

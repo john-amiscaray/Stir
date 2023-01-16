@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * The base class for all classes that represent HTML elements
  */
-@EqualsAndHashCode(callSuper = false)
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractUIElement extends CacheableElement {
 
     /**
@@ -32,12 +32,15 @@ public abstract class AbstractUIElement extends CacheableElement {
     @Attribute(name = "style")
     protected String style;
 
-    public AbstractUIElement(String id, List<String> cssClasses, String style) {
+    protected boolean hidden;
+
+    public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden) {
         this.id = id;
         if(cssClasses != null){
             this.cssClasses = new ArrayList<>(cssClasses);
         }
         this.style = style;
+        this.hidden = hidden;
     }
 
     public AbstractUIElement() {

@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Section extends AbstractElementContainer<AbstractUIElement>{
 
-    public Section(String id, List<String> cssClasses, String style, List<AbstractUIElement> children) {
-        super(id, cssClasses, style, children);
+    public Section(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean hidden) {
+        super(id, cssClasses, style, children, hidden);
     }
 
     public static SectionBuilder builder() {
@@ -27,6 +27,7 @@ public class Section extends AbstractElementContainer<AbstractUIElement>{
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<AbstractUIElement> children;
+        private boolean hidden;
 
         SectionBuilder() {
         }
@@ -77,6 +78,11 @@ public class Section extends AbstractElementContainer<AbstractUIElement>{
             return this;
         }
 
+        public SectionBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Section build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -101,11 +107,11 @@ public class Section extends AbstractElementContainer<AbstractUIElement>{
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.children));
             }
 
-            return new Section(id, cssClasses, style, children);
+            return new Section(id, cssClasses, style, children, hidden);
         }
 
         public String toString() {
-            return "Section.SectionBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ")";
+            return "Section.SectionBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ")";
         }
     }
 }

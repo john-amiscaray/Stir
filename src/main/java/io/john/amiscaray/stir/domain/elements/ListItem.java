@@ -21,8 +21,8 @@ public class ListItem extends AbstractUIElement{
     @InnerContent
     private String content;
 
-    public ListItem(String id, List<String> cssClasses, String style, String content) {
-        super(id, cssClasses, style);
+    public ListItem(String id, List<String> cssClasses, String style, String content, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.content = content;
     }
 
@@ -33,7 +33,6 @@ public class ListItem extends AbstractUIElement{
     public static ListItemBuilder builder() {
         return new ListItemBuilder();
     }
-
 
     public String getContent() {
         return this.content;
@@ -72,6 +71,7 @@ public class ListItem extends AbstractUIElement{
         private ArrayList<String> cssClasses;
         private String style;
         private String content;
+        private boolean hidden;
 
         ListItemBuilder() {
         }
@@ -109,6 +109,11 @@ public class ListItem extends AbstractUIElement{
             return this;
         }
 
+        public ListItemBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public ListItem build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -122,11 +127,11 @@ public class ListItem extends AbstractUIElement{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new ListItem(id, cssClasses, style, content);
+            return new ListItem(id, cssClasses, style, content, hidden);
         }
 
         public String toString() {
-            return "ListItem.ListItemBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ")";
+            return "ListItem.ListItemBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ", hidden=" + this.hidden + ")";
         }
     }
 }

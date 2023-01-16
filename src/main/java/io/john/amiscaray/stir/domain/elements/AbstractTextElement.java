@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.InnerContent;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.List;
  * A parent class for elements meant to display text
  */
 @NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractTextElement extends AbstractUIElement {
 
     /**
@@ -17,8 +19,8 @@ public abstract class AbstractTextElement extends AbstractUIElement {
     @InnerContent
     protected String content;
 
-    public AbstractTextElement(String id, List<String> cssClasses, String style, String content) {
-        super(id, cssClasses, style);
+    public AbstractTextElement(String id, List<String> cssClasses, String style, String content, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.content = content;
     }
 

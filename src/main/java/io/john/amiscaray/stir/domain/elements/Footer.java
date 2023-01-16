@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Footer extends AbstractElementContainer<AbstractUIElement>{
 
-    public Footer(String id, List<String> cssClasses, String style, List<AbstractUIElement> children) {
-        super(id, cssClasses, style, children);
+    public Footer(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean builder) {
+        super(id, cssClasses, style, children, builder);
     }
 
     public static FooterBuilder builder() {
@@ -27,6 +27,7 @@ public class Footer extends AbstractElementContainer<AbstractUIElement>{
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<AbstractUIElement> children;
+        private boolean builder;
 
         FooterBuilder() {
         }
@@ -77,6 +78,11 @@ public class Footer extends AbstractElementContainer<AbstractUIElement>{
             return this;
         }
 
+        public FooterBuilder builder(boolean builder) {
+            this.builder = builder;
+            return this;
+        }
+
         public Footer build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -101,11 +107,11 @@ public class Footer extends AbstractElementContainer<AbstractUIElement>{
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.children));
             }
 
-            return new Footer(id, cssClasses, style, children);
+            return new Footer(id, cssClasses, style, children, builder);
         }
 
         public String toString() {
-            return "Footer.FooterBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ")";
+            return "Footer.FooterBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", builder=" + this.builder + ")";
         }
     }
 }

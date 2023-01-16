@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderedList extends AbstractListElement {
 
-    public OrderedList(String id, List<String> cssClasses, String style, List<ListItem> listItems) {
-        super(id, cssClasses, style, listItems);
+    public OrderedList(String id, List<String> cssClasses, String style, List<ListItem> listItems, boolean hidden) {
+        super(id, cssClasses, style, listItems, hidden);
     }
 
     public static OrderedListBuilder builder() {
@@ -50,6 +50,7 @@ public class OrderedList extends AbstractListElement {
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<ListItem> listItems;
+        private boolean hidden;
 
         OrderedListBuilder() {
         }
@@ -100,6 +101,11 @@ public class OrderedList extends AbstractListElement {
             return this;
         }
 
+        public OrderedListBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public OrderedList build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -124,11 +130,11 @@ public class OrderedList extends AbstractListElement {
                     listItems = java.util.Collections.unmodifiableList(new ArrayList<ListItem>(this.listItems));
             }
 
-            return new OrderedList(id, cssClasses, style, listItems);
+            return new OrderedList(id, cssClasses, style, listItems, hidden);
         }
 
         public String toString() {
-            return "OrderedList.OrderedListBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", listItems=" + this.listItems + ")";
+            return "OrderedList.OrderedListBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", listItems=" + this.listItems + ", hidden=" + this.hidden + ")";
         }
     }
 }

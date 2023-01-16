@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Article extends AbstractElementContainer<AbstractUIElement>{
 
-    public Article(String id, List<String> cssClasses, String style, List<AbstractUIElement> children) {
-        super(id, cssClasses, style, children);
+    public Article(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean hidden) {
+        super(id, cssClasses, style, children, hidden);
     }
 
     public static ArticleBuilder builder() {
@@ -27,6 +27,7 @@ public class Article extends AbstractElementContainer<AbstractUIElement>{
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<AbstractUIElement> children;
+        private boolean hidden;
 
         ArticleBuilder() {
         }
@@ -77,6 +78,11 @@ public class Article extends AbstractElementContainer<AbstractUIElement>{
             return this;
         }
 
+        public ArticleBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Article build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -101,11 +107,11 @@ public class Article extends AbstractElementContainer<AbstractUIElement>{
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.children));
             }
 
-            return new Article(id, cssClasses, style, children);
+            return new Article(id, cssClasses, style, children, hidden);
         }
 
         public String toString() {
-            return "Article.ArticleBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ")";
+            return "Article.ArticleBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ")";
         }
     }
 }

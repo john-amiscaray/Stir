@@ -34,8 +34,8 @@ public class Option extends AbstractUIElement{
         this.value = optionName.toLowerCase(Locale.ROOT);
     }
 
-    public Option(String id, List<String> cssClasses, String style, String value, String optionName) {
-        super(id, cssClasses, style);
+    public Option(String id, List<String> cssClasses, String style, String value, String optionName, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.value = value;
         this.optionName = optionName;
     }
@@ -48,7 +48,6 @@ public class Option extends AbstractUIElement{
     public static OptionBuilder builder() {
         return new OptionBuilder();
     }
-
 
     public String getValue() {
         return this.value;
@@ -106,6 +105,7 @@ public class Option extends AbstractUIElement{
         private String style;
         private String value;
         private String optionName;
+        private boolean hidden;
 
         OptionBuilder() {
         }
@@ -148,6 +148,11 @@ public class Option extends AbstractUIElement{
             return this;
         }
 
+        public OptionBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Option build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -161,11 +166,11 @@ public class Option extends AbstractUIElement{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Option(id, cssClasses, style, value, optionName);
+            return new Option(id, cssClasses, style, value, optionName, hidden);
         }
 
         public String toString() {
-            return "Option.OptionBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", value=" + this.value + ", optionName=" + this.optionName + ")";
+            return "Option.OptionBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", value=" + this.value + ", optionName=" + this.optionName + ", hidden=" + this.hidden + ")";
         }
     }
 }

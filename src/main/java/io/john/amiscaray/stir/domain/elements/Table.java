@@ -26,8 +26,8 @@ public class Table extends AbstractUIElement {
      */
     private Class<?> clazz;
 
-    public Table(String id, List<String> cssClasses, String style, Collection<?> entries, Class<?> clazz) {
-        super(id, cssClasses, style);
+    public Table(String id, List<String> cssClasses, String style, Collection<?> entries, Class<?> clazz, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.entries = entries;
         this.clazz = clazz;
     }
@@ -97,6 +97,7 @@ public class Table extends AbstractUIElement {
         private String style;
         private ArrayList<Object> entries;
         private Class<?> clazz;
+        private boolean hidden;
 
         TableBuilder() {
         }
@@ -152,6 +153,11 @@ public class Table extends AbstractUIElement {
             return this;
         }
 
+        public TableBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Table build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -176,11 +182,11 @@ public class Table extends AbstractUIElement {
                     entries = java.util.Collections.unmodifiableList(new ArrayList<Object>(this.entries));
             }
 
-            return new Table(id, cssClasses, style, entries, clazz);
+            return new Table(id, cssClasses, style, entries, clazz, hidden);
         }
 
         public String toString() {
-            return "Table.TableBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", entries=" + this.entries + ", clazz=" + this.clazz + ")";
+            return "Table.TableBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", entries=" + this.entries + ", clazz=" + this.clazz + ", hidden=" + this.hidden + ")";
         }
     }
 }

@@ -1,12 +1,14 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.Attribute;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 /**
  * A parent class for any elements displaying external content
  */
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractContentFrame extends AbstractUIElement {
 
     /**
@@ -27,8 +29,8 @@ public abstract class AbstractContentFrame extends AbstractUIElement {
     @Attribute(name = "width")
     protected Integer width;
 
-    public AbstractContentFrame(String id, List<String> cssClasses, String style, Integer height, String src, Integer width) {
-        super(id, cssClasses, style);
+    public AbstractContentFrame(String id, List<String> cssClasses, String style, Integer height, String src, Integer width, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.height = height;
         this.src = src;
         this.width = width;

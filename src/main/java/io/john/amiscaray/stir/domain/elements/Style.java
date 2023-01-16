@@ -26,7 +26,7 @@ public class Style extends AbstractUIElement{
 
     public Style(String id, List<String> cssClasses, String style,
                  List<CssRule> rules, List<String> literalCssStrings) {
-        super(id, cssClasses, style);
+        super(id, cssClasses, style, false);
         for (String cssString : literalCssStrings) {
             this.css.append(cssString);
         }

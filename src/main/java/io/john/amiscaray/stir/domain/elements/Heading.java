@@ -19,13 +19,13 @@ public class Heading extends AbstractTextElement{
      */
     private Integer level;
 
-    public Heading(String id, List<String> cssClasses, String style, String content, Integer level) {
-        super(id, cssClasses, style, content);
+    public Heading(String id, List<String> cssClasses, String style, String content, Integer level, boolean hidden) {
+        super(id, cssClasses, style, content, hidden);
         this.level = level;
     }
 
     public Heading(Integer level, String content){
-        super(null, new ArrayList<>(), null, content);
+        super(null, new ArrayList<>(), null, content, false);
         this.level = level;
     }
 
@@ -77,6 +77,7 @@ public class Heading extends AbstractTextElement{
         private String style;
         private String content;
         private Integer level;
+        private boolean hidden;
 
         HeadingBuilder() {
         }
@@ -119,6 +120,11 @@ public class Heading extends AbstractTextElement{
             return this;
         }
 
+        public HeadingBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Heading build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -132,11 +138,11 @@ public class Heading extends AbstractTextElement{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Heading(id, cssClasses, style, content, level);
+            return new Heading(id, cssClasses, style, content, level, hidden);
         }
 
         public String toString() {
-            return "Heading.HeadingBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ", level=" + this.level + ")";
+            return "Heading.HeadingBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ", level=" + this.level + ", hidden=" + this.hidden + ")";
         }
     }
 }
