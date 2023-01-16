@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * The base class for all classes that represent HTML elements
  */
-@EqualsAndHashCode(callSuper = true)
+@EqualsAndHashCode
 public abstract class AbstractUIElement extends CacheableElement {
 
     /**
