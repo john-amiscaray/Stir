@@ -550,7 +550,7 @@ outputs:
 
 ## Creating Custom Elements or Components
 
-This framework provides custom annotations for creating your own elements or components if the need arises. Every class representing HTML elements must be annotated with the `@HTMLElement` annotation so the `ElementProcessor` class knows what to do with it. This annotation has options such as the tag name and whether the element type requires a closing tag. Additionally, every element must extend the `AbstractUIElement` class which contains a list of CSS classes, an element ID, and comes with caching support from the `CacheableElement` class.
+This framework provides custom annotations for creating your own elements or components if the need arises. Every class representing HTML elements must be annotated with the `@HTMLElement` annotation so the `ElementProcessor` class knows what to do with it. This annotation has options such as the tag name and whether the element type requires a closing tag. Additionally, every element must extend the `AbstractUIElement` class which contains a list of CSS classes, an element ID, a boolean `hidden` field, and comes with caching support from the `CacheableElement` class.
 
 ### Adding Attributes
 
