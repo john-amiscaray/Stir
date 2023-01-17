@@ -352,6 +352,10 @@ public class ElementProcessor {
             cacheEnabled = true;
         }
 
+        if(obj.isHidden()){
+            obj.setStyle(obj.getStyle() != null ? obj.getStyle() + " display: none;": "display: none;");
+        }
+
         String tagName = getTagName(obj.getClass());
 
         if(tagName == null){

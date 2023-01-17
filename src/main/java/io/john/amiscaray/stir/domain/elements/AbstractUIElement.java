@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * The base class for all classes that represent HTML elements
  */
-@EqualsAndHashCode
+@EqualsAndHashCode(callSuper = false)
 public abstract class AbstractUIElement extends CacheableElement {
 
     /**
@@ -73,6 +73,11 @@ public abstract class AbstractUIElement extends CacheableElement {
         this.cssClasses = cssClasses;
     }
 
+    public void setHidden(boolean hidden) {
+        propertyChangeSupport.firePropertyChange("hidden", this.hidden, hidden);
+        this.hidden = hidden;
+    }
+
     /**
      * Adds a CSS class to the element
      * @param clazz The CSS class to add to the element
@@ -85,4 +90,7 @@ public abstract class AbstractUIElement extends CacheableElement {
 
     }
 
+    public boolean isHidden() {
+        return this.hidden;
+    }
 }

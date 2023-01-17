@@ -44,6 +44,8 @@ public class ImgTest {
                 .srcSet("something-else")
                 .useMap("#some-map")
                 .width(200)
+                .style("border: 2px solid black;")
+                .hidden(true)
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/imgWithEverything.html"), processor.getMarkup(i));

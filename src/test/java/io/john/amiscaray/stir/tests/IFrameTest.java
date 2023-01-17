@@ -32,6 +32,8 @@ public class IFrameTest {
                 .id("iFrame")
                 .cssClasses(new ArrayList<>(List.of("red", "blue")))
                 .cssClass("green")
+                .style("border: 2px solid black;")
+                .hidden(true)
                 .allow("geolocation")
                 .allowFullScreen(true)
                 .height(200)

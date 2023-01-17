@@ -26,6 +26,8 @@ public class HGroupTest {
                 .id("main-title")
                 .cssClasses(new ArrayList<>(List.of("red", "blue")))
                 .cssClass("green")
+                .style("color: red;")
+                .hidden(true)
                 .child(new Heading(1, "This is a BIG title"))
                 .child(new Heading(2, "This is a smaller title"))
                 .child(new Paragraph("This is some text"))

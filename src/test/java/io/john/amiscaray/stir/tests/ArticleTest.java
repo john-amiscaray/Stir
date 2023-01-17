@@ -35,6 +35,8 @@ public class ArticleTest {
                 .id("myArticle")
                 .cssClasses(new ArrayList<>(List.of("red", "blue")))
                 .cssClass("green")
+                .style("color: red;")
+                .hidden(true)
                 .child(new Table(List.of(new Student(1, "John", 4.0f)), Student.class))
                 .build();
 
