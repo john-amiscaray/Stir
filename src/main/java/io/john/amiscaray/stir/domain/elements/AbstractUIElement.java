@@ -32,6 +32,9 @@ public abstract class AbstractUIElement extends CacheableElement {
     @Attribute(name = "style")
     protected String style;
 
+    /**
+     * Whether the element should be hidden. Setting this to true adds the following style to it: display: none.
+     */
     protected boolean hidden;
 
     public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden) {
