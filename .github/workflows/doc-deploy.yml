@@ -17,4 +17,4 @@ jobs:
           java-version: 15
           target-folder: docs
           project: maven
-          custom-command: mvn javadoc:javadoc -Dshow=private -Ddoctitle="<img alt="Stir" src="https://github.com/john-amiscaray/Stir/blob/master/assets/logo.png">"
+          custom-command: mvn javadoc:javadoc -Dshow=private -Ddoctitle="<img alt="Stir" width="250" src="https://github.com/john-amiscaray/Stir/blob/master/assets/logo.png">"
