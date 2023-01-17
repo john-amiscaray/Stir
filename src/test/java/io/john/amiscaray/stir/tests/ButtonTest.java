@@ -24,6 +24,8 @@ public class ButtonTest {
                 .id("myBtn")
                 .cssClasses(new ArrayList<>(List.of("btn", "btn-primary")))
                 .cssClass("btn-important")
+                .style("color: red;")
+                .hidden(true)
                 .disabled(true)
                 .autoFocus(true)
                 .form("myForm")
@@ -33,7 +35,6 @@ public class ButtonTest {
                 .formMethod("get")
                 .type("submit")
                 .name("btn")
-                .style("")
                 .formEnctype("something")
                 .formNoValidate(true)
                 .build();

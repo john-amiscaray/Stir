@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class HGroup extends AbstractElementContainer<AbstractTextElement>{
 
-    public HGroup(String id, List<String> cssClasses, String style, List<AbstractTextElement> children) {
-        super(id, cssClasses, style, children);
+    public HGroup(String id, List<String> cssClasses, String style, List<AbstractTextElement> children, boolean hidden) {
+        super(id, cssClasses, style, children, hidden);
     }
 
     public static HGroupBuilder builder() {
@@ -27,6 +27,7 @@ public class HGroup extends AbstractElementContainer<AbstractTextElement>{
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<AbstractTextElement> children;
+        private boolean hidden;
 
         HGroupBuilder() {
         }
@@ -77,6 +78,11 @@ public class HGroup extends AbstractElementContainer<AbstractTextElement>{
             return this;
         }
 
+        public HGroupBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public HGroup build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -101,11 +107,11 @@ public class HGroup extends AbstractElementContainer<AbstractTextElement>{
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractTextElement>(this.children));
             }
 
-            return new HGroup(id, cssClasses, style, children);
+            return new HGroup(id, cssClasses, style, children, hidden);
         }
 
         public String toString() {
-            return "HGroup.HGroupBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ")";
+            return "HGroup.HGroupBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ")";
         }
     }
 }

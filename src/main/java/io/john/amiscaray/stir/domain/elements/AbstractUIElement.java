@@ -32,12 +32,15 @@ public abstract class AbstractUIElement extends CacheableElement {
     @Attribute(name = "style")
     protected String style;
 
-    public AbstractUIElement(String id, List<String> cssClasses, String style) {
+    protected boolean hidden;
+
+    public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden) {
         this.id = id;
         if(cssClasses != null){
             this.cssClasses = new ArrayList<>(cssClasses);
         }
         this.style = style;
+        this.hidden = hidden;
     }
 
     public AbstractUIElement() {
@@ -70,6 +73,11 @@ public abstract class AbstractUIElement extends CacheableElement {
         this.cssClasses = cssClasses;
     }
 
+    public void setHidden(boolean hidden) {
+        propertyChangeSupport.firePropertyChange("hidden", this.hidden, hidden);
+        this.hidden = hidden;
+    }
+
     /**
      * Adds a CSS class to the element
      * @param clazz The CSS class to add to the element
@@ -82,4 +90,7 @@ public abstract class AbstractUIElement extends CacheableElement {
 
     }
 
+    public boolean isHidden() {
+        return this.hidden;
+    }
 }

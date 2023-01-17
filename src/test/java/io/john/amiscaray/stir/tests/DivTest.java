@@ -160,4 +160,15 @@ public class DivTest {
 
     }
 
+    @Test
+    public void testHiddenDiv() throws IOException {
+
+        Div div = Div.builder()
+                .hidden(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/hiddenDiv.html"), processor.getMarkup(div));
+
+    }
+
 }

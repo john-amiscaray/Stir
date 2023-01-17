@@ -323,6 +323,9 @@ public class ElementProcessor {
         Class<?> clazz = table.getClazz();
         StringBuilder builder = new StringBuilder();
         HTMLElement meta = Table.class.getAnnotation(HTMLElement.class);
+        if(table.isHidden()){
+            table.setStyle(table.getStyle() != null ? table.getStyle() + " display: none;": "display: none;");
+        }
         try {
             buildElementOpeningTag(builder, table, meta, meta.tagName());
             builder.append(getInnerTableMarkup(collection, clazz).indent(ElementProcessor.indentationSize));
@@ -350,6 +353,10 @@ public class ElementProcessor {
                 return result;
             }
             cacheEnabled = true;
+        }
+
+        if(obj.isHidden()){
+            obj.setStyle(obj.getStyle() != null ? obj.getStyle() + " display: none;": "display: none;");
         }
 
         String tagName = getTagName(obj.getClass());

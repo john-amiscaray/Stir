@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class UnorderedList extends AbstractListElement{
 
-    public UnorderedList(String id, List<String> cssClasses, String style, List<ListItem> listItems) {
-        super(id, cssClasses, style, listItems);
+    public UnorderedList(String id, List<String> cssClasses, String style, List<ListItem> listItems, boolean hidden) {
+        super(id, cssClasses, style, listItems, hidden);
     }
 
     public static UnorderedListBuilder builder() {
@@ -27,6 +27,7 @@ public class UnorderedList extends AbstractListElement{
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<ListItem> listItems;
+        private boolean hidden;
 
         UnorderedListBuilder() {
         }
@@ -77,6 +78,11 @@ public class UnorderedList extends AbstractListElement{
             return this;
         }
 
+        public UnorderedListBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public UnorderedList build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -101,11 +107,11 @@ public class UnorderedList extends AbstractListElement{
                     listItems = java.util.Collections.unmodifiableList(new ArrayList<ListItem>(this.listItems));
             }
 
-            return new UnorderedList(id, cssClasses, style, listItems);
+            return new UnorderedList(id, cssClasses, style, listItems, hidden);
         }
 
         public String toString() {
-            return "UnorderedList.UnorderedListBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", listItems=" + this.listItems + ")";
+            return "UnorderedList.UnorderedListBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", listItems=" + this.listItems + ", hidden=" + this.hidden + ")";
         }
     }
 }

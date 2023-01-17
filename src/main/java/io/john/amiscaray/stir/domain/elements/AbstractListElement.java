@@ -1,6 +1,7 @@
 package io.john.amiscaray.stir.domain.elements;
 
 import io.john.amiscaray.stir.annotation.ChildList;
+import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,7 @@ import java.util.stream.Collectors;
 /**
  * A parent class for the two list types (ul and ol)
  */
+@EqualsAndHashCode(callSuper = true)
 public abstract class AbstractListElement extends AbstractUIElement{
 
     /**
@@ -17,8 +19,8 @@ public abstract class AbstractListElement extends AbstractUIElement{
     @ChildList
     protected List<ListItem> listItems;
 
-    public AbstractListElement(String id, List<String> cssClasses, String style, List<ListItem> listItems) {
-        super(id, cssClasses, style);
+    public AbstractListElement(String id, List<String> cssClasses, String style, List<ListItem> listItems, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.listItems = listItems;
     }
 

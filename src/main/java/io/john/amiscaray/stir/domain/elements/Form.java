@@ -34,8 +34,8 @@ public class Form extends AbstractUIElement {
     @Attribute(name="action", defaultValue = "/")
     private String action;
 
-    public Form(String id, List<String> cssClasses, String style, List<Input> fields, String method, String action) {
-        super(id, cssClasses, style);
+    public Form(String id, List<String> cssClasses, String style, List<Input> fields, String method, String action, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.fields = fields;
         this.method = method;
         this.action = action;
@@ -114,6 +114,7 @@ public class Form extends AbstractUIElement {
         private ArrayList<Input> fields;
         private String method;
         private String action;
+        private boolean hidden;
 
         FormBuilder() {
         }
@@ -174,6 +175,11 @@ public class Form extends AbstractUIElement {
             return this;
         }
 
+        public FormBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Form build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -198,11 +204,11 @@ public class Form extends AbstractUIElement {
                     fields = java.util.Collections.unmodifiableList(new ArrayList<Input>(this.fields));
             }
 
-            return new Form(id, cssClasses, style, fields, method, action);
+            return new Form(id, cssClasses, style, fields, method, action, hidden);
         }
 
         public String toString() {
-            return "Form.FormBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", fields=" + this.fields + ", method=" + this.method + ", action=" + this.action + ")";
+            return "Form.FormBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", fields=" + this.fields + ", method=" + this.method + ", action=" + this.action + ", hidden=" + this.hidden + ")";
         }
     }
 }

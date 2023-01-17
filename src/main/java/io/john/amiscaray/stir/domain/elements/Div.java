@@ -16,8 +16,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Div extends AbstractElementContainer<AbstractUIElement>{
 
-    public Div(String id, List<String> cssClasses, String style, List<AbstractUIElement> children) {
-        super(id, cssClasses, style, children);
+    public Div(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean hidden) {
+        super(id, cssClasses, style, children, hidden);
     }
 
     public static DivBuilder builder() {
@@ -33,6 +33,7 @@ public class Div extends AbstractElementContainer<AbstractUIElement>{
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<AbstractUIElement> children;
+        private boolean hidden;
 
         DivBuilder() {
         }
@@ -83,6 +84,11 @@ public class Div extends AbstractElementContainer<AbstractUIElement>{
             return this;
         }
 
+        public DivBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Div build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -107,13 +113,11 @@ public class Div extends AbstractElementContainer<AbstractUIElement>{
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.children));
             }
 
-            return new Div(id, cssClasses, style, children);
+            return new Div(id, cssClasses, style, children, hidden);
         }
 
         public String toString() {
-            return "Div.DivBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ")";
+            return "Div.DivBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ")";
         }
-
     }
-
 }

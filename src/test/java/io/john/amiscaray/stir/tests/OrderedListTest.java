@@ -118,4 +118,15 @@ public class OrderedListTest {
 
     }
 
+    @Test
+    public void testHiddenOL() throws IOException {
+
+        OrderedList ol = OrderedList.builder()
+                .hidden(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/hiddenOL.html"), elementProcessor.getMarkup(ol));
+
+    }
+
 }

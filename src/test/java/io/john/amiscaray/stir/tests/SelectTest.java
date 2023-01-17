@@ -72,6 +72,8 @@ public class SelectTest {
                 .id("select")
                 .cssClasses(new ArrayList<>(List.of("red", "blue")))
                 .cssClass("green")
+                .style("color: red;")
+                .hidden(true)
                 .autoFocus(true)
                 .disabled(true)
                 .multiple(true)

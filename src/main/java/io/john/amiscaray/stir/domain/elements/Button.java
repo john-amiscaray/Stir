@@ -66,8 +66,8 @@ public class Button extends AbstractFormField{
 
     public Button(String id, List<String> cssClasses, String style, Boolean autoFocus, Boolean disabled,
                   String form, String name, String content, String formAction, String formEnctype, String formMethod,
-                  Boolean formNoValidate, String type, String value) {
-        super(id, cssClasses, style, autoFocus, disabled, form, name);
+                  Boolean formNoValidate, String type, String value, boolean hidden) {
+        super(id, cssClasses, style, autoFocus, disabled, form, name, hidden);
         this.content = content;
         this.formAction = formAction;
         this.formEnctype = formEnctype;
@@ -168,6 +168,7 @@ public class Button extends AbstractFormField{
         private Boolean formNoValidate;
         private String type;
         private String value;
+        private boolean hidden;
 
         ButtonBuilder() {
         }
@@ -255,6 +256,11 @@ public class Button extends AbstractFormField{
             return this;
         }
 
+        public ButtonBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Button build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -268,11 +274,11 @@ public class Button extends AbstractFormField{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Button(id, cssClasses, style, autoFocus, disabled, form, name, content, formAction, formEnctype, formMethod, formNoValidate, type, value);
+            return new Button(id, cssClasses, style, autoFocus, disabled, form, name, content, formAction, formEnctype, formMethod, formNoValidate, type, value, hidden);
         }
 
         public String toString() {
-            return "Button.ButtonBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", autoFocus=" + this.autoFocus + ", disabled=" + this.disabled + ", form=" + this.form + ", name=" + this.name + ", content=" + this.content + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", type=" + this.type + ", value=" + this.value + ")";
+            return "Button.ButtonBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", autoFocus=" + this.autoFocus + ", disabled=" + this.disabled + ", form=" + this.form + ", name=" + this.name + ", content=" + this.content + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", type=" + this.type + ", value=" + this.value + ", hidden=" + this.hidden + ")";
         }
     }
 }

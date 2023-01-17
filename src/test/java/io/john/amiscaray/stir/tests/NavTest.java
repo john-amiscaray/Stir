@@ -81,12 +81,14 @@ public class NavTest {
     }
 
     @Test
-    public void testNavWithClassesAndId() throws IOException {
+    public void testHiddenNavWithClassesIdAndStyle() throws IOException {
 
         Nav nav = Nav.builder()
                 .id("nav")
                 .cssClasses(new ArrayList<>(List.of("red", "blue")))
                 .cssClass("green")
+                .style("color: red;")
+                .hidden(true)
                 .list(NavLinkList.builder()
                         .id("nav-list")
                         .cssClass("red")
@@ -107,6 +109,28 @@ public class NavTest {
                 .build();
 
         assertEquals(loader.getHTMLContentOf("html/navWithClasses.html"), processor.getMarkup(nav));
+
+    }
+
+    @Test
+    public void testHiddenNavLinkList() throws IOException {
+
+        NavLinkList nll = NavLinkList.builder()
+                .hidden(true)
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/hiddenNavLinkList.html"), processor.getMarkup(nll));
+
+    }
+
+    @Test
+    public void testHiddenNavLink() throws IOException {
+
+        NavLink nl = NavLink.builder()
+                .hidden(true)
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/hiddenNavLink.html"), processor.getMarkup(nl));
 
     }
 

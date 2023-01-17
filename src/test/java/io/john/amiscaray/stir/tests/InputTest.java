@@ -25,6 +25,7 @@ public class InputTest {
                 .type("text")
                 .name("username")
                 .style("color: red;")
+                .hidden(true)
                 .autoFocus(true)
                 .disabled(true)
                 .form("my-form")

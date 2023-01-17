@@ -24,6 +24,8 @@ public class TableTest {
                 .clazz(Student.class)
                 .cssClasses(new ArrayList<>(List.of("red", "blue")))
                 .cssClass("green")
+                .style("color: red;")
+                .hidden(true)
                 .id("table")
                 .entries(new ArrayList<>(List.of(new Student(1, "John", 0.5f), new Student(2, "Jill", 3.1f))))
                 .entry(new Student(3, "David", 2.2f))

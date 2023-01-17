@@ -63,8 +63,8 @@ public class Anchor extends AbstractUIElement{
     private String type;
 
     public Anchor(String id, List<String> cssClasses, String style, String label, String href, String download,
-                  String hrefLang, String ping, String referrerPolicy, String rel, String target, String type) {
-        super(id, cssClasses, style);
+                  String hrefLang, String ping, String referrerPolicy, String rel, String target, String type, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.label = label;
         this.href = href;
         this.download = download;
@@ -243,6 +243,7 @@ public class Anchor extends AbstractUIElement{
         private String rel;
         private String target;
         private String type;
+        private boolean hidden;
 
         AnchorBuilder() {
         }
@@ -320,6 +321,11 @@ public class Anchor extends AbstractUIElement{
             return this;
         }
 
+        public AnchorBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Anchor build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -333,11 +339,11 @@ public class Anchor extends AbstractUIElement{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Anchor(id, cssClasses, style, label, href, download, hrefLang, ping, referrerPolicy, rel, target, type);
+            return new Anchor(id, cssClasses, style, label, href, download, hrefLang, ping, referrerPolicy, rel, target, type, hidden);
         }
 
         public String toString() {
-            return "Anchor.AnchorBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", label=" + this.label + ", href=" + this.href + ", download=" + this.download + ", hrefLang=" + this.hrefLang + ", ping=" + this.ping + ", referrerPolicy=" + this.referrerPolicy + ", rel=" + this.rel + ", target=" + this.target + ", type=" + this.type + ")";
+            return "Anchor.AnchorBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", label=" + this.label + ", href=" + this.href + ", download=" + this.download + ", hrefLang=" + this.hrefLang + ", ping=" + this.ping + ", referrerPolicy=" + this.referrerPolicy + ", rel=" + this.rel + ", target=" + this.target + ", type=" + this.type + ", hidden=" + this.hidden + ")";
         }
     }
 }

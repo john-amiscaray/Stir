@@ -36,8 +36,8 @@ public class LinkedStyle extends AbstractUIElement {
     @Attribute(name="crossorigin")
     private String crossOrigin;
 
-    public LinkedStyle(String id, List<String> cssClasses, String style, String href, String integrity, String crossOrigin) {
-        super(id, cssClasses, style);
+    public LinkedStyle(String id, List<String> cssClasses, String style, String href, String integrity, String crossOrigin, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.href = href;
         this.integrity = integrity;
         this.crossOrigin = crossOrigin;
@@ -131,6 +131,7 @@ public class LinkedStyle extends AbstractUIElement {
         private String href;
         private String integrity;
         private String crossOrigin;
+        private boolean hidden;
 
         LinkedStyleBuilder() {
         }
@@ -178,6 +179,11 @@ public class LinkedStyle extends AbstractUIElement {
             return this;
         }
 
+        public LinkedStyleBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public LinkedStyle build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -191,11 +197,11 @@ public class LinkedStyle extends AbstractUIElement {
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new LinkedStyle(id, cssClasses, style, href, integrity, crossOrigin);
+            return new LinkedStyle(id, cssClasses, style, href, integrity, crossOrigin, hidden);
         }
 
         public String toString() {
-            return "LinkedStyle.LinkedStyleBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", href=" + this.href + ", integrity=" + this.integrity + ", crossOrigin=" + this.crossOrigin + ")";
+            return "LinkedStyle.LinkedStyleBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", href=" + this.href + ", integrity=" + this.integrity + ", crossOrigin=" + this.crossOrigin + ", hidden=" + this.hidden + ")";
         }
     }
 }

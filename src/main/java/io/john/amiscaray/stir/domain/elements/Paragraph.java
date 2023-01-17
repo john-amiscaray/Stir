@@ -14,13 +14,13 @@ import java.util.List;
 @NoArgsConstructor
 public class Paragraph extends AbstractTextElement {
 
-    public Paragraph(String id, List<String> cssClasses, String style, String content) {
-        super(id, cssClasses, style, content);
+    public Paragraph(String id, List<String> cssClasses, String style, String content, boolean hidden) {
+        super(id, cssClasses, style, content, hidden);
     }
 
     public Paragraph(String content){
 
-        super(null, new ArrayList<>(), null, content);
+        super(null, new ArrayList<>(), null, content, false);
 
     }
 
@@ -51,6 +51,7 @@ public class Paragraph extends AbstractTextElement {
         private ArrayList<String> cssClasses;
         private String style;
         private String content;
+        private boolean hidden;
 
         ParagraphBuilder() {
         }
@@ -88,6 +89,11 @@ public class Paragraph extends AbstractTextElement {
             return this;
         }
 
+        public ParagraphBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Paragraph build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -101,11 +107,11 @@ public class Paragraph extends AbstractTextElement {
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Paragraph(id, cssClasses, style, content);
+            return new Paragraph(id, cssClasses, style, content, hidden);
         }
 
         public String toString() {
-            return "Paragraph.ParagraphBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ")";
+            return "Paragraph.ParagraphBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ", hidden=" + this.hidden + ")";
         }
     }
 }

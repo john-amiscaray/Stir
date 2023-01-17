@@ -3,10 +3,7 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Label;
-import lombok.Builder;
-import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -209,8 +206,8 @@ public class Input extends AbstractFormField {
                  String formMethod, Boolean formNoValidate, String formTarget, Integer height, String list, Double max,
                  Integer maxLength, Double min, Integer minLength, Boolean multiple, String pattern, String placeHolder,
                  Boolean readOnly, Boolean required, Integer size, String src, Double step, Integer width, List<String> cssClasses,
-                 String id, String style, String name) {
-        super(id, cssClasses, style, autoFocus, disabled, form, name);
+                 String id, String style, String name, boolean hidden) {
+        super(id, cssClasses, style, autoFocus, disabled, form, name, hidden);
         this.type = type;
         this.value = value;
         this.label = label;
@@ -722,6 +719,7 @@ public class Input extends AbstractFormField {
         private String id;
         private String style;
         private String name;
+        private boolean hidden;
 
         InputBuilder() {
         }
@@ -914,6 +912,11 @@ public class Input extends AbstractFormField {
             return this;
         }
 
+        public InputBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public Input build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -927,11 +930,11 @@ public class Input extends AbstractFormField {
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Input(type, value, label, accept, alt, autoComplete, autoFocus, checked, dirName, disabled, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, height, list, max, maxLength, min, minLength, multiple, pattern, placeHolder, readOnly, required, size, src, step, width, cssClasses, id, style, name);
+            return new Input(type, value, label, accept, alt, autoComplete, autoFocus, checked, dirName, disabled, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, height, list, max, maxLength, min, minLength, multiple, pattern, placeHolder, readOnly, required, size, src, step, width, cssClasses, id, style, name, hidden);
         }
 
         public String toString() {
-            return "Input.InputBuilder(type=" + this.type + ", value=" + this.value + ", label=" + this.label + ", accept=" + this.accept + ", alt=" + this.alt + ", autoComplete=" + this.autoComplete + ", autoFocus=" + this.autoFocus + ", checked=" + this.checked + ", dirName=" + this.dirName + ", disabled=" + this.disabled + ", form=" + this.form + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", formTarget=" + this.formTarget + ", height=" + this.height + ", list=" + this.list + ", max=" + this.max + ", maxLength=" + this.maxLength + ", min=" + this.min + ", minLength=" + this.minLength + ", multiple=" + this.multiple + ", pattern=" + this.pattern + ", placeHolder=" + this.placeHolder + ", readOnly=" + this.readOnly + ", required=" + this.required + ", size=" + this.size + ", src=" + this.src + ", step=" + this.step + ", width=" + this.width + ", cssClasses=" + this.cssClasses + ", id=" + this.id + ", style=" + this.style + ", name=" + this.name + ")";
+            return "Input.InputBuilder(type=" + this.type + ", value=" + this.value + ", label=" + this.label + ", accept=" + this.accept + ", alt=" + this.alt + ", autoComplete=" + this.autoComplete + ", autoFocus=" + this.autoFocus + ", checked=" + this.checked + ", dirName=" + this.dirName + ", disabled=" + this.disabled + ", form=" + this.form + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", formTarget=" + this.formTarget + ", height=" + this.height + ", list=" + this.list + ", max=" + this.max + ", maxLength=" + this.maxLength + ", min=" + this.min + ", minLength=" + this.minLength + ", multiple=" + this.multiple + ", pattern=" + this.pattern + ", placeHolder=" + this.placeHolder + ", readOnly=" + this.readOnly + ", required=" + this.required + ", size=" + this.size + ", src=" + this.src + ", step=" + this.step + ", width=" + this.width + ", cssClasses=" + this.cssClasses + ", id=" + this.id + ", style=" + this.style + ", name=" + this.name + ", hidden=" + this.hidden + ")";
         }
     }
 }

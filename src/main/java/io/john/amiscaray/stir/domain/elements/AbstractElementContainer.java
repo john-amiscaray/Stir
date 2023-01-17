@@ -17,8 +17,8 @@ public abstract class AbstractElementContainer <T extends AbstractUIElement> ext
     @ChildList
     protected List<T> children;
 
-    public AbstractElementContainer(String id, List<String> cssClasses, String style, List<T> children) {
-        super(id, cssClasses, style);
+    public AbstractElementContainer(String id, List<String> cssClasses, String style, List<T> children, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.children = children;
     }
 

@@ -22,7 +22,7 @@ public class ElementWithLongAndFloat extends AbstractUIElement {
 
     @Builder
     public ElementWithLongAndFloat(String id, List<String> cssClasses, String style, Float myFloat, Long myLong) {
-        super(id, cssClasses, style);
+        super(id, cssClasses, style, false);
         this.myFloat = myFloat;
         this.myLong = myLong;
     }

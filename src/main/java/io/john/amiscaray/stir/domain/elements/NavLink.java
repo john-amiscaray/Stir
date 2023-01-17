@@ -21,8 +21,8 @@ public class NavLink extends AbstractUIElement{
     @Nested
     private Anchor a;
 
-    public NavLink(String id, List<String> cssClasses, String style, Anchor a) {
-        super(id, cssClasses, style);
+    public NavLink(String id, List<String> cssClasses, String style, Anchor a, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.a = a;
     }
 
@@ -39,7 +39,6 @@ public class NavLink extends AbstractUIElement{
     public static NavLinkBuilder builder() {
         return new NavLinkBuilder();
     }
-
 
     public Anchor getA() {
         return this.a;
@@ -82,6 +81,7 @@ public class NavLink extends AbstractUIElement{
         private ArrayList<String> cssClasses;
         private String style;
         private Anchor a;
+        private boolean hidden;
 
         NavLinkBuilder() {
         }
@@ -119,6 +119,11 @@ public class NavLink extends AbstractUIElement{
             return this;
         }
 
+        public NavLinkBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public NavLink build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -132,11 +137,11 @@ public class NavLink extends AbstractUIElement{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new NavLink(id, cssClasses, style, a);
+            return new NavLink(id, cssClasses, style, a, hidden);
         }
 
         public String toString() {
-            return "NavLink.NavLinkBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", a=" + this.a + ")";
+            return "NavLink.NavLinkBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", a=" + this.a + ", hidden=" + this.hidden + ")";
         }
     }
 }

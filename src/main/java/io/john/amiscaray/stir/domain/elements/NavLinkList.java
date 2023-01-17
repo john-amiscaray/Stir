@@ -21,8 +21,8 @@ public class NavLinkList extends AbstractUIElement{
     @ChildList(childrenType = NavLink.class)
     private List<NavLink> navLinks = new ArrayList<>();
 
-    public NavLinkList(String id, List<String> cssClasses, String style, List<NavLink> navLinks) {
-        super(id, cssClasses, style);
+    public NavLinkList(String id, List<String> cssClasses, String style, List<NavLink> navLinks, boolean hidden) {
+        super(id, cssClasses, style, hidden);
         this.navLinks = navLinks;
     }
 
@@ -42,12 +42,12 @@ public class NavLinkList extends AbstractUIElement{
 
     }
 
-
     public static class NavLinkListBuilder {
         private String id;
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<NavLink> navLinks;
+        private boolean hidden;
 
         NavLinkListBuilder() {
         }
@@ -98,6 +98,11 @@ public class NavLinkList extends AbstractUIElement{
             return this;
         }
 
+        public NavLinkListBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
+            return this;
+        }
+
         public NavLinkList build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -122,11 +127,11 @@ public class NavLinkList extends AbstractUIElement{
                     navLinks = java.util.Collections.unmodifiableList(new ArrayList<NavLink>(this.navLinks));
             }
 
-            return new NavLinkList(id, cssClasses, style, navLinks);
+            return new NavLinkList(id, cssClasses, style, navLinks, hidden);
         }
 
         public String toString() {
-            return "NavLinkList.NavLinkListBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", navLinks=" + this.navLinks + ")";
+            return "NavLinkList.NavLinkListBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", navLinks=" + this.navLinks + ", hidden=" + this.hidden + ")";
         }
     }
 }
