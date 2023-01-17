@@ -87,7 +87,7 @@ public class HTMLDocument {
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
                         List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
                         boolean withBootStrap, boolean withBootStrapPopper, boolean withWaterCSS, ColorTheme waterCSSTheme,
-                        String title, String language, String format, Map<String, Object> formatArgs) {
+                        String title, String language, String format, Map<String, Object> formatArgs, boolean isFormatForBody) {
         this.elements = elements;
         this.linkedStyles = new ArrayList<>(linkedStyles);
         this.style = style;
@@ -135,7 +135,27 @@ public class HTMLDocument {
         }
 
         if(format != null){
-            this.format = format;
+            if(isFormatForBody){
+                this.format = String.format("""
+                        <!DOCTYPE html>
+                        <html lang="<& str_lang &>">
+                            <head>
+                                <meta charset="UTF-8">
+                                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                                <& str_meta &>
+                                <title><& str_title &></title>
+                                <& str_hscripts &>
+                                <& str_lstyles &>
+                                <& str_styles &>
+                            </head>
+                            <body>
+                                %s
+                                <& str_fscripts &>
+                            </body>
+                        </html>""", format.indent(ElementProcessor.getIndentationSize() * 2).trim());
+            }else{
+                this.format = format;
+            }
         }
         if(formatArgs != null){
             long numInvalidKeys = formatArgs.keySet()
@@ -616,6 +636,7 @@ public class HTMLDocument {
         private String format;
         private ArrayList<String> formatArgs$key;
         private ArrayList<Object> formatArgs$value;
+        private boolean isFormatForBody;
 
         HTMLDocumentBuilder() {
         }
@@ -780,6 +801,11 @@ public class HTMLDocument {
             return this;
         }
 
+        public HTMLDocumentBuilder isFormatForBody(boolean isFormatForBody) {
+            this.isFormatForBody = isFormatForBody;
+            return this;
+        }
+
         public HTMLDocument build() {
             List<AbstractUIElement> elements;
             switch (this.elements == null ? 0 : this.elements.size()) {
@@ -851,12 +877,11 @@ public class HTMLDocument {
                     formatArgs = Collections.unmodifiableMap(formatArgs);
             }
 
-            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language, format, formatArgs);
+            return new HTMLDocument(elements, linkedStyles, style, headerScripts, footerScripts, metaTags, withBootStrap, withBootStrapPopper, withWaterCSS, waterCSSTheme, title, language, format, formatArgs, isFormatForBody);
         }
 
         public String toString() {
-            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ", format=" + this.format + ", formatArgs$key=" + this.formatArgs$key + ", formatArgs$value=" + this.formatArgs$value + ")";
+            return "HTMLDocument.HTMLDocumentBuilder(elements=" + this.elements + ", linkedStyles=" + this.linkedStyles + ", style=" + this.style + ", headerScripts=" + this.headerScripts + ", footerScripts=" + this.footerScripts + ", metaTags=" + this.metaTags + ", withBootStrap=" + this.withBootStrap + ", withBootStrapPopper=" + this.withBootStrapPopper + ", withWaterCSS=" + this.withWaterCSS + ", waterCSSTheme=" + this.waterCSSTheme + ", title=" + this.title + ", language=" + this.language + ", format=" + this.format + ", formatArgs$key=" + this.formatArgs$key + ", formatArgs$value=" + this.formatArgs$value + ", isFormatForBody=" + this.isFormatForBody + ")";
         }
     }
-
 }

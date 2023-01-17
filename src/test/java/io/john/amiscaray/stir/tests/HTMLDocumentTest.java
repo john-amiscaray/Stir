@@ -7,8 +7,10 @@ import io.john.amiscaray.stir.stub.Student;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
+import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.element;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class HTMLDocumentTest {
@@ -448,6 +450,77 @@ public class HTMLDocumentTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/docWithCSSWaterDefault.html"), doc.generateDocumentString());
+
+    }
+
+    @Test
+    public void testDocWithBodyFormat() {
+
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <& nav &>
+                        <h1><& str_title &></h1>
+                        <& str_content &>
+                        """)
+                .isFormatForBody(true)
+                .build();
+
+        assertEquals("""
+            <!DOCTYPE html>
+            <html lang="<& str_lang &>">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <& str_meta &>
+                    <title><& str_title &></title>
+                    <& str_hscripts &>
+                    <& str_lstyles &>
+                    <& str_styles &>
+                </head>
+                <body>
+                    <& nav &>
+                    <h1><& str_title &></h1>
+                    <& str_content &>
+                    <& str_fscripts &>
+                </body>
+            </html>""", doc.getFormat());
+
+    }
+
+    @Test
+    public void testDocBodyFormatWithAll() throws IOException {
+
+        LinkedHashMap<String, String> navMap = new LinkedHashMap<>();
+        navMap.put("Home", "/home");
+        navMap.put("Products", "/products");
+        navMap.put("About", "/about");
+        Nav nav = Nav.fromLabelHrefMap(navMap);
+        Table studentTable = new Table(List.of(new Student(1, "John", 3.99f)), Student.class);
+        HTMLDocument doc = HTMLDocument.builder()
+                .format("""
+                        <& nav &>
+                        <h1><& str_title &></h1>
+                        <& str_content &>
+                        """)
+                .isFormatForBody(true)
+                .formatArg("nav", nav)
+                .element(studentTable)
+                .headerScript(new Script("./main.js"))
+                .metaTag(Meta.builder().name("something").content("a thing").build())
+                .footerScript((Script) element("script[src='./thing.js']"))
+                .title("Hello World")
+                .language("en")
+                .style(Style.builder()
+                        .literalCssString("""
+                                body {
+                                    color: red;
+                                }
+                                """)
+                        .build())
+                .linkedStyle(new LinkedStyle("./style.css"))
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/docBodyFormatTest.html"), doc.generateDocumentString());
 
     }
 
