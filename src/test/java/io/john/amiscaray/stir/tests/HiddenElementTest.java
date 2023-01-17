@@ -47,4 +47,16 @@ public class HiddenElementTest {
 
     }
 
+    @Test
+    public void testCacheIsDirtyWhenHiddenChanged() {
+
+        Paragraph p = (Paragraph) element("p('Hello World')");
+        p.setHidden(true);
+        elementProcessor.getMarkup(p);
+        assertEquals(p.getCacheStatus(), CacheableElement.CacheStatus.CLEAN);
+        p.setHidden(false);
+        assertEquals(p.getCacheStatus(), CacheableElement.CacheStatus.DIRTY);
+
+    }
+
 }

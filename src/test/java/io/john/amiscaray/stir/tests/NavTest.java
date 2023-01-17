@@ -112,4 +112,26 @@ public class NavTest {
 
     }
 
+    @Test
+    public void testHiddenNavLinkList() throws IOException {
+
+        NavLinkList nll = NavLinkList.builder()
+                .hidden(true)
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/hiddenNavLinkList.html"), processor.getMarkup(nll));
+
+    }
+
+    @Test
+    public void testHiddenNavLink() throws IOException {
+
+        NavLink nl = NavLink.builder()
+                .hidden(true)
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/hiddenNavLink.html"), processor.getMarkup(nl));
+
+    }
+
 }
