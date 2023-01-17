@@ -1,4 +1,4 @@
-# Stir
+<img src="./assets/logo.png" alt="logo" width="500"/>
 
 A Java Framework for generating HTML content and UI development for server-side rendering. Stir allows you to generate UIs using simple Java objects whose fields act as inner content and attributes for the HTML elements they represent. All of these objects can be created using the familiar builder pattern or using simple constructors. See the [Java Docs](https://john-amiscaray.github.io/Stir/index.html) for more information.
 
