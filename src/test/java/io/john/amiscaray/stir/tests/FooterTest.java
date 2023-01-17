@@ -52,4 +52,16 @@ public class FooterTest {
 
     }
 
+    @Test
+    public void testHiddenFooter() throws IOException {
+
+        Footer footer = Footer.builder()
+                .style("color: red;")
+                .hidden(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/hiddenFooter.html"), processor.getMarkup(footer));
+
+    }
+
 }

@@ -14,8 +14,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Footer extends AbstractElementContainer<AbstractUIElement>{
 
-    public Footer(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean builder) {
-        super(id, cssClasses, style, children, builder);
+    public Footer(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean hidden) {
+        super(id, cssClasses, style, children, hidden);
     }
 
     public static FooterBuilder builder() {
@@ -27,7 +27,7 @@ public class Footer extends AbstractElementContainer<AbstractUIElement>{
         private ArrayList<String> cssClasses;
         private String style;
         private ArrayList<AbstractUIElement> children;
-        private boolean builder;
+        private boolean hidden;
 
         FooterBuilder() {
         }
@@ -78,8 +78,8 @@ public class Footer extends AbstractElementContainer<AbstractUIElement>{
             return this;
         }
 
-        public FooterBuilder builder(boolean builder) {
-            this.builder = builder;
+        public FooterBuilder hidden(boolean hidden) {
+            this.hidden = hidden;
             return this;
         }
 
@@ -107,11 +107,11 @@ public class Footer extends AbstractElementContainer<AbstractUIElement>{
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.children));
             }
 
-            return new Footer(id, cssClasses, style, children, builder);
+            return new Footer(id, cssClasses, style, children, hidden);
         }
 
         public String toString() {
-            return "Footer.FooterBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", builder=" + this.builder + ")";
+            return "Footer.FooterBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ")";
         }
     }
 }

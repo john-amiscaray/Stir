@@ -22,6 +22,8 @@ public class OptionTest {
                 .optionName("Red")
                 .id("red")
                 .cssClass("color")
+                .style("color: red;")
+                .hidden(true)
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/optionTest.html"), processor.getMarkup(option));
 

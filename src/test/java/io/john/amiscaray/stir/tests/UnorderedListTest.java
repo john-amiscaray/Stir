@@ -117,5 +117,17 @@ public class UnorderedListTest {
                 .collect(Collectors.toList()), n3w);
 
     }
+
+    @Test
+    public void testHiddenUL() throws IOException {
+
+        UnorderedList ul = UnorderedList.builder()
+                .style("color: red;")
+                .hidden(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/hiddenUL.html"), elementProcessor.getMarkup(ul));
+
+    }
     
 }

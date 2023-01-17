@@ -81,12 +81,14 @@ public class NavTest {
     }
 
     @Test
-    public void testNavWithClassesAndId() throws IOException {
+    public void testHiddenNavWithClassesIdAndStyle() throws IOException {
 
         Nav nav = Nav.builder()
                 .id("nav")
                 .cssClasses(new ArrayList<>(List.of("red", "blue")))
                 .cssClass("green")
+                .style("color: red;")
+                .hidden(true)
                 .list(NavLinkList.builder()
                         .id("nav-list")
                         .cssClass("red")

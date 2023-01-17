@@ -35,4 +35,17 @@ public class HeadingTest {
 
     }
 
+    @Test
+    public void testHiddenHeading() throws IOException {
+
+        Heading heading = Heading.builder()
+                .level(1)
+                .style("color: red;")
+                .hidden(true)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/hiddenHeading.html"), processor.getMarkup(heading));
+
+    }
+
 }

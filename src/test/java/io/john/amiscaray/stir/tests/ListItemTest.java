@@ -20,6 +20,8 @@ public class ListItemTest {
         ListItem li = ListItem.builder()
                 .id("someItem")
                 .cssClass("someClass")
+                .style("color: red;")
+                .hidden(true)
                 .content("Some Text")
                 .build();
 

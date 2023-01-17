@@ -2,9 +2,12 @@ package io.john.amiscaray.stir.tests;
 
 import io.john.amiscaray.stir.domain.elements.CssRule;
 import io.john.amiscaray.stir.domain.elements.Style;
+import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class StyleTest {
 
     private final ElementProcessor processor = ElementProcessor.getInstance();
+    private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
 
     @Test
     public void testAddRawCSSPropSupport() throws ExecutionException, InterruptedException, TimeoutException {
@@ -81,6 +85,29 @@ public class StyleTest {
 
         assertEquals(initRules, old.toString());
         assertEquals( initRules + processor.processStyle(rule), n3w.toString());
+
+    }
+
+    @Test
+    public void testStyleBuilderWithAll() throws IOException {
+
+        Style style = Style.builder()
+                .id("thing")
+                .cssClass("red")
+                .cssClasses(List.of("blue", "green"))
+                .rule(CssRule.builder()
+                        .selector("p")
+                        .style("color", "red")
+                        .build())
+                .literalCssString("""
+                        nav {
+                            width: 100%;
+                            height: 50px;
+                        }
+                        """)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/styleBuilderTest.html"), processor.getMarkup(style));
 
     }
 
