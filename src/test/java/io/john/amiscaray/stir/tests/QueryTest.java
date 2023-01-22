@@ -26,10 +26,12 @@ public class QueryTest {
             .content("Other spooky content")
             .build();
     private final Input in = new Input("someIn", "text", "Hello World", "AAAAAAAA", "some-in");
+    private final Input in2 = new Input("otherIn", "text", "Idk", "AAA", "some");
     private final Form libForm = Form.builder()
             .id("myForm")
             .cssClass("form")
             .field(in)
+            .field(in2)
             .build();
     private final FormWithInputs stubForm = new FormWithInputs();
     private final ListItemStub listItem = new ListItemStub("Heyo");
@@ -91,7 +93,7 @@ public class QueryTest {
     @Test
     public void testDescendentSelector() {
 
-        assertEquals(List.of(in), testDoc.querySelector("#myForm input"));
+        assertEquals(List.of(in, in2), testDoc.querySelector("#myForm input"));
 
     }
 
@@ -297,6 +299,13 @@ public class QueryTest {
     public void testClassAttributeInQuotes(){
 
         assertEquals(List.of(paragraph2, paragraph3), testDoc.querySelector("p[class=\"content spooky\"]"));
+
+    }
+
+    @Test
+    public void testAttributePipeSelector(){
+
+        assertEquals(List.of(in, in2), testDoc.querySelector("*[name|=\"some\"]"));
 
     }
 
