@@ -22,7 +22,6 @@ public class Header extends AbstractElementContainer<AbstractUIElement>{
         return new HeaderBuilder();
     }
 
-
     public static class HeaderBuilder {
         private String id;
         private ArrayList<String> cssClasses;
