@@ -1,8 +1,12 @@
 package io.john.amiscaray.stir.tests;
 
+import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
+import io.john.amiscaray.stir.annotation.exceptions.InvalidClassListException;
+import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTableException;
 import io.john.amiscaray.stir.domain.elements.Form;
 import io.john.amiscaray.stir.domain.elements.Input;
 import io.john.amiscaray.stir.domain.elements.Paragraph;
+import io.john.amiscaray.stir.domain.elements.UnorderedList;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
@@ -15,6 +19,7 @@ import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
 
+import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.element;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
@@ -319,6 +324,74 @@ public class ElementProcessorTest {
         processor.getMarkup(username);
         verify(processor, times(0)).getMarkupFromCache(username);
         ElementProcessor.setCacheDisabled(false);
+
+    }
+
+    @Test
+    public void testElementWithBadClassList() {
+
+        ElementWithBadClassList element = ElementWithBadClassList.builder()
+                .myClasses("red blue green")
+                .content("Hello")
+                .build();
+
+        assertThrows(InvalidClassListException.class, () -> {
+            processor.getMarkup(element);
+        });
+
+    }
+
+    @Test
+    public void testElementWithoutAnnotation() {
+
+        ElementWithoutAnnotation element = ElementWithoutAnnotation.builder()
+                .name("Hello")
+                .thing("AAAA")
+                .build();
+
+        assertThrows(IllegalElementException.class, () -> {
+            processor.getMarkup(element);
+        });
+
+    }
+
+    @Test
+    public void testElementWithBadObjectTable() {
+
+        ElementWithBadObjectTable object = ElementWithBadObjectTable.builder()
+                .table("Hello World")
+                .build();
+
+        assertThrows(InvalidObjectTableException.class, () -> {
+            processor.getMarkup(object);
+        });
+
+    }
+
+    @Test
+    public void testElementWithBadInnerContent() {
+
+        ElementWithBadInnerContent elementWithBadInnerContent = ElementWithBadInnerContent.builder()
+                .content(12)
+                .build();
+
+        assertThrows(IllegalElementException.class, () -> {
+            processor.getMarkup(elementWithBadInnerContent);
+        });
+
+    }
+
+    @Test
+    public void testElementWithBadChildList() {
+
+        ElementWithBadChildList el = ElementWithBadChildList.builder()
+                .list(UnorderedList.builder()
+                        .build())
+                .build();
+
+        assertThrows(IllegalElementException.class, () -> {
+            processor.getMarkup(el);
+        });
 
     }
 

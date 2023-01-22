@@ -79,10 +79,7 @@ public class ElementDescriptorProcessor {
                     if(Modifier.isAbstract(clazz.getModifiers())){
                         return false;
                     }
-                    if(!clazz.isAnnotationPresent(HTMLElement.class)){
-                        throw new IllegalElementException("The class: " + clazz.getName() + " must be annotated with @HTMLElement");
-                    }
-                    return clazz.getAnnotation(HTMLElement.class).tagName().equals(tagName);
+                    return clazz.isAnnotationPresent(HTMLElement.class) && clazz.getAnnotation(HTMLElement.class).tagName().equals(tagName);
                 }).collect(Collectors.toList());
         if(possibleTypes.isEmpty() || originalTagName.equals("h")){
             throw new DescriptorFormatException("No such element found");
