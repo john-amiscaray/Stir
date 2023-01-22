@@ -45,6 +45,7 @@ public class NavLink extends AbstractUIElement{
     }
 
     public void setA(Anchor a) {
+        propertyChangeSupport.firePropertyChange("a", a, this.a);
         this.a = a;
     }
 
