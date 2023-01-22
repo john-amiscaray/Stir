@@ -333,6 +333,10 @@ By default, if no format is set for the document, the following layout will be u
 </html>
 ```
 
+### Template Scope
+
+Since version 0.8.0, there is an option to limit the scope of your template to only be for the document body. Simply set the `isFormatForBody` option to true in the `HTMLDocument` builder. The outer content of the template should match the default template shown above.
+
 ### Formatting Arguments
 
 From version 0.4.1 onwards, you can now add formatting arguments to your template, allowing you to interpolate custom content into your document format using formatting blocks. To do so, all you need to do is call the `formatArgs` method of the `HTMLDocument`'s builder class with a key and value. The key is what you can use in any formatting block to specify to the `FormatProcessor` that you want the corresponding value to be placed in the given area of the template. For example take the following Java code:
