@@ -84,6 +84,11 @@ public class HTMLDocument {
      */
     private Map<String, Object> formatArgs = new HashMap<>();
 
+    /**
+     * Whether the supplied template should only be for the Document's body. If false, the template will apply for the whole document
+     */
+    private boolean isFormatForBody;
+
     public HTMLDocument(List<AbstractUIElement> elements, List<LinkedStyle> linkedStyles, Style style,
                         List<Script> headerScripts, List<Script> footerScripts, List<Meta> metaTags,
                         boolean withBootStrap, boolean withBootStrapPopper, boolean withWaterCSS, ColorTheme waterCSSTheme,
@@ -133,7 +138,7 @@ public class HTMLDocument {
                         .build());
             }
         }
-
+        this.isFormatForBody = isFormatForBody;
         if(format != null){
             if(isFormatForBody){
                 this.format = String.format("""
