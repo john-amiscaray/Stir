@@ -20,7 +20,15 @@ A Java Framework for generating HTML content and UI development for server-side 
 
 ## Installation
 
-This project can be added to a project as a Maven dependency. See the GitHub [package](https://github.com/john-amiscaray/Stir/packages/1759982) for more info.
+This library can be added to a project using the following Maven dependency:
+
+```xml
+<dependency>
+    <groupId>io.john-amiscaray.stir</groupId>
+    <artifactId>stir</artifactId>
+    <version>1.0.0</version>
+</dependency>
+```
 
 ## Building a Simple Page
 
