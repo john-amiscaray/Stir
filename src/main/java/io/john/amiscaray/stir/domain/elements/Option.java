@@ -58,10 +58,12 @@ public class Option extends AbstractUIElement{
     }
 
     public void setValue(String value) {
+        propertyChangeSupport.firePropertyChange("value", this.value, value);
         this.value = value;
     }
 
     public void setOptionName(String optionName) {
+        propertyChangeSupport.firePropertyChange("optionName", this.optionName, optionName);
         this.optionName = optionName;
     }
 

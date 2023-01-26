@@ -37,9 +37,14 @@ public class Anchor extends AbstractUIElement{
     @Attribute(name = "hreflang")
     private String hrefLang;
     /**
-     * The ping attribute of the anchor tag
+     * The media attribute of the anchor tag
      */
     @Attribute(name = "media")
+    private String media;
+    /**
+     * The ping attribute of the anchor tag
+     */
+    @Attribute(name = "ping")
     private String ping;
     /**
      * The referrerPolicy attribute of the anchor tag
@@ -62,13 +67,14 @@ public class Anchor extends AbstractUIElement{
     @Attribute(name = "type")
     private String type;
 
-    public Anchor(String id, List<String> cssClasses, String style, String label, String href, String download,
-                  String hrefLang, String ping, String referrerPolicy, String rel, String target, String type, boolean hidden) {
+    public Anchor(String id, List<String> cssClasses, String style, String label, String href, String download, String hrefLang,
+                  String media, String ping, String referrerPolicy, String rel, String target, String type, boolean hidden) {
         super(id, cssClasses, style, hidden);
         this.label = label;
         this.href = href;
         this.download = download;
         this.hrefLang = hrefLang;
+        this.media = media;
         this.ping = ping;
         this.referrerPolicy = referrerPolicy;
         this.rel = rel;
@@ -81,7 +87,7 @@ public class Anchor extends AbstractUIElement{
         this.href = href;
         this.download = download;
         this.hrefLang = hrefLang;
-        this.ping = ping;
+        this.media = ping;
         this.referrerPolicy = referrerPolicy;
         this.rel = rel;
         this.target = target;
@@ -113,8 +119,8 @@ public class Anchor extends AbstractUIElement{
         return this.hrefLang;
     }
 
-    public String getPing() {
-        return this.ping;
+    public String getMedia() {
+        return this.media;
     }
 
     public String getReferrerPolicy() {
@@ -133,32 +139,58 @@ public class Anchor extends AbstractUIElement{
         return this.type;
     }
 
+    public String getPing() {
+        return ping;
+    }
+
     public void setDownload(String download) {
+        propertyChangeSupport.firePropertyChange("download", this.download, download);
         this.download = download;
     }
 
     public void setHrefLang(String hrefLang) {
+        propertyChangeSupport.firePropertyChange("hrefLang", this.hrefLang, hrefLang);
         this.hrefLang = hrefLang;
     }
 
-    public void setPing(String ping) {
-        this.ping = ping;
+    public void setMedia(String media) {
+        propertyChangeSupport.firePropertyChange("media", this.media, media);
+        this.media = media;
     }
 
     public void setReferrerPolicy(String referrerPolicy) {
+        propertyChangeSupport.firePropertyChange("referrerPolicy", this.referrerPolicy, referrerPolicy);
         this.referrerPolicy = referrerPolicy;
     }
 
     public void setRel(String rel) {
+        propertyChangeSupport.firePropertyChange("rel", this.rel, rel);
         this.rel = rel;
     }
 
     public void setTarget(String target) {
+        propertyChangeSupport.firePropertyChange("target", this.target, target);
         this.target = target;
     }
 
     public void setType(String type) {
+        propertyChangeSupport.firePropertyChange("type", this.type, type);
         this.type = type;
+    }
+
+    public void setLabel(String label) {
+        propertyChangeSupport.firePropertyChange("label", this.label, label);
+        this.label = label;
+    }
+
+    public void setHref(String href) {
+        propertyChangeSupport.firePropertyChange("href", this.href, href);
+        this.href = href;
+    }
+
+    public void setPing(String ping) {
+        propertyChangeSupport.firePropertyChange("ping", this.ping, ping);
+        this.ping = ping;
     }
 
     public boolean equals(final Object o) {
@@ -179,8 +211,8 @@ public class Anchor extends AbstractUIElement{
         final Object this$hrefLang = this.getHrefLang();
         final Object other$hrefLang = other.getHrefLang();
         if (this$hrefLang == null ? other$hrefLang != null : !this$hrefLang.equals(other$hrefLang)) return false;
-        final Object this$ping = this.getPing();
-        final Object other$ping = other.getPing();
+        final Object this$ping = this.getMedia();
+        final Object other$ping = other.getMedia();
         if (this$ping == null ? other$ping != null : !this$ping.equals(other$ping)) return false;
         final Object this$referrerPolicy = this.getReferrerPolicy();
         final Object other$referrerPolicy = other.getReferrerPolicy();
@@ -213,7 +245,7 @@ public class Anchor extends AbstractUIElement{
         result = result * PRIME + ($download == null ? 43 : $download.hashCode());
         final Object $hrefLang = this.getHrefLang();
         result = result * PRIME + ($hrefLang == null ? 43 : $hrefLang.hashCode());
-        final Object $ping = this.getPing();
+        final Object $ping = this.getMedia();
         result = result * PRIME + ($ping == null ? 43 : $ping.hashCode());
         final Object $referrerPolicy = this.getReferrerPolicy();
         result = result * PRIME + ($referrerPolicy == null ? 43 : $referrerPolicy.hashCode());
@@ -227,7 +259,7 @@ public class Anchor extends AbstractUIElement{
     }
 
     public String toString() {
-        return "Anchor(label=" + this.getLabel() + ", href=" + this.getHref() + ", download=" + this.getDownload() + ", hrefLang=" + this.getHrefLang() + ", ping=" + this.getPing() + ", referrerPolicy=" + this.getReferrerPolicy() + ", rel=" + this.getRel() + ", target=" + this.getTarget() + ", type=" + this.getType() + ")";
+        return "Anchor(label=" + this.getLabel() + ", href=" + this.getHref() + ", download=" + this.getDownload() + ", hrefLang=" + this.getHrefLang() + ", ping=" + this.getMedia() + ", referrerPolicy=" + this.getReferrerPolicy() + ", rel=" + this.getRel() + ", target=" + this.getTarget() + ", type=" + this.getType() + ")";
     }
 
     public static class AnchorBuilder {
@@ -238,6 +270,7 @@ public class Anchor extends AbstractUIElement{
         private String href;
         private String download;
         private String hrefLang;
+        private String media;
         private String ping;
         private String referrerPolicy;
         private String rel;
@@ -296,6 +329,11 @@ public class Anchor extends AbstractUIElement{
             return this;
         }
 
+        public AnchorBuilder media(String media) {
+            this.media = media;
+            return this;
+        }
+
         public AnchorBuilder ping(String ping) {
             this.ping = ping;
             return this;
@@ -339,11 +377,11 @@ public class Anchor extends AbstractUIElement{
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
 
-            return new Anchor(id, cssClasses, style, label, href, download, hrefLang, ping, referrerPolicy, rel, target, type, hidden);
+            return new Anchor(id, cssClasses, style, label, href, download, hrefLang, media, ping, referrerPolicy, rel, target, type, hidden);
         }
 
         public String toString() {
-            return "Anchor.AnchorBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", label=" + this.label + ", href=" + this.href + ", download=" + this.download + ", hrefLang=" + this.hrefLang + ", ping=" + this.ping + ", referrerPolicy=" + this.referrerPolicy + ", rel=" + this.rel + ", target=" + this.target + ", type=" + this.type + ", hidden=" + this.hidden + ")";
+            return "Anchor.AnchorBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", label=" + this.label + ", href=" + this.href + ", download=" + this.download + ", hrefLang=" + this.hrefLang + ", media=" + this.media + ", ping=" + this.ping + ", referrerPolicy=" + this.referrerPolicy + ", rel=" + this.rel + ", target=" + this.target + ", type=" + this.type + ", hidden=" + this.hidden + ")";
         }
     }
 }

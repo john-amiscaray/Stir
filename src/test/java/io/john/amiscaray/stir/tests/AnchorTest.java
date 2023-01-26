@@ -29,8 +29,8 @@ public class AnchorTest {
                 .download("something")
                 .hrefLang("en")
                 .target("idk")
-                // TODO fix the ping being the media attribute for god knows why
-                //.ping("idk")
+                .media("idk")
+                .ping("idk")
                 .referrerPolicy("idk")
                 .rel("idk")
                 .type("idk")
