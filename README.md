@@ -20,7 +20,7 @@ A feature-rich Java framework for server-side rendering. Stir allows you to gene
 
 ## Installation
 
-This library can be added to a project using the following Maven dependency:
+This framework can be added to a project using the following Maven dependency:
 
 ```xml
 <dependency>
