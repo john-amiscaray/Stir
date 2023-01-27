@@ -2,12 +2,12 @@
 
 <img src="./assets/logo.png" alt="logo" width="250"/>
 
-A Java Framework for generating HTML content and UI development for server-side rendering. Stir allows you to generate UIs using simple Java objects whose fields act as inner content and attributes for the HTML elements they represent. All of these objects can be created using the familiar builder pattern or using simple constructors. See the [Java Docs](https://john-amiscaray.github.io/Stir/index.html) for more information.
+A feature-rich Java framework for server-side rendering. Stir allows you to generate UIs using simple Java objects resembling POJOs, [document templating](#document-templating), and [element descriptors](#element-descriptors). See the [Java Docs](https://john-amiscaray.github.io/Stir/index.html) for more information.
 
 ## Table of Contents
 
 - [Installation](#installation)
-- [Building a Simple Page](#building-a-simple-page)
+- [Building a Simple Page Using Java Objects](#building-a-simple-page-using-java-objects)
 - [Supported Elements](#supported-elements)
 - [Element Descriptors](#element-descriptors)
 - [Document Templating](#document-templating)
@@ -30,9 +30,9 @@ This library can be added to a project using the following Maven dependency:
 </dependency>
 ```
 
-## Building a Simple Page
+## Building a Simple Page Using Java Objects
 
-Pages can be generated using Stir's `HTMLDocument` class. Using simple builder patterns and built-in classes you can generate large amounts of reusable markup for your applications:
+The most basic way to generate pages with Stir would be with the `HTMLDocument` class and the Stir provided element classes. Using simple builder patterns and built-in classes representing HTML elements, you can generate large amounts of reusable markup for your applications:
 
 ```java
 import io.john.amiscaray.stir.domain.HTMLDocument;
@@ -115,6 +115,8 @@ The above Java code outputs the following markup:
 
 The backbone for how all this markup gets generated is the `ElementProcessor` class whose role is to take elements using its `getMarkup` method or styles with its `processStyle` method and generate the appropriate HTML or CSS. Use of this class should be handled within the `HTMLDocument` class but if you need to use it manually, you can get an instance of it using the static `getInstance` method.
 
+While this example looks slightly verbose, as you'll see later, we provide tools like [element descriptors](#element-descriptors) and [document templating](#document-templating) to reduce the amount of code required.
+
 ## Supported Elements
 
 As of the latest version, Stir has built-in support for the following elements:
@@ -148,7 +150,7 @@ See the [Javadocs](https://john-amiscaray.github.io/Stir/io/john/amiscaray/stir/
 
 ## Element Descriptors
 
-Version 0.5.0 introduced a new syntax for initializing an `AbstractUIElement` known as **element descriptors**. These allow you to initialize an `AbstractUIElement` using a string following a syntax similar to a CSS query. To do this, simply call the static `ElementDescriptorProcessor.element` method with the element descriptor as a string. As an example, take the following code:
+Version 0.5.0 introduced a new compact syntax for generating HTML markup using a language similar to CSS selectors. These are known as **element descriptors**. Element descriptors allow you to initialize an `AbstractUIElement` using a string following a syntax similar to a CSS query. To do this, simply call the static `ElementDescriptorProcessor.element` method with the element descriptor as a string. As an example, take the following code:
 
 ```java
 import io.john.amiscaray.stir.domain.elements.Form;
