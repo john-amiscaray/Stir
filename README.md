@@ -150,7 +150,7 @@ See the [Javadocs](https://john-amiscaray.github.io/Stir/io/john/amiscaray/stir/
 
 ## Element Descriptors
 
-Version 0.5.0 introduced a new compact syntax for generating HTML markup using a language similar to CSS selectors. These are known as **element descriptors**. Element descriptors allow you to initialize an `AbstractUIElement` using a string following a syntax similar to a CSS query. To do this, simply call the static `ElementDescriptorProcessor.element` method with the element descriptor as a string. As an example, take the following code:
+Version 0.5.0 introduced a new compact syntax for generating HTML markup using a language similar to CSS selectors. These are known as **element descriptors**. Element descriptors allow you to initialize an `AbstractUIElement` using a string following Stir's element descriptor language. To do this, simply call the static `ElementDescriptorProcessor.element` method with the element descriptor as a string. As an example, take the following code:
 
 ```java
 import io.john.amiscaray.stir.domain.elements.Form;
