@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 /**
@@ -38,7 +39,7 @@ public abstract class AbstractUIElement extends CacheableElement {
      */
     protected boolean hidden;
 
-    protected TreeMap<String, String> customAttributes = new TreeMap<>();
+    protected Map<String, String> customAttributes = new TreeMap<>();
 
     public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden) {
         this.id = id;
