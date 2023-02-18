@@ -3,10 +3,7 @@ package io.john.amiscaray.stir.tests;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidClassListException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTableException;
-import io.john.amiscaray.stir.domain.elements.Form;
-import io.john.amiscaray.stir.domain.elements.Input;
-import io.john.amiscaray.stir.domain.elements.Paragraph;
-import io.john.amiscaray.stir.domain.elements.UnorderedList;
+import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
@@ -392,6 +389,53 @@ public class ElementProcessorTest {
         assertThrows(IllegalElementException.class, () -> {
             processor.getMarkup(el);
         });
+
+    }
+
+    @Test
+    public void testElementWithCustomAttribute() throws IOException {
+
+        assertEquals(processor.getMarkup(Anchor.builder()
+                        .customAttribute("data-info", "hello-world")
+                .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttribute.html"));
+
+    }
+
+    @Test
+    public void testElementWithMultipleCustomAttributes() throws IOException {
+
+        assertEquals(processor.getMarkup(Anchor.builder()
+                    .customAttribute("data-info", "hello-world")
+                    .customAttribute("data-todo-id", "1")
+                    .customAttribute("data-role", "link")
+                .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttributes.html"));
+
+    }
+
+    @Test
+    public void testElementWithCustomAttributesAndClasses() throws IOException {
+
+        assertEquals(processor.getMarkup(Anchor.builder()
+                    .cssClasses(List.of("red", "blue", "green"))
+                    .customAttribute("data-info", "hello-world")
+                    .customAttribute("data-todo-id", "1")
+                    .customAttribute("data-role", "link")
+                .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttributesAndClasses.html"));
+
+    }
+
+    @Test
+    public void testElementWithAttributesCustomAttributesClassesAndId() throws IOException {
+
+        assertEquals(processor.getMarkup(Anchor.builder()
+                .href("https://en.wiktionary.org/wiki/en_passant")
+                .media("idk")
+                .id("google-en-passant")
+                .cssClasses(List.of("red", "blue", "green"))
+                .customAttribute("data-info", "hello-world")
+                .customAttribute("data-todo-id", "1")
+                .customAttribute("data-role", "link")
+                .build()), htmlLoader.getHTMLContentOf("html/anchorWithAttributesCustomAttributesClassesAndId.html"));
 
     }
 

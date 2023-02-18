@@ -100,4 +100,13 @@ public abstract class AbstractUIElement extends CacheableElement {
     public boolean isHidden() {
         return this.hidden;
     }
+
+    public Map<String, String> getCustomAttributes() {
+        return customAttributes;
+    }
+
+    public void setCustomAttributes(Map<String, String> customAttributes) {
+        propertyChangeSupport.firePropertyChange("customAttributes", this.customAttributes, customAttributes);
+        this.customAttributes = customAttributes;
+    }
 }
