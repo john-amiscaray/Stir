@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TreeMap;
 
 /**
  * The base class for all classes that represent HTML elements
@@ -36,6 +37,8 @@ public abstract class AbstractUIElement extends CacheableElement {
      * Whether the element should be hidden. Setting this to true adds the following style to it: display: none.
      */
     protected boolean hidden;
+
+    protected TreeMap<String, String> customAttributes = new TreeMap<>();
 
     public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden) {
         this.id = id;

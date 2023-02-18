@@ -82,6 +82,7 @@ public class Anchor extends AbstractUIElement{
         this.type = type;
     }
 
+    @Deprecated
     public Anchor(String label, String href, String download, String hrefLang, String ping, String referrerPolicy, String rel, String target, String type) {
         this.label = label;
         this.href = href;
