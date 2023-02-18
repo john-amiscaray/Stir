@@ -214,7 +214,7 @@ public class ElementDescriptorProcessor {
         if(childDescriptor.isBlank()){
             return;
         }
-        String[] childrenDescriptors = childDescriptor.split(",");
+        String[] childrenDescriptors = childDescriptor.split("(?<![\\[\\(\\{]),(?!([^\\[\\(]*[\\]\\)]|.*\\}))");
         Field childList = ReflectionUtils.getAllFields(elementInnerClass, field -> field.isAnnotationPresent(ChildList.class))
                 .stream().findFirst().orElseThrow(() -> new ElementInitializationException("No element ChildList found. The element must have a List<? extends AbstractUIElement> field annotated with @ChildList"));
         childList.setAccessible(true);

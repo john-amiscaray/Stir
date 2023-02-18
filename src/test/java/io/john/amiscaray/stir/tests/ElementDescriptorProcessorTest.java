@@ -370,4 +370,58 @@ public class ElementDescriptorProcessorTest {
 
     }
 
+    @Test
+    public void testElementDescriptorWithChildrenWithMultipleAttributes(){
+
+        assertEquals(Form.builder()
+                .id("todo-form")
+                .field(Input.builder()
+                        .name("title")
+                        .type("text")
+                        .build())
+                .field(Input.builder()
+                        .name("description")
+                        .type("text")
+                        .build())
+                .field(Input.builder()
+                        .type("date")
+                        .name("dueDate")
+                        .build())
+                .field(Input.builder()
+                        .type("submit")
+                        .value("Save To-do")
+                        .build())
+                .build(), element("form#todo-form{input[name='title',type='text'],input[name='description',type='text'],input[type='date',name='dueDate'],input[type='submit',value='Save To-do']}"));
+
+    }
+
+    @Test
+    public void testElementDescriptorWithChildWithCommaInnerContent() {
+
+        assertEquals(Div.builder()
+                .child(element("p('Hello, world.')"))
+                .build(), element("div{p('Hello, world.')}"));
+
+    }
+
+    @Test
+    public void testDeeplyNestedChildDescriptors() {
+
+        assertEquals(element("div{form{input[name='title',type='text'],input[name='description',type='text']},p('Hello, World!')}"),
+                Div.builder()
+                        .child(Form.builder()
+                                .field(Input.builder()
+                                        .name("title")
+                                        .type("text")
+                                        .build())
+                                .field(Input.builder()
+                                        .name("description")
+                                        .type("text")
+                                        .build())
+                                .build())
+                        .child(element("p('Hello, World!')"))
+                        .build());
+
+    }
+
 }
