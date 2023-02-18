@@ -82,6 +82,18 @@ public class Anchor extends AbstractUIElement{
         this.type = type;
     }
 
+    /**
+     * @deprecated This constructor contains errors regarding the ping and media attributes. Instantiate this class with a builder, the other constructor, or an element descriptor.
+     * @param label
+     * @param href
+     * @param download
+     * @param hrefLang
+     * @param ping
+     * @param referrerPolicy
+     * @param rel
+     * @param target
+     * @param type
+     */
     @Deprecated
     public Anchor(String label, String href, String download, String hrefLang, String ping, String referrerPolicy, String rel, String target, String type) {
         this.label = label;
