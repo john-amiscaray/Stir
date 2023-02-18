@@ -407,7 +407,7 @@ public class ElementDescriptorProcessorTest {
     @Test
     public void testDeeplyNestedChildDescriptors() {
 
-        assertEquals(element("div{form{input[name='title',type='text'],input[name='description',type='text']}}"),
+        assertEquals(element("div{form{input[name='title',type='text'],input[name='description',type='text']},p('Hello, World!')}"),
                 Div.builder()
                         .child(Form.builder()
                                 .field(Input.builder()
@@ -419,8 +419,8 @@ public class ElementDescriptorProcessorTest {
                                         .type("text")
                                         .build())
                                 .build())
-                        .build()
-        );
+                        .child(element("p('Hello, World!')"))
+                        .build());
 
     }
 
