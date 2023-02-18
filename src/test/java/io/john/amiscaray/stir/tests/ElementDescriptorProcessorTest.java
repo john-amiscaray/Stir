@@ -395,4 +395,13 @@ public class ElementDescriptorProcessorTest {
 
     }
 
+    @Test
+    public void testElementDescriptorWithChildWithCommaInnerContent() {
+
+        assertEquals(Div.builder()
+                .child(element("p('Hello, world.')"))
+                .build(), element("div{p('Hello, world.')}"));
+
+    }
+
 }
