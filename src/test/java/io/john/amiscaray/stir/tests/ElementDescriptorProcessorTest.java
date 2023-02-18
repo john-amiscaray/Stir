@@ -404,4 +404,24 @@ public class ElementDescriptorProcessorTest {
 
     }
 
+    @Test
+    public void testDeeplyNestedChildDescriptors() {
+
+        assertEquals(element("div{form{input[name='title',type='text'],input[name='description',type='text']}}"),
+                Div.builder()
+                        .child(Form.builder()
+                                .field(Input.builder()
+                                        .name("title")
+                                        .type("text")
+                                        .build())
+                                .field(Input.builder()
+                                        .name("description")
+                                        .type("text")
+                                        .build())
+                                .build())
+                        .build()
+        );
+
+    }
+
 }
