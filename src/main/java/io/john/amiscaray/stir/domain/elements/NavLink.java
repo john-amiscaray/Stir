@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A pojo representing a navlink as a list item
@@ -21,8 +22,8 @@ public class NavLink extends AbstractUIElement{
     @Nested
     private Anchor a;
 
-    public NavLink(String id, List<String> cssClasses, String style, Anchor a, boolean hidden) {
-        super(id, cssClasses, style, hidden);
+    public NavLink(String id, List<String> cssClasses, String style, Anchor a, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, hidden, customAttributes);
         this.a = a;
     }
 
@@ -83,6 +84,8 @@ public class NavLink extends AbstractUIElement{
         private String style;
         private Anchor a;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         NavLinkBuilder() {
         }
@@ -125,6 +128,36 @@ public class NavLink extends AbstractUIElement{
             return this;
         }
 
+        public NavLinkBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public NavLinkBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public NavLinkBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public NavLink build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -137,12 +170,26 @@ public class NavLink extends AbstractUIElement{
                 default:
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = java.util.Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = java.util.Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new java.util.LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = java.util.Collections.unmodifiableMap(customAttributes);
+            }
 
-            return new NavLink(id, cssClasses, style, a, hidden);
+            return new NavLink(id, cssClasses, style, a, hidden, customAttributes);
         }
 
         public String toString() {
-            return "NavLink.NavLinkBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", a=" + this.a + ", hidden=" + this.hidden + ")";
+            return "NavLink.NavLinkBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", a=" + this.a + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

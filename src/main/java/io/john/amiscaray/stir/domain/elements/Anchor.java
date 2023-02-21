@@ -3,9 +3,7 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.Attribute;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
-import lombok.Builder;
 import lombok.NoArgsConstructor;
-import lombok.Singular;
 
 import java.util.*;
 
@@ -69,7 +67,7 @@ public class Anchor extends AbstractUIElement{
 
     public Anchor(String id, List<String> cssClasses, String style, String label, String href, String download, String hrefLang,
                   String media, String ping, String referrerPolicy, String rel, String target, String type, boolean hidden, Map<String, String> customAttributes) {
-        super(id, cssClasses, style, hidden);
+        super(id, cssClasses, style, hidden, customAttributes);
         this.label = label;
         this.href = href;
         this.download = download;
@@ -80,7 +78,6 @@ public class Anchor extends AbstractUIElement{
         this.rel = rel;
         this.target = target;
         this.type = type;
-        this.customAttributes = customAttributes;
     }
 
     /**

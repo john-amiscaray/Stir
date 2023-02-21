@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A pojo representing an iframe element
@@ -59,8 +60,8 @@ public class IFrame extends AbstractContentFrame{
 
     public IFrame(String id, List<String> cssClasses, String style, String allow, Boolean allowFullScreen,
                   Integer height, String loading, String name, String referrerPolicy,
-                  String sandbox, String src, String srcDoc, Integer width, boolean hidden) {
-        super(id, cssClasses, style, height, src, width, hidden);
+                  String sandbox, String src, String srcDoc, Integer width, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, height, src, width, hidden, customAttributes);
         this.allow = allow;
         this.allowFullScreen = allowFullScreen;
         this.loading = loading;
@@ -157,6 +158,8 @@ public class IFrame extends AbstractContentFrame{
         private String srcDoc;
         private Integer width;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         IFrameBuilder() {
         }
@@ -244,6 +247,36 @@ public class IFrame extends AbstractContentFrame{
             return this;
         }
 
+        public IFrameBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public IFrameBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public IFrameBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public IFrame build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -256,12 +289,26 @@ public class IFrame extends AbstractContentFrame{
                 default:
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = java.util.Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = java.util.Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new java.util.LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = java.util.Collections.unmodifiableMap(customAttributes);
+            }
 
-            return new IFrame(id, cssClasses, style, allow, allowFullScreen, height, loading, name, referrerPolicy, sandbox, src, srcDoc, width, hidden);
+            return new IFrame(id, cssClasses, style, allow, allowFullScreen, height, loading, name, referrerPolicy, sandbox, src, srcDoc, width, hidden, customAttributes);
         }
 
         public String toString() {
-            return "IFrame.IFrameBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", allow=" + this.allow + ", allowFullScreen=" + this.allowFullScreen + ", height=" + this.height + ", loading=" + this.loading + ", name=" + this.name + ", referrerPolicy=" + this.referrerPolicy + ", sandbox=" + this.sandbox + ", src=" + this.src + ", srcDoc=" + this.srcDoc + ", width=" + this.width + ", hidden=" + this.hidden + ")";
+            return "IFrame.IFrameBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", allow=" + this.allow + ", allowFullScreen=" + this.allowFullScreen + ", height=" + this.height + ", loading=" + this.loading + ", name=" + this.name + ", referrerPolicy=" + this.referrerPolicy + ", sandbox=" + this.sandbox + ", src=" + this.src + ", srcDoc=" + this.srcDoc + ", width=" + this.width + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

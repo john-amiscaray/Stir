@@ -4,6 +4,7 @@ import io.john.amiscaray.stir.annotation.Attribute;
 import lombok.EqualsAndHashCode;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A parent class for any elements displaying external content
@@ -29,8 +30,8 @@ public abstract class AbstractContentFrame extends AbstractUIElement {
     @Attribute(name = "width")
     protected Integer width;
 
-    public AbstractContentFrame(String id, List<String> cssClasses, String style, Integer height, String src, Integer width, boolean hidden) {
-        super(id, cssClasses, style, hidden);
+    public AbstractContentFrame(String id, List<String> cssClasses, String style, Integer height, String src, Integer width, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, hidden, customAttributes);
         this.height = height;
         this.src = src;
         this.width = width;

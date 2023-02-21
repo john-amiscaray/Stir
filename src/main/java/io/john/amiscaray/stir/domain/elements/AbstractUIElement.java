@@ -41,13 +41,14 @@ public abstract class AbstractUIElement extends CacheableElement {
 
     protected Map<String, String> customAttributes = new TreeMap<>();
 
-    public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden) {
+    public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden, Map<String, String> customAttributes) {
         this.id = id;
         if(cssClasses != null){
             this.cssClasses = new ArrayList<>(cssClasses);
         }
         this.style = style;
         this.hidden = hidden;
+        this.customAttributes = customAttributes;
     }
 
     public AbstractUIElement() {

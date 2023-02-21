@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.TreeMap;
 
 @HTMLElement(tagName = "p")
 @NoArgsConstructor
@@ -22,7 +23,7 @@ public class ElementWithLongAndFloat extends AbstractUIElement {
 
     @Builder
     public ElementWithLongAndFloat(String id, List<String> cssClasses, String style, Float myFloat, Long myLong) {
-        super(id, cssClasses, style, false);
+        super(id, cssClasses, style, false, new TreeMap<>());
         this.myFloat = myFloat;
         this.myLong = myLong;
     }
