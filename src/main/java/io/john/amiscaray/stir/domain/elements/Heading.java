@@ -23,7 +23,7 @@ public class Heading extends AbstractTextElement{
     }
 
     public Heading(Integer level, String content){
-        super(null, new ArrayList<>(), null, content, false, new TreeMap<>());
+        super(null, new ArrayList<>(), null, content, false, new LinkedHashMap<>());
         this.level = level;
     }
 

@@ -5,10 +5,7 @@ import io.john.amiscaray.stir.annotation.ClassList;
 import io.john.amiscaray.stir.annotation.Id;
 import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
  * The base class for all classes that represent HTML elements
@@ -39,7 +36,7 @@ public abstract class AbstractUIElement extends CacheableElement {
      */
     protected boolean hidden;
 
-    protected Map<String, String> customAttributes = new TreeMap<>();
+    protected Map<String, String> customAttributes = new LinkedHashMap<>();
 
     public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden, Map<String, String> customAttributes) {
         this.id = id;
@@ -48,7 +45,9 @@ public abstract class AbstractUIElement extends CacheableElement {
         }
         this.style = style;
         this.hidden = hidden;
-        this.customAttributes = customAttributes;
+        if(customAttributes != null){
+            this.customAttributes = customAttributes;
+        }
     }
 
     public AbstractUIElement() {
