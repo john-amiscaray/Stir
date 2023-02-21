@@ -8,6 +8,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,6 +50,22 @@ public class ImgTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/imgWithEverything.html"), processor.getMarkup(i));
+
+    }
+
+    @Test
+    public void testImgWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Img img = Img.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/imgWithCustomAttributes.html"), processor.getMarkup(img));
 
     }
 

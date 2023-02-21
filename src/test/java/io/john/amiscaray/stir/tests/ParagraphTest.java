@@ -7,6 +7,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -96,6 +97,22 @@ public class ParagraphTest {
         assertEquals(CacheableElement.CacheStatus.CLEAN, p.getCacheStatus());
         p.setContent("This is not text");
         assertEquals(CacheableElement.CacheStatus.DIRTY, p.getCacheStatus());
+
+    }
+
+    @Test
+    public void testParagraphWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Paragraph p = Paragraph.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/pWithCustomAttributes.html"), processor.getMarkup(p));
 
     }
 

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -126,6 +127,22 @@ public class OrderedListTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/hiddenOL.html"), elementProcessor.getMarkup(ol));
+
+    }
+
+    @Test
+    public void testOLWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        OrderedList ol = OrderedList.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/olWithCustomAttributes.html"), elementProcessor.getMarkup(ol));
 
     }
 

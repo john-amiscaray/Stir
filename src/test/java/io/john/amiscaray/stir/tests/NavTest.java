@@ -134,4 +134,36 @@ public class NavTest {
 
     }
 
+    @Test
+    public void testNavWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Nav nav = Nav.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/navWithCustomAttributes.html"), processor.getMarkup(nav));
+
+    }
+
+    @Test
+    public void testNavLinkListWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        NavLinkList nll = NavLinkList.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(loader.getHTMLContentOf("html/navLinkListWithCustomAttributes.html"), processor.getMarkup(nll));
+
+    }
+
 }
