@@ -12,6 +12,7 @@ public @interface HTMLElement {
 
     String tagName();
 
+    String alias() default "";
     /**
      * Whether the element has a closing tag
      * @return the boolean value
