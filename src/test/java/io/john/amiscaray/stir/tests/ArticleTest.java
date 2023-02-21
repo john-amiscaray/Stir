@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,6 +42,20 @@ public class ArticleTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/articleWithEverything.html"), processor.getMarkup(article));
+
+    }
+
+    @Test
+    public void testArticleWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-type", "blog");
+        attributes.put("data-role", "content");
+        Article article = Article.builder()
+                .customAttribute("data-todo-id", "1")
+                .customAttributes(attributes)
+                .build();
+        assertEquals(htmlLoader.getHTMLContentOf("html/articleWithCustomAttributes.html"), processor.getMarkup(article));
 
     }
 

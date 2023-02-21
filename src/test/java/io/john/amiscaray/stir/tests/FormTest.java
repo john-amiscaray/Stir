@@ -7,6 +7,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.element;
@@ -33,6 +34,22 @@ public class FormTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/formWithAll.html"), processor.getMarkup(form));
+
+    }
+
+    @Test
+    public void testFormWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Form form = Form.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/formWithCustomAttributes.html"), processor.getMarkup(form));
 
     }
 

@@ -6,6 +6,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static io.john.amiscaray.stir.util.ElementDescriptorProcessor.element;
@@ -30,6 +31,22 @@ public class HeaderTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/headerWithAll.html"), processor.getMarkup(header));
+
+    }
+
+    @Test
+    public void testHeaderWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Header header = Header.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/headerWithCustomAttributes.html"), processor.getMarkup(header));
 
     }
 

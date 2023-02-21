@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -168,6 +169,22 @@ public class DivTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/hiddenDiv.html"), processor.getMarkup(div));
+
+    }
+
+    @Test
+    public void testDivWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Div div = Div.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/divWithCustomAttributes.html"), processor.getMarkup(div));
 
     }
 

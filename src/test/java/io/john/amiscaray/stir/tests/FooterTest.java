@@ -9,6 +9,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -61,6 +62,22 @@ public class FooterTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/hiddenFooter.html"), processor.getMarkup(footer));
+
+    }
+
+    @Test
+    public void testFooterWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Footer footer = Footer.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/footerWithCustomAttributes.html"), processor.getMarkup(footer));
 
     }
 
