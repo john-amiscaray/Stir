@@ -3,9 +3,7 @@ package io.john.amiscaray.stir.domain.elements;
 import io.john.amiscaray.stir.annotation.HTMLElement;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * A pojo representing a paragraph element
@@ -14,13 +12,13 @@ import java.util.List;
 @NoArgsConstructor
 public class Paragraph extends AbstractTextElement {
 
-    public Paragraph(String id, List<String> cssClasses, String style, String content, boolean hidden) {
-        super(id, cssClasses, style, content, hidden);
+    public Paragraph(String id, List<String> cssClasses, String style, String content, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, content, hidden, customAttributes);
     }
 
     public Paragraph(String content){
 
-        super(null, new ArrayList<>(), null, content, false);
+        super(null, new ArrayList<>(), null, content, false, new TreeMap<>());
 
     }
 
@@ -52,6 +50,8 @@ public class Paragraph extends AbstractTextElement {
         private String style;
         private String content;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         ParagraphBuilder() {
         }
@@ -94,24 +94,68 @@ public class Paragraph extends AbstractTextElement {
             return this;
         }
 
+        public ParagraphBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public ParagraphBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public ParagraphBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public Paragraph build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
                 case 0:
-                    cssClasses = java.util.Collections.emptyList();
+                    cssClasses = Collections.emptyList();
                     break;
                 case 1:
-                    cssClasses = java.util.Collections.singletonList(this.cssClasses.get(0));
+                    cssClasses = Collections.singletonList(this.cssClasses.get(0));
                     break;
                 default:
-                    cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+                    cssClasses = Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+            }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = Collections.unmodifiableMap(customAttributes);
             }
 
-            return new Paragraph(id, cssClasses, style, content, hidden);
+            return new Paragraph(id, cssClasses, style, content, hidden, customAttributes);
         }
 
         public String toString() {
-            return "Paragraph.ParagraphBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ", hidden=" + this.hidden + ")";
+            return "Paragraph.ParagraphBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", content=" + this.content + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,6 +33,23 @@ public class TableTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/studentFromBuilder.html"), processor.getMarkup(table));
+
+    }
+
+    @Test
+    public void testTableWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Table table = Table.builder()
+                .clazz(Student.class)
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/tableWithCustomAttributes.html"), processor.getMarkup(table));
 
     }
 

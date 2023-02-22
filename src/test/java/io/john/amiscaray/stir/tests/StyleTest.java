@@ -7,6 +7,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -108,6 +109,22 @@ public class StyleTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/styleBuilderTest.html"), processor.getMarkup(style));
+
+    }
+
+    @Test
+    public void testStyleWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Style style = Style.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/styleWithCustomAttributes.html"), processor.getMarkup(style));
 
     }
 

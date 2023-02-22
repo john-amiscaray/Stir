@@ -5,8 +5,7 @@ import io.john.amiscaray.stir.annotation.ClassList;
 import io.john.amiscaray.stir.annotation.Id;
 import lombok.EqualsAndHashCode;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * The base class for all classes that represent HTML elements
@@ -37,13 +36,18 @@ public abstract class AbstractUIElement extends CacheableElement {
      */
     protected boolean hidden;
 
-    public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden) {
+    protected Map<String, String> customAttributes = new LinkedHashMap<>();
+
+    public AbstractUIElement(String id, List<String> cssClasses, String style, boolean hidden, Map<String, String> customAttributes) {
         this.id = id;
         if(cssClasses != null){
             this.cssClasses = new ArrayList<>(cssClasses);
         }
         this.style = style;
         this.hidden = hidden;
+        if(customAttributes != null){
+            this.customAttributes = customAttributes;
+        }
     }
 
     public AbstractUIElement() {
@@ -95,5 +99,14 @@ public abstract class AbstractUIElement extends CacheableElement {
 
     public boolean isHidden() {
         return this.hidden;
+    }
+
+    public Map<String, String> getCustomAttributes() {
+        return customAttributes;
+    }
+
+    public void setCustomAttributes(Map<String, String> customAttributes) {
+        propertyChangeSupport.firePropertyChange("customAttributes", this.customAttributes, customAttributes);
+        this.customAttributes = customAttributes;
     }
 }

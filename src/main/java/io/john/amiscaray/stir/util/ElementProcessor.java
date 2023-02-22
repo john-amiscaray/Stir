@@ -161,6 +161,10 @@ public class ElementProcessor {
             }
         }
 
+        for (Map.Entry<String, String> entry : obj.getCustomAttributes().entrySet()) {
+            builder.append(" ").append(encode(entry.getKey())).append("=\"").append(encode(entry.getValue())).append("\"");
+        }
+
         builder.append(">");
         if(elMeta.newLineAfterOpening()){
             builder.append("\n");

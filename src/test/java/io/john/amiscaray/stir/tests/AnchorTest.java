@@ -6,7 +6,9 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -37,6 +39,21 @@ public class AnchorTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/anchorWithAll.html"), processor.getMarkup(a));
+
+    }
+
+    @Test
+    public void testAnchorWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+        Anchor a = Anchor.builder()
+                .customAttribute("data-info", "hello-world")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/anchorWithCustomAttributes.html"), processor.getMarkup(a));
 
     }
 

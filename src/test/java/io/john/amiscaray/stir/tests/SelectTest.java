@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -85,6 +86,22 @@ public class SelectTest {
 
         assertEquals(htmlLoader.getHTMLContentOf("html/selectWithAll.html"), processor.getMarkup(select));
 
+    }
+
+    @Test
+    public void testSelectWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Select select = Select.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/selectWithCustomAttributes.html"), processor.getMarkup(select));
+        
     }
 
 }

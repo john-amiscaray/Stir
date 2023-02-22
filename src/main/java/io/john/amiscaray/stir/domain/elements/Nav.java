@@ -4,10 +4,7 @@ import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.Nested;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -23,8 +20,8 @@ public class Nav extends AbstractUIElement{
     @Nested
     private NavLinkList list;
 
-    public Nav(String id, List<String> cssClasses, String style, NavLinkList list, boolean hidden) {
-        super(id, cssClasses, style, hidden);
+    public Nav(String id, List<String> cssClasses, String style, NavLinkList list, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, hidden, customAttributes);
         this.list = list;
     }
 
@@ -66,6 +63,8 @@ public class Nav extends AbstractUIElement{
         private String style;
         private NavLinkList list;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         NavBuilder() {
         }
@@ -108,24 +107,68 @@ public class Nav extends AbstractUIElement{
             return this;
         }
 
+        public NavBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public NavBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public NavBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public Nav build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
                 case 0:
-                    cssClasses = java.util.Collections.emptyList();
+                    cssClasses = Collections.emptyList();
                     break;
                 case 1:
-                    cssClasses = java.util.Collections.singletonList(this.cssClasses.get(0));
+                    cssClasses = Collections.singletonList(this.cssClasses.get(0));
                     break;
                 default:
-                    cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+                    cssClasses = Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+            }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = Collections.unmodifiableMap(customAttributes);
             }
 
-            return new Nav(id, cssClasses, style, list, hidden);
+            return new Nav(id, cssClasses, style, list, hidden, customAttributes);
         }
 
         public String toString() {
-            return "Nav.NavBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", list=" + this.list + ", hidden=" + this.hidden + ")";
+            return "Nav.NavBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", list=" + this.list + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

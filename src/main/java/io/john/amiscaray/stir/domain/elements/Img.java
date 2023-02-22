@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A pojo representing an img element
@@ -69,9 +70,8 @@ public class Img extends AbstractContentFrame{
     @Attribute(name = "usemap")
     private String useMap;
 
-    public Img(String id, List<String> cssClasses, String style, String alt, String crossOrigin, Integer height,
-               Boolean isMap, String loading, String longDesc, String referrerPolicy, String sizes, String src, String srcSet, String useMap, Integer width, boolean hidden) {
-        super(id, cssClasses, style, height, src, width, hidden);
+    public Img(String id, List<String> cssClasses, String style, String alt, String crossOrigin, Integer height, Boolean isMap, String loading, String longDesc, String referrerPolicy, String sizes, String src, String srcSet, String useMap, Integer width, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, height, src, width, hidden, customAttributes);
         this.alt = alt;
         this.crossOrigin = crossOrigin;
         this.isMap = isMap;
@@ -154,6 +154,8 @@ public class Img extends AbstractContentFrame{
         private String useMap;
         private Integer width;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         ImgBuilder() {
         }
@@ -251,6 +253,36 @@ public class Img extends AbstractContentFrame{
             return this;
         }
 
+        public ImgBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public ImgBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public ImgBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public Img build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -263,12 +295,26 @@ public class Img extends AbstractContentFrame{
                 default:
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = java.util.Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = java.util.Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new java.util.LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = java.util.Collections.unmodifiableMap(customAttributes);
+            }
 
-            return new Img(id, cssClasses, style, alt, crossOrigin, height, isMap, loading, longDesc, referrerPolicy, sizes, src, srcSet, useMap, width, hidden);
+            return new Img(id, cssClasses, style, alt, crossOrigin, height, isMap, loading, longDesc, referrerPolicy, sizes, src, srcSet, useMap, width, hidden, customAttributes);
         }
 
         public String toString() {
-            return "Img.ImgBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", alt=" + this.alt + ", crossOrigin=" + this.crossOrigin + ", height=" + this.height + ", isMap=" + this.isMap + ", loading=" + this.loading + ", longDesc=" + this.longDesc + ", referrerPolicy=" + this.referrerPolicy + ", sizes=" + this.sizes + ", src=" + this.src + ", srcSet=" + this.srcSet + ", useMap=" + this.useMap + ", width=" + this.width + ", hidden=" + this.hidden + ")";
+            return "Img.ImgBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", alt=" + this.alt + ", crossOrigin=" + this.crossOrigin + ", height=" + this.height + ", isMap=" + this.isMap + ", loading=" + this.loading + ", longDesc=" + this.longDesc + ", referrerPolicy=" + this.referrerPolicy + ", sizes=" + this.sizes + ", src=" + this.src + ", srcSet=" + this.srcSet + ", useMap=" + this.useMap + ", width=" + this.width + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

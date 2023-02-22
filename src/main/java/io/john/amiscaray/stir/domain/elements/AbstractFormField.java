@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A parent class for common form field attributes
@@ -37,8 +38,8 @@ public abstract class AbstractFormField extends AbstractUIElement{
     @Attribute(name = "name")
     protected String name;
 
-    public AbstractFormField(String id, List<String> cssClasses, String style, Boolean autoFocus, Boolean disabled, String form, String name, boolean hidden) {
-        super(id, cssClasses, style, hidden);
+    public AbstractFormField(String id, List<String> cssClasses, String style, Boolean autoFocus, Boolean disabled, String form, String name, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, hidden, customAttributes);
         this.autoFocus = autoFocus;
         this.disabled = disabled;
         this.form = form;

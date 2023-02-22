@@ -5,9 +5,7 @@ import io.john.amiscaray.stir.annotation.HTMLElement;
 import io.john.amiscaray.stir.annotation.InnerContent;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * A pojo representing an HTML anchor tag
@@ -68,8 +66,8 @@ public class Anchor extends AbstractUIElement{
     private String type;
 
     public Anchor(String id, List<String> cssClasses, String style, String label, String href, String download, String hrefLang,
-                  String media, String ping, String referrerPolicy, String rel, String target, String type, boolean hidden) {
-        super(id, cssClasses, style, hidden);
+                  String media, String ping, String referrerPolicy, String rel, String target, String type, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, hidden, customAttributes);
         this.label = label;
         this.href = href;
         this.download = download;
@@ -82,6 +80,19 @@ public class Anchor extends AbstractUIElement{
         this.type = type;
     }
 
+    /**
+     * @deprecated This constructor contains errors regarding the ping and media attributes. Instantiate this class with a builder, the other constructors, or an element descriptor.
+     * @param label
+     * @param href
+     * @param download
+     * @param hrefLang
+     * @param ping
+     * @param referrerPolicy
+     * @param rel
+     * @param target
+     * @param type
+     */
+    @Deprecated
     public Anchor(String label, String href, String download, String hrefLang, String ping, String referrerPolicy, String rel, String target, String type) {
         this.label = label;
         this.href = href;
@@ -277,6 +288,8 @@ public class Anchor extends AbstractUIElement{
         private String target;
         private String type;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         AnchorBuilder() {
         }
@@ -364,24 +377,68 @@ public class Anchor extends AbstractUIElement{
             return this;
         }
 
+        public AnchorBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public AnchorBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public AnchorBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public Anchor build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
                 case 0:
-                    cssClasses = java.util.Collections.emptyList();
+                    cssClasses = Collections.emptyList();
                     break;
                 case 1:
-                    cssClasses = java.util.Collections.singletonList(this.cssClasses.get(0));
+                    cssClasses = Collections.singletonList(this.cssClasses.get(0));
                     break;
                 default:
-                    cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+                    cssClasses = Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
+            }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = Collections.unmodifiableMap(customAttributes);
             }
 
-            return new Anchor(id, cssClasses, style, label, href, download, hrefLang, media, ping, referrerPolicy, rel, target, type, hidden);
+            return new Anchor(id, cssClasses, style, label, href, download, hrefLang, media, ping, referrerPolicy, rel, target, type, hidden, customAttributes);
         }
 
         public String toString() {
-            return "Anchor.AnchorBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", label=" + this.label + ", href=" + this.href + ", download=" + this.download + ", hrefLang=" + this.hrefLang + ", media=" + this.media + ", ping=" + this.ping + ", referrerPolicy=" + this.referrerPolicy + ", rel=" + this.rel + ", target=" + this.target + ", type=" + this.type + ", hidden=" + this.hidden + ")";
+            return "Anchor.AnchorBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", label=" + this.label + ", href=" + this.href + ", download=" + this.download + ", hrefLang=" + this.hrefLang + ", media=" + this.media + ", ping=" + this.ping + ", referrerPolicy=" + this.referrerPolicy + ", rel=" + this.rel + ", target=" + this.target + ", type=" + this.type + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

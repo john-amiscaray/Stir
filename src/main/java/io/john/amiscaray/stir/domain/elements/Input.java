@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A pojo representing an input element
@@ -206,8 +207,8 @@ public class Input extends AbstractFormField {
                  String formMethod, Boolean formNoValidate, String formTarget, Integer height, String list, Double max,
                  Integer maxLength, Double min, Integer minLength, Boolean multiple, String pattern, String placeHolder,
                  Boolean readOnly, Boolean required, Integer size, String src, Double step, Integer width, List<String> cssClasses,
-                 String id, String style, String name, boolean hidden) {
-        super(id, cssClasses, style, autoFocus, disabled, form, name, hidden);
+                 String id, String style, String name, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, autoFocus, disabled, form, name, hidden, customAttributes);
         this.type = type;
         this.value = value;
         this.label = label;
@@ -720,6 +721,8 @@ public class Input extends AbstractFormField {
         private String style;
         private String name;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         InputBuilder() {
         }
@@ -917,6 +920,36 @@ public class Input extends AbstractFormField {
             return this;
         }
 
+        public InputBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public InputBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public InputBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public Input build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -929,12 +962,26 @@ public class Input extends AbstractFormField {
                 default:
                     cssClasses = java.util.Collections.unmodifiableList(new ArrayList<String>(this.cssClasses));
             }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = java.util.Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = java.util.Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new java.util.LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = java.util.Collections.unmodifiableMap(customAttributes);
+            }
 
-            return new Input(type, value, label, accept, alt, autoComplete, autoFocus, checked, dirName, disabled, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, height, list, max, maxLength, min, minLength, multiple, pattern, placeHolder, readOnly, required, size, src, step, width, cssClasses, id, style, name, hidden);
+            return new Input(type, value, label, accept, alt, autoComplete, autoFocus, checked, dirName, disabled, form, formAction, formEnctype, formMethod, formNoValidate, formTarget, height, list, max, maxLength, min, minLength, multiple, pattern, placeHolder, readOnly, required, size, src, step, width, cssClasses, id, style, name, hidden, customAttributes);
         }
 
         public String toString() {
-            return "Input.InputBuilder(type=" + this.type + ", value=" + this.value + ", label=" + this.label + ", accept=" + this.accept + ", alt=" + this.alt + ", autoComplete=" + this.autoComplete + ", autoFocus=" + this.autoFocus + ", checked=" + this.checked + ", dirName=" + this.dirName + ", disabled=" + this.disabled + ", form=" + this.form + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", formTarget=" + this.formTarget + ", height=" + this.height + ", list=" + this.list + ", max=" + this.max + ", maxLength=" + this.maxLength + ", min=" + this.min + ", minLength=" + this.minLength + ", multiple=" + this.multiple + ", pattern=" + this.pattern + ", placeHolder=" + this.placeHolder + ", readOnly=" + this.readOnly + ", required=" + this.required + ", size=" + this.size + ", src=" + this.src + ", step=" + this.step + ", width=" + this.width + ", cssClasses=" + this.cssClasses + ", id=" + this.id + ", style=" + this.style + ", name=" + this.name + ", hidden=" + this.hidden + ")";
+            return "Input.InputBuilder(type=" + this.type + ", value=" + this.value + ", label=" + this.label + ", accept=" + this.accept + ", alt=" + this.alt + ", autoComplete=" + this.autoComplete + ", autoFocus=" + this.autoFocus + ", checked=" + this.checked + ", dirName=" + this.dirName + ", disabled=" + this.disabled + ", form=" + this.form + ", formAction=" + this.formAction + ", formEnctype=" + this.formEnctype + ", formMethod=" + this.formMethod + ", formNoValidate=" + this.formNoValidate + ", formTarget=" + this.formTarget + ", height=" + this.height + ", list=" + this.list + ", max=" + this.max + ", maxLength=" + this.maxLength + ", min=" + this.min + ", minLength=" + this.minLength + ", multiple=" + this.multiple + ", pattern=" + this.pattern + ", placeHolder=" + this.placeHolder + ", readOnly=" + this.readOnly + ", required=" + this.required + ", size=" + this.size + ", src=" + this.src + ", step=" + this.step + ", width=" + this.width + ", cssClasses=" + this.cssClasses + ", id=" + this.id + ", style=" + this.style + ", name=" + this.name + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

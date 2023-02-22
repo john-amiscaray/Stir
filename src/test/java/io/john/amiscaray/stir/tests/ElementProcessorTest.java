@@ -393,6 +393,15 @@ public class ElementProcessorTest {
     }
 
     @Test
+    public void testElementWithCustomAttribute() throws IOException {
+
+        assertEquals(processor.getMarkup(Anchor.builder()
+                .customAttribute("data-info", "hello-world")
+                .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttribute.html"));
+
+    }
+
+    @Test
     public void testTableWithTableIgnore() throws IOException {
 
         Table studentTable = new Table(List.of(
@@ -405,6 +414,17 @@ public class ElementProcessorTest {
                     .build()), StudentWithIgnored.class);
 
         assertEquals(htmlLoader.getHTMLContentOf("html/studentTableWithIgnored.html"), processor.getMarkup(studentTable));
+
+    }
+
+    @Test
+    public void testElementWithMultipleCustomAttributes() throws IOException {
+
+        assertEquals(processor.getMarkup(Anchor.builder()
+                .customAttribute("data-info", "hello-world")
+                .customAttribute("data-todo-id", "1")
+                .customAttribute("data-role", "link")
+                .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttributes.html"));
 
     }
 
@@ -423,6 +443,32 @@ public class ElementProcessorTest {
 
         assertEquals(htmlLoader.getHTMLContentOf("html/studentTableWithIgnoredAndData.html"), processor.getMarkup(studentTable));
 
+    }
+
+    @Test
+    public void testElementWithCustomAttributesAndClasses() throws IOException {
+
+        assertEquals(processor.getMarkup(Anchor.builder()
+                    .cssClasses(List.of("red", "blue", "green"))
+                    .customAttribute("data-info", "hello-world")
+                    .customAttribute("data-todo-id", "1")
+                    .customAttribute("data-role", "link")
+                .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttributesAndClasses.html"));
+
+    }
+
+    @Test
+    public void testElementWithAttributesCustomAttributesClassesAndId() throws IOException {
+
+                assertEquals(processor.getMarkup(Anchor.builder()
+                        .href("https://en.wiktionary.org/wiki/en_passant")
+                        .media("idk")
+                        .id("google-en-passant")
+                        .cssClasses(List.of("red", "blue", "green"))
+                        .customAttribute("data-info", "hello-world")
+                        .customAttribute("data-todo-id", "1")
+                        .customAttribute("data-role", "link")
+                        .build()), htmlLoader.getHTMLContentOf("html/anchorWithAttributesCustomAttributesClassesAndId.html"));
     }
 
     @Test

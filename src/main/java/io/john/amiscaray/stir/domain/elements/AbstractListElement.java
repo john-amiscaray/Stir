@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -19,8 +20,8 @@ public abstract class AbstractListElement extends AbstractUIElement{
     @ChildList
     protected List<ListItem> listItems;
 
-    public AbstractListElement(String id, List<String> cssClasses, String style, List<ListItem> listItems, boolean hidden) {
-        super(id, cssClasses, style, hidden);
+    public AbstractListElement(String id, List<String> cssClasses, String style, List<ListItem> listItems, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, hidden, customAttributes);
         this.listItems = listItems;
     }
 

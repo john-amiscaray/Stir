@@ -5,6 +5,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * A parent class for elements meant to display text
@@ -19,8 +20,8 @@ public abstract class AbstractTextElement extends AbstractUIElement {
     @InnerContent
     protected String content;
 
-    public AbstractTextElement(String id, List<String> cssClasses, String style, String content, boolean hidden) {
-        super(id, cssClasses, style, hidden);
+    public AbstractTextElement(String id, List<String> cssClasses, String style, String content, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, hidden, customAttributes);
         this.content = content;
     }
 

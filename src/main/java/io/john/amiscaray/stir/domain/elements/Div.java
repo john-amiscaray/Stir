@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 /**
  * A pojo representing a div element
@@ -16,8 +17,8 @@ import java.util.List;
 @NoArgsConstructor
 public class Div extends AbstractElementContainer<AbstractUIElement>{
 
-    public Div(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean hidden) {
-        super(id, cssClasses, style, children, hidden);
+    public Div(String id, List<String> cssClasses, String style, List<AbstractUIElement> children, boolean hidden, Map<String, String> customAttributes) {
+        super(id, cssClasses, style, children, hidden, customAttributes);
     }
 
     public static DivBuilder builder() {
@@ -34,6 +35,8 @@ public class Div extends AbstractElementContainer<AbstractUIElement>{
         private String style;
         private ArrayList<AbstractUIElement> children;
         private boolean hidden;
+        private ArrayList<String> customAttributes$key;
+        private ArrayList<String> customAttributes$value;
 
         DivBuilder() {
         }
@@ -89,6 +92,36 @@ public class Div extends AbstractElementContainer<AbstractUIElement>{
             return this;
         }
 
+        public DivBuilder customAttribute(String customAttributeKey, String customAttributeValue) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            this.customAttributes$key.add(customAttributeKey);
+            this.customAttributes$value.add(customAttributeValue);
+            return this;
+        }
+
+        public DivBuilder customAttributes(Map<? extends String, ? extends String> customAttributes) {
+            if (this.customAttributes$key == null) {
+                this.customAttributes$key = new ArrayList<String>();
+                this.customAttributes$value = new ArrayList<String>();
+            }
+            for (final Map.Entry<? extends String, ? extends String> $lombokEntry : customAttributes.entrySet()) {
+                this.customAttributes$key.add($lombokEntry.getKey());
+                this.customAttributes$value.add($lombokEntry.getValue());
+            }
+            return this;
+        }
+
+        public DivBuilder clearCustomAttributes() {
+            if (this.customAttributes$key != null) {
+                this.customAttributes$key.clear();
+                this.customAttributes$value.clear();
+            }
+            return this;
+        }
+
         public Div build() {
             List<String> cssClasses;
             switch (this.cssClasses == null ? 0 : this.cssClasses.size()) {
@@ -112,12 +145,26 @@ public class Div extends AbstractElementContainer<AbstractUIElement>{
                 default:
                     children = java.util.Collections.unmodifiableList(new ArrayList<AbstractUIElement>(this.children));
             }
+            Map<String, String> customAttributes;
+            switch (this.customAttributes$key == null ? 0 : this.customAttributes$key.size()) {
+                case 0:
+                    customAttributes = java.util.Collections.emptyMap();
+                    break;
+                case 1:
+                    customAttributes = java.util.Collections.singletonMap(this.customAttributes$key.get(0), this.customAttributes$value.get(0));
+                    break;
+                default:
+                    customAttributes = new java.util.LinkedHashMap<String, String>(this.customAttributes$key.size() < 1073741824 ? 1 + this.customAttributes$key.size() + (this.customAttributes$key.size() - 3) / 3 : Integer.MAX_VALUE);
+                    for (int $i = 0; $i < this.customAttributes$key.size(); $i++)
+                        customAttributes.put(this.customAttributes$key.get($i), (String) this.customAttributes$value.get($i));
+                    customAttributes = java.util.Collections.unmodifiableMap(customAttributes);
+            }
 
-            return new Div(id, cssClasses, style, children, hidden);
+            return new Div(id, cssClasses, style, children, hidden, customAttributes);
         }
 
         public String toString() {
-            return "Div.DivBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ")";
+            return "Div.DivBuilder(id=" + this.id + ", cssClasses=" + this.cssClasses + ", style=" + this.style + ", children=" + this.children + ", hidden=" + this.hidden + ", customAttributes$key=" + this.customAttributes$key + ", customAttributes$value=" + this.customAttributes$value + ")";
         }
     }
 }

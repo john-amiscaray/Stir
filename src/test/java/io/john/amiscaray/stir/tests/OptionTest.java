@@ -6,6 +6,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.LinkedHashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -26,6 +27,22 @@ public class OptionTest {
                 .hidden(true)
                 .build();
         assertEquals(htmlLoader.getHTMLContentOf("html/optionTest.html"), processor.getMarkup(option));
+
+    }
+
+    @Test
+    public void testOptionWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        Option option = Option.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/optionWithCustomAttributes.html"), processor.getMarkup(option));
 
     }
 

@@ -10,6 +10,7 @@ import io.john.amiscaray.stir.util.ElementProcessor;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -34,6 +35,22 @@ public class HGroupTest {
                 .build();
 
         assertEquals(htmlLoader.getHTMLContentOf("html/hGroupWithEverything.html"), processor.getMarkup(hGroup));
+
+    }
+
+    @Test
+    public void testHGroupWithCustomAttributes() throws IOException {
+
+        LinkedHashMap<String, String> attributes = new LinkedHashMap<>();
+        attributes.put("data-todo-id", "1");
+        attributes.put("data-role", "link");
+
+        HGroup hGroup = HGroup.builder()
+                .customAttribute("data-color", "red")
+                .customAttributes(attributes)
+                .build();
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/hgroupWithCustomAttributes.html"), processor.getMarkup(hGroup));
 
     }
 

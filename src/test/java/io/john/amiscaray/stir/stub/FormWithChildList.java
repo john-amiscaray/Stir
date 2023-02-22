@@ -7,7 +7,7 @@ import io.john.amiscaray.stir.domain.elements.Input;
 import lombok.Builder;
 import lombok.Singular;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 @HTMLElement(tagName = "form")
@@ -18,7 +18,7 @@ public class FormWithChildList extends AbstractUIElement {
 
     @Builder
     public FormWithChildList(String id, @Singular List<String> cssClasses, String style, @Singular List<Input> fields) {
-        super(id, cssClasses, style, false);
+        super(id, cssClasses, style, false, new LinkedHashMap<>());
         this.fields = fields;
     }
 
