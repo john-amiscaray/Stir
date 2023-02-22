@@ -470,6 +470,7 @@ public class ElementProcessorTest {
                         .customAttribute("data-role", "link")
                         .build()), htmlLoader.getHTMLContentOf("html/anchorWithAttributesCustomAttributesClassesAndId.html"));
     }
+
     @Test
     public void testTableWithAllFieldsIgnored() throws IOException {
 
