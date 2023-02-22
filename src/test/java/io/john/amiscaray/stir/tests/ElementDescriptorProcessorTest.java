@@ -138,7 +138,6 @@ public class ElementDescriptorProcessorTest {
 
     }
 
-    // TODO expand testing for attribute selector to include values of all the supported types
     @Test
     public void testElementWithBooleanAttribute() {
 
