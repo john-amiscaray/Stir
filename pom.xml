@@ -8,7 +8,6 @@
     <artifactId>stir</artifactId>
     <version>2.0.0</version>
     <packaging>jar</packaging>
-
     <name>${project.groupId}:${project.artifactId}</name>
     <description>A Java framework for server-side rendering</description>
     <url>https://github.com/john-amiscaray/Stir</url>

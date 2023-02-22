@@ -72,16 +72,26 @@ public class ElementDescriptorProcessor {
         validateTagNameClassesAndID(tagNameIdAndClasses);
         validateFieldsDescriptor(fieldsDescriptor);
         String originalTagName = tagNameIdAndClasses.split("[.#]", 2)[0];
-        String tagName = originalTagName.matches("h[1-9]") ? "h" : originalTagName;
+        String tagName = originalTagName.matches("h[1-9]") ? "_stir_heading" : originalTagName;
 
-        List<Class<?>> possibleTypes = tagName.equals("h") ? List.of(Heading.class) : classes.stream()
+        Class<? extends AbstractUIElement> classWithAlias = classes.stream()
                 .filter(clazz -> {
                     if(Modifier.isAbstract(clazz.getModifiers())){
                         return false;
                     }
+                    return clazz.isAnnotationPresent(HTMLElement.class) && !clazz.getAnnotation(HTMLElement.class).alias().isBlank() && clazz.getAnnotation(HTMLElement.class).alias().equals(tagName);
+                })
+                .findFirst()
+                .orElse(null);
+
+        List<Class<? extends AbstractUIElement>> possibleTypes = classWithAlias != null ? List.of(classWithAlias) : classes.stream()
+                .filter(clazz -> {
+                    if(Modifier.isAbstract(clazz.getModifiers()) || clazz.equals(Heading.class)){
+                        return false;
+                    }
                     return clazz.isAnnotationPresent(HTMLElement.class) && clazz.getAnnotation(HTMLElement.class).tagName().equals(tagName);
                 }).collect(Collectors.toList());
-        if(possibleTypes.isEmpty() || originalTagName.equals("h")){
+        if(possibleTypes.isEmpty()){
             throw new DescriptorFormatException("No such element found");
         }
         RuntimeException lastError = null;
@@ -122,7 +132,7 @@ public class ElementDescriptorProcessor {
                     setElementInnerContent(innerContentDescriptor, element, elementType);
                     setElementChildren(childDescriptor, element, elementType, javaPackage);
                     if(elementType.equals(Heading.class)){
-                        assert element.getClass().equals(Heading.class) && tagName.equals("h") && originalTagName.length() == 2;
+                        assert element.getClass().equals(Heading.class) && tagName.equals("_stir_heading") && originalTagName.length() == 2;
                         ((Heading) element).setLevel(Integer.parseInt(originalTagName.substring(1)));
                     }
                 } catch (InstantiationException | IllegalAccessException | InvocationTargetException | ClassNotFoundException e) {
