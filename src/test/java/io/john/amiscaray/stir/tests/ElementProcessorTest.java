@@ -396,8 +396,24 @@ public class ElementProcessorTest {
     public void testElementWithCustomAttribute() throws IOException {
 
         assertEquals(processor.getMarkup(Anchor.builder()
-                        .customAttribute("data-info", "hello-world")
+                .customAttribute("data-info", "hello-world")
                 .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttribute.html"));
+
+    }
+
+    @Test
+    public void testTableWithTableIgnore() throws IOException {
+
+        Table studentTable = new Table(List.of(
+                StudentWithIgnored.builder()
+                        .studentId(1)
+                        .name("John")
+                        .sin("123 ABC")
+                        .gpa(3.9f)
+                        .major("cs")
+                    .build()), StudentWithIgnored.class);
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/studentTableWithIgnored.html"), processor.getMarkup(studentTable));
 
     }
 
@@ -405,10 +421,27 @@ public class ElementProcessorTest {
     public void testElementWithMultipleCustomAttributes() throws IOException {
 
         assertEquals(processor.getMarkup(Anchor.builder()
-                    .customAttribute("data-info", "hello-world")
-                    .customAttribute("data-todo-id", "1")
-                    .customAttribute("data-role", "link")
+                .customAttribute("data-info", "hello-world")
+                .customAttribute("data-todo-id", "1")
+                .customAttribute("data-role", "link")
                 .build()), htmlLoader.getHTMLContentOf("html/anchorWithCustomAttributes.html"));
+
+    }
+
+    @Test
+    public void testTableWithTableIgnoreAndTableData() throws IOException {
+
+        Table studentTable = new Table(List.of(
+                StudentWithIgnoredAndData.builder()
+                        .studentId(1)
+                        .name("John")
+                        .sin("123 ABC")
+                        .gpa(3.9f)
+                        .major("cs")
+                        .build()
+        ), StudentWithIgnoredAndData.class);
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/studentTableWithIgnoredAndData.html"), processor.getMarkup(studentTable));
 
     }
 
@@ -427,15 +460,37 @@ public class ElementProcessorTest {
     @Test
     public void testElementWithAttributesCustomAttributesClassesAndId() throws IOException {
 
-        assertEquals(processor.getMarkup(Anchor.builder()
-                .href("https://en.wiktionary.org/wiki/en_passant")
-                .media("idk")
-                .id("google-en-passant")
-                .cssClasses(List.of("red", "blue", "green"))
-                .customAttribute("data-info", "hello-world")
-                .customAttribute("data-todo-id", "1")
-                .customAttribute("data-role", "link")
-                .build()), htmlLoader.getHTMLContentOf("html/anchorWithAttributesCustomAttributesClassesAndId.html"));
+                assertEquals(processor.getMarkup(Anchor.builder()
+                        .href("https://en.wiktionary.org/wiki/en_passant")
+                        .media("idk")
+                        .id("google-en-passant")
+                        .cssClasses(List.of("red", "blue", "green"))
+                        .customAttribute("data-info", "hello-world")
+                        .customAttribute("data-todo-id", "1")
+                        .customAttribute("data-role", "link")
+                        .build()), htmlLoader.getHTMLContentOf("html/anchorWithAttributesCustomAttributesClassesAndId.html"));
+    }
+    @Test
+    public void testTableWithAllFieldsIgnored() throws IOException {
+
+        Table studentTable = new Table(List.of(
+                StudentWithAllIgnored.builder()
+                        .studentId(1)
+                        .name("John")
+                        .sin("123 ABC")
+                        .gpa(3.9f)
+                        .major("cs")
+                        .build(),
+                StudentWithAllIgnored.builder()
+                        .studentId(2)
+                        .name("Bobbert")
+                        .sin("456 DEF")
+                        .gpa(4.33f)
+                        .major("art")
+                        .build()
+        ), StudentWithAllIgnored.class);
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/tableWithAllIgnored.html"), processor.getMarkup(studentTable));
 
     }
 

@@ -268,6 +268,9 @@ public class ElementProcessor {
         Field[] fields = type.getDeclaredFields();
         for (Field field : fields) {
             field.setAccessible(true);
+            if(field.isAnnotationPresent(TableIgnore.class)){
+                continue;
+            }
             String name = field.getName();
             if(field.isAnnotationPresent(TableData.class)){
                 String columnMetaName = field.getAnnotation(TableData.class).columnName();
@@ -284,6 +287,9 @@ public class ElementProcessor {
             for (Object obj : collection) {
                 builder.append("<tr>\n".indent(ElementProcessor.indentationSize));
                 for (Field field : fields) {
+                    if(field.isAnnotationPresent(TableIgnore.class)){
+                        continue;
+                    }
                     Object value = field.get(type.cast(obj));
                     builder.append(String.format("<td>%s</td>", value).indent(ElementProcessor.indentationSize * 2));
                 }
