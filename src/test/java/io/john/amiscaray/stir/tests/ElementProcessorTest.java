@@ -3,10 +3,7 @@ package io.john.amiscaray.stir.tests;
 import io.john.amiscaray.stir.annotation.exceptions.IllegalElementException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidClassListException;
 import io.john.amiscaray.stir.annotation.exceptions.InvalidObjectTableException;
-import io.john.amiscaray.stir.domain.elements.Form;
-import io.john.amiscaray.stir.domain.elements.Input;
-import io.john.amiscaray.stir.domain.elements.Paragraph;
-import io.john.amiscaray.stir.domain.elements.UnorderedList;
+import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
 import io.john.amiscaray.stir.stub.*;
 import io.john.amiscaray.stir.util.ElementProcessor;
@@ -392,6 +389,63 @@ public class ElementProcessorTest {
         assertThrows(IllegalElementException.class, () -> {
             processor.getMarkup(el);
         });
+
+    }
+
+    @Test
+    public void testTableWithTableIgnore() throws IOException {
+
+        Table studentTable = new Table(List.of(
+                StudentWithIgnored.builder()
+                        .studentId(1)
+                        .name("John")
+                        .sin("123 ABC")
+                        .gpa(3.9f)
+                        .major("cs")
+                    .build()), StudentWithIgnored.class);
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/studentTableWithIgnored.html"), processor.getMarkup(studentTable));
+
+    }
+
+    @Test
+    public void testTableWithTableIgnoreAndTableData() throws IOException {
+
+        Table studentTable = new Table(List.of(
+                StudentWithIgnoredAndData.builder()
+                        .studentId(1)
+                        .name("John")
+                        .sin("123 ABC")
+                        .gpa(3.9f)
+                        .major("cs")
+                        .build()
+        ), StudentWithIgnoredAndData.class);
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/studentTableWithIgnoredAndData.html"), processor.getMarkup(studentTable));
+
+    }
+
+    @Test
+    public void testTableWithAllFieldsIgnored() throws IOException {
+
+        Table studentTable = new Table(List.of(
+                StudentWithAllIgnored.builder()
+                        .studentId(1)
+                        .name("John")
+                        .sin("123 ABC")
+                        .gpa(3.9f)
+                        .major("cs")
+                        .build(),
+                StudentWithAllIgnored.builder()
+                        .studentId(2)
+                        .name("Bobbert")
+                        .sin("456 DEF")
+                        .gpa(4.33f)
+                        .major("art")
+                        .build()
+        ), StudentWithAllIgnored.class);
+
+        assertEquals(htmlLoader.getHTMLContentOf("html/tableWithAllIgnored.html"), processor.getMarkup(studentTable));
 
     }
 
