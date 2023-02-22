@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * A pojo representing a heading element (i.e. h1, h2, h3, etc.)
  */
-@HTMLElement(tagName = "h")
+@HTMLElement(tagName = "h", alias = "_stir_heading")
 @NoArgsConstructor
 public class Heading extends AbstractTextElement{
 

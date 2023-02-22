@@ -3,6 +3,8 @@ package io.john.amiscaray.stir.tests;
 import io.john.amiscaray.stir.domain.elements.*;
 import io.john.amiscaray.stir.domain.elements.exceptions.ElementInitializationException;
 import io.john.amiscaray.stir.setup.ExpectedHTMLLoader;
+import io.john.amiscaray.stir.stub.AliasedElement;
+import io.john.amiscaray.stir.stub.AliasedFooterElement;
 import io.john.amiscaray.stir.stub.ElementWithLongAndFloat;
 import io.john.amiscaray.stir.stub.ListStub;
 import io.john.amiscaray.stir.util.ElementDescriptorProcessor;
@@ -21,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ElementDescriptorProcessorTest {
 
+    public static final String STUB_PACKAGE = "io.john.amiscaray.stir.stub";
     private final ExpectedHTMLLoader htmlLoader = ExpectedHTMLLoader.getInstance();
     private final ElementProcessor elementProcessor = ElementProcessor.getInstance();
 
@@ -135,7 +138,6 @@ public class ElementDescriptorProcessorTest {
 
     }
 
-    // TODO expand testing for attribute selector to include values of all the supported types
     @Test
     public void testElementWithBooleanAttribute() {
 
@@ -170,7 +172,7 @@ public class ElementDescriptorProcessorTest {
                 .myFloat(12.3f)
                 .myLong(999999999L)
                 .build();
-        ElementWithLongAndFloat actual = (ElementWithLongAndFloat) element("p[my-float='12.3',my-long='999999999']", "io.john.amiscaray.stir.stub");
+        ElementWithLongAndFloat actual = (ElementWithLongAndFloat) element("p[my-float='12.3',my-long='999999999']", STUB_PACKAGE);
         assertEquals(expected, actual);
 
     }
@@ -305,7 +307,7 @@ public class ElementDescriptorProcessorTest {
     @Test
     public void testSetBasePackage() {
 
-        ElementDescriptorProcessor.setBasePackage("io.john.amiscaray.stir.stub");
+        ElementDescriptorProcessor.setBasePackage(STUB_PACKAGE);
         assertTrue(element("ul") instanceof ListStub);
 
     }
@@ -320,7 +322,7 @@ public class ElementDescriptorProcessorTest {
     @Test
     public void testElementWithBadAttribute() {
 
-        ElementDescriptorProcessor.setBasePackage("io.john.amiscaray.stir.stub");
+        ElementDescriptorProcessor.setBasePackage(STUB_PACKAGE);
         assertThrows(ElementInitializationException.class, () -> element("div[thing='aaaaaa']"));
 
     }
@@ -421,6 +423,34 @@ public class ElementDescriptorProcessorTest {
                                 .build())
                         .child(element("p('Hello, World!')"))
                         .build());
+
+    }
+
+    @Test
+    public void testDescriptorWithAliasedElement() {
+
+        ElementDescriptorProcessor.setBasePackage(STUB_PACKAGE);
+
+        assertEquals(AliasedElement.builder()
+                .bar("foo-bar")
+                .lorem("ipsum")
+                .build(), element("foo[bar='foo-bar',lorem='ipsum']"));
+
+    }
+
+    @Test
+    public void testDescriptorFooterAlias() {
+
+        ElementDescriptorProcessor.setBasePackage(STUB_PACKAGE);
+
+        assertTrue(element("footer") instanceof AliasedFooterElement);
+
+    }
+
+    @Test
+    public void testDescriptorWithBadName() {
+
+        assertThrows(DescriptorFormatException.class, () -> element("thisisnotarealelement"));
 
     }
 
